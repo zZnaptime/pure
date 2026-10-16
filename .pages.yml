@@ -1,0 +1,150 @@
+# Pages CMS (관리자 화면) 설정 — https://app.pagescms.org 에서 깃허브로 로그인하면 이 설정대로 보여요.
+
+media:
+  input: assets/uploads
+  output: /assets/uploads
+
+content:
+  # ── 글 ──
+  - name: posts
+    label: 글 (Records)
+    type: collection
+    path: posts
+    filename: "{year}-{month}-{day}-{hour}{minute}{second}.md"
+    exclude: [posts.json]
+    view:
+      primary: title
+      fields: [title, category, date, notice]
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: 제목
+        type: string
+        required: true
+      - name: date
+        label: 날짜
+        type: date
+        options:
+          time: true
+          format: "yyyy-MM-dd HH:mm"
+      - name: category
+        label: 카테고리
+        description: 카테고리를 새로 만들면 '홈 설정 → 카테고리'에도 추가하고, 여기 목록에도 추가해 주세요 (.pages.yml).
+        type: select
+        options:
+          values: [PURE, "♪ music", etc, "!"]
+      - name: notice
+        label: 공지사항으로 올리기
+        description: 켜면 카테고리 대신 상단 NOTICE 메뉴에 들어가요.
+        type: boolean
+        default: false
+      - name: thumbnail
+        label: 썸네일
+        description: 비워두면 본문 첫 번째 이미지를 써요.
+        type: image
+      - name: summary
+        label: 요약
+        description: 카드에 보이는 짧은 설명. 비워두면 본문 앞부분을 써요.
+        type: text
+      - name: sub
+        label: 부제목
+        description: 쓰면 카드에서 요약 대신 이 문구가 보여요.
+        type: string
+      - name: status
+        label: 커미션 상태
+        type: select
+        options:
+          values: [OPEN, CLOSE]
+      - name: price
+        label: 금액 (숫자만)
+        type: number
+      # ── ♪ 노래 글 (음원을 넣으면 글 창 맨 위에 플레이어 + 가사가 생겨요) ──
+      - name: song
+        label: ♪ 음원 (mp3)
+        description: 노래 글일 때만 넣어요. 넣으면 글 창 맨 위에 재생기 + 다운로드 버튼이 생겨요.
+        type: file
+      - name: songCover
+        label: ♪ 앨범 커버
+        description: 비워두면 썸네일을 써요. 정사각형 추천.
+        type: image
+      - name: artist
+        label: ♪ 아티스트
+        type: string
+      - name: lyrics
+        label: ♪ 가사
+        description: "그냥 써도 되고, 줄 앞에 [00:12.30] 처럼 시간을 붙이면 노래에 맞춰 하이라이트돼요 (LRC 가사 그대로 붙여넣기 가능)."
+        type: text
+      - name: draft
+        label: 임시저장 (켜면 홈에 안 보여요)
+        type: boolean
+        default: false
+      - name: body
+        label: 본문
+        type: rich-text
+
+  # ── 홈 설정 (예전 티스토리 '스킨 옵션') ──
+  - name: settings
+    label: 홈 설정
+    type: file
+    path: settings.json
+    format: json
+    fields:
+      - { name: title, label: 사이트 이름, type: string }
+      - { name: blogger, label: 운영자 이름, type: string }
+      - { name: heroSub, label: 타이틀 옆 문구, type: string }
+      - name: sinceDate
+        label: D+ 기준일
+        type: date
+        options: { format: "yyyy-MM-dd" }
+      - { name: pureImg, label: 퓨어 프로필 이미지, type: image }
+      - { name: uxiImg, label: 유시 프로필 이미지, type: image }
+      - { name: ddayImage, label: D-DAY 창 사진 (가로 16:9), type: image }
+      - { name: ddayMemo, label: D-DAY 사진 뒷면 메모, type: text }
+      - { name: ddayTitle, label: D-DAY 창 페어 이름, type: string }
+      - { name: xUrl, label: LUVINFO 링크 (비우면 숨김), type: string }
+      - { name: cmsUrl, label: 글쓰기 버튼 주소 (관리자 화면), type: string }
+      - { name: repoUrl, label: 저장소 버튼 주소 (깃허브 저장소, 비우면 숨김), type: string }
+      - { name: infoTitle, label: 안내사항 창 이름, type: string }
+      - name: info
+        label: 안내사항 창에 띄울 글 (글 파일 이름, 최대 3개)
+        description: "예: 2026-10-14-200000 (글 목록에서 파일 이름 확인)"
+        type: string
+        list: { max: 3 }
+      - name: infoScope
+        label: 안내사항 표시 위치
+        type: select
+        options:
+          values: [home, all]
+      - name: categories
+        label: 카테고리 (Records 창에 이 순서대로 보여요)
+        type: object
+        list: true
+        fields:
+          - { name: name, label: 이름, type: string }
+          - name: icon
+            label: 아이콘
+            type: select
+            options:
+              values: [heart, disc, music, rec, bell, folder, syringe, pill, memo, link, globe, chat, radar, pen]
+      - { name: newDays, label: NEW 표시 기간 (일), type: number }
+      - { name: priceLabel, label: 가격 표시 글자, type: string }
+      - { name: showSummary, label: 카드에 요약 보이기, type: boolean }
+      - { name: showUncategorized, label: 미분류 글 보이기, type: boolean }
+      - { name: thumbFallback, label: 썸네일 없을 때 기본 이미지, type: image }
+      - name: cardCols
+        label: 카드 열 수 (PC)
+        type: select
+        options:
+          values: ["2", "3", "4"]
+      - { name: cardRadius, label: 카드 모서리 둥글게, type: boolean }
+      - { name: postImgRadius, label: 본문 이미지 모서리 둥글게, type: boolean }
+      - name: fontScale
+        label: 글자 크기
+        type: select
+        options:
+          values: ["1.0", "1.1", "1.2"]
+      - { name: pointColor, label: 가격 색상, type: string }
+      - { name: newColor, label: NEW 뱃지 색상, type: string }

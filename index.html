@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Syringe</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/apps2.css">
+  <!-- 플레이리스트 · 메신저 · 알림 · 인터넷 · 링크 허브 설정 -->
+  <script src="assets/js/config.js"></script>
+</head>
+
+<body id="tt-body-index">
+<script>/* 주소로 창 열기 : ?p=글 · ?c=카테고리 · ?notice=공지 (페이지 이동 없이 홈 안에서 창으로 열려요) */
+(function(){var q=new URLSearchParams(location.search),r=q.has('p')?'post':q.has('notice')?'notice':(q.has('c')||q.has('records'))?'list':'home';window.SY_ROUTE=r;if(r!=='home'){try{sessionStorage.setItem('sy-booted','1');}catch(e){}}})();</script>
+
+<!-- 아이콘 모음 (svg sprite) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-memo" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-syringe" viewBox="0 0 24 24"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 20.5l1.6-5A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></symbol>
+  <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5" stroke-dasharray="2 2"/><path d="M12 12l6.4-6.4"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-rec" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 12h8M8 15.5h5"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M6.6 12A5.4 5.4 0 0 1 12 6.6M17.4 12a5.4 5.4 0 0 1-5.4 5.4"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+  <symbol id="i-bulletin" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="17" rx="2"/><path d="M9 2.5h6v3H9zM8 11h8M8 15h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M2 9.5a5.5 5.5 0 0 1 9.6-3.7.6.6 0 0 0 .8 0A5.5 5.5 0 0 1 22 9.5c0 2.3-1.5 4-3 5.5l-5.5 5.3a2 2 0 0 1-3 0L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.2 13h6.3l.5-1 2 4.5 2-7 1.5 3.5h5.3"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-tile" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="14" y="17" width="8" height="5" rx="1"/><path d="M10 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.7.9l.8 1.2a2 2 0 0 0 1.7.9H20a2 2 0 0 1 2 2v2.5"/><path d="M20 17v-2a2 2 0 1 0-4 0v2"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="none" stroke="#6EE7C8" stroke-width="1.5"/><rect x="13" y="7" width="6" height="18" rx="1.5" fill="currentColor" stroke="none"/><rect x="7" y="13" width="18" height="6" rx="1.5" fill="currentColor" stroke="none"/><rect x="13" y="13" width="6" height="6" fill="#6EE7C8" stroke="none"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-hub" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="3.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="3.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><rect x="2.5" y="8" width="19" height="8" rx="4" transform="rotate(-35 12 12)"/><path d="M9.2 7.9l5.6 8.2" /></symbol>
+  <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.4 6.6a8 8 0 1 0 11.2 0"/></symbol>
+  <symbol id="i-x" viewBox="0 0 12 12"><path d="M3 3l6 6M9 3l-6 6"/></symbol>
+  <symbol id="i-min" viewBox="0 0 12 12"><path d="M3 8.5h6"/></symbol>
+  <symbol id="i-id" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.3"/><path d="M5.8 16.2c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h4M14.5 13.5h3"/></symbol>
+  <symbol id="i-sword" viewBox="0 0 24 24"><path d="M14.5 3.5H20.5V9.5L10 20l-6-6z" /><path d="M7 13l4 4M4 20l2.5-2.5M15 9l-6 6"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+</svg>
+
+
+<div class="sy-bg" aria-hidden="true"></div>
+
+<!-- ══════════════ 접속 커버 (홈 첫 접속 / 좌상단 로고 누르면 다시) ══════════════ -->
+<div class="boot" id="syBoot" hidden role="dialog" aria-modal="true" aria-label="SYRINGE 접속">
+ <div class="bt-panel">
+  <span class="bt-hl" aria-hidden="true"></span>
+
+  <!-- 상단 -->
+  <header class="bt-head">
+    <span class="bt-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="#6EE7C8" stroke-width="1.5"/><rect x="13" y="7" width="6" height="18" rx="1.5" fill="#fff"/><rect x="7" y="13" width="18" height="6" rx="1.5" fill="#fff"/><rect x="13" y="13" width="6" height="6" fill="#6EE7C8"/></svg><span><b>SYRINGE-01</b><small>ARCH CLINIC</small></span></span>
+    <nav class="bt-nav" aria-hidden="true"><span>01 · ADMISSION</span><span>02 · VITALS</span><span>03 · RECORDS</span></nav>
+  </header>
+  <div class="bt-notch bt-ntr"><span class="bt-chip"><i class="live-dot"></i>INFIRMARY · OPEN 24H</span><span class="bt-chip ghost sy-aegis">—</span></div>
+
+  <!-- 왼쪽 : 타이틀 -->
+  <section class="bt-left">
+    <div class="bt-ecg" aria-hidden="true">
+      <span class="bt-ecg-h"><b>VITAL</b> HR <em id="btHr">72</em> BPM · SpO₂ 99%</span>
+      <svg viewBox="0 0 600 80" preserveAspectRatio="none"><path class="bg" d="M0 50H120L132 50L140 36L148 50H190L200 50L208 62L220 8L232 70L242 50H300L312 42L322 50H420L432 50L440 36L448 50H470L478 62L490 12L502 70L512 50H600"/><path class="fg" pathLength="100" d="M0 50H120L132 50L140 36L148 50H190L200 50L208 62L220 8L232 70L242 50H300L312 42L322 50H420L432 50L440 36L448 50H470L478 62L490 12L502 70L512 50H600"/></svg>
+    </div>
+    <p class="bt-eye"><span>THE CLINICAL GUIDING PROTOCOL</span><i></i><span>VOL. 05</span></p>
+    <h1 class="bt-title" aria-label="SYRINGE">SYR<span class="ix-cap" aria-hidden="true"></span>NGE</h1>
+    <div class="bt-pair">
+      <b>PURE<i>×</i>UXI</b>
+      <span class="bt-pair-sub"><em>A-CLASS GUIDE</em><em>S-CLASS SENTINEL</em></span>
+      <span class="bt-pair-tag">LOVE DISORDER CLINIC ✦</span>
+    </div>
+    <div class="bt-load">
+      <div class="bt-lh"><span id="btMsg">STERILIZING</span><b><span id="btPct">0</span><small>%</small></b></div>
+      <div class="bt-track"><i id="btBar"></i></div>
+      <div class="bt-dots" id="btDots"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </section>
+
+  <!-- 오른쪽 : 스코프 + 주사기 -->
+  <section class="bt-scope" aria-hidden="true">
+    <svg class="bt-ring" viewBox="-110 -110 220 220">
+      <g class="bt-ticks"></g>
+      <circle class="hair" r="96"/>
+      <circle class="hair dash" r="78"/>
+      <circle class="hair" r="54"/>
+      <circle class="bt-arc" r="96" pathLength="100" transform="rotate(-90)"/>
+      <g class="bt-orb"><circle cx="0" cy="-96" r="3.2"/></g>
+      <g class="bt-orb2"><circle cx="0" cy="-78" r="2"/></g>
+    </svg>
+    <span class="bt-lab l1">SINCE P×U · <b class="sy-dday">D+000</b></span>
+    <span class="bt-lab l2">5.0 mL · STERILE</span>
+    <span class="bt-lab l3">GUIDE <b>PURE</b></span>
+    <span class="bt-lab l4">SENTINEL <b>UXI</b></span>
+    <div class="bt-syr-wrap">
+      <svg class="ix-syr" viewBox="0 0 790 150" fill="none">
+        <defs>
+          <linearGradient id="ixNeedle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#B9D3E4"/></linearGradient>
+          <linearGradient id="ixLiqG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9FFF3"/><stop offset=".55" stop-color="#6EE7C8"/><stop offset="1" stop-color="#36C9A6"/></linearGradient>
+          <linearGradient id="ixRod" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D6ECF8"/></linearGradient>
+          <pattern id="ixDot" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.45" fill="#fff"/></pattern>
+          <pattern id="ixDotB" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.25" fill="#1E8FD6"/></pattern>
+          <linearGradient id="ixFadeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="1"/></linearGradient>
+          <mask id="ixFade"><rect x="0" y="0" width="790" height="150" fill="url(#ixFadeG)"/></mask>
+          <clipPath id="ixBarrel"><rect x="184" y="42" width="278" height="66" rx="13"/></clipPath>
+        </defs>
+        <path d="M2 75 L18 72 H150 V78 H18 Z" fill="url(#ixNeedle)"/>
+        <rect x="18" y="72" width="132" height="1.6" fill="#fff"/>
+        <rect x="138" y="56" width="42" height="38" rx="10" fill="#FFFFFF"/>
+        <rect x="166" y="56" width="7" height="38" fill="#A9DCF5"/>
+        <rect x="176" y="34" width="294" height="82" rx="20" fill="#FFFFFF" fill-opacity=".14"/>
+        <g clip-path="url(#ixBarrel)">
+          <rect id="ixLiq" x="184" y="42" width="0" height="66" fill="url(#ixLiqG)"/>
+          <rect id="ixLiqD" x="184" y="42" width="0" height="66" fill="url(#ixDot)" mask="url(#ixFade)" opacity=".55"/>
+        </g>
+        <g fill="#fff" opacity=".9"><rect x="214" y="42" width="2.4" height="15" rx="1.2"/><rect x="242" y="42" width="2.4" height="9" rx="1.2"/><rect x="270" y="42" width="2.4" height="15" rx="1.2"/><rect x="298" y="42" width="2.4" height="9" rx="1.2"/><rect x="326" y="42" width="2.4" height="15" rx="1.2"/><rect x="354" y="42" width="2.4" height="9" rx="1.2"/><rect x="382" y="42" width="2.4" height="15" rx="1.2"/><rect x="410" y="42" width="2.4" height="9" rx="1.2"/><rect x="438" y="42" width="2.4" height="15" rx="1.2"/></g>
+        <rect x="194" y="96" width="250" height="6" rx="3" fill="#fff" opacity=".45"/>
+        <rect x="176" y="34" width="294" height="82" rx="20" stroke="#fff" stroke-width="3" stroke-opacity=".9"/>
+        <g id="ixPl">
+          <rect x="184" y="44" width="16" height="62" rx="6" fill="#0D5A96"/>
+          <rect x="189" y="44" width="2.5" height="62" fill="#3B86C4"/><rect x="194" y="44" width="2.5" height="62" fill="#3B86C4"/>
+          <rect x="200" y="64" width="302" height="22" rx="6" fill="url(#ixRod)"/>
+          <rect x="200" y="74" width="302" height="2" fill="#A9DCF5"/>
+          <rect x="498" y="22" width="22" height="106" rx="11" fill="#FFFFFF"/>
+          <rect x="498" y="22" width="22" height="106" rx="11" fill="url(#ixDotB)" mask="url(#ixFade)" opacity=".45"/>
+        </g>
+        <rect x="464" y="10" width="20" height="130" rx="10" fill="#FFFFFF"/>
+        <rect x="464" y="10" width="20" height="130" rx="10" fill="url(#ixDotB)" mask="url(#ixFade)" opacity=".4"/>
+      </svg>
+    </div>
+    <svg class="bt-pill bp1" viewBox="0 0 120 48" fill="none"><path d="M24 2H60V46H24A22 22 0 0 1 24 2Z" fill="#FFFFFF"/><path d="M60 2H96A22 22 0 0 1 96 46H60Z" fill="#6EE7C8"/><path d="M60 2H96A22 22 0 0 1 96 46H60Z" fill="url(#ixDot)" opacity=".7"/><rect x="58.5" y="2" width="3" height="44" fill="#fff" opacity=".6"/><rect x="14" y="10" width="40" height="7" rx="3.5" fill="#fff" opacity=".9"/></svg>
+    <svg class="bt-pill bp2" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="32" r="26" fill="#0D5A96" opacity=".3"/><circle cx="30" cy="28" r="26" fill="#FFFFFF"/><circle cx="30" cy="28" r="26" fill="url(#ixDotB)" mask="url(#ixFade)" opacity=".25"/><rect x="10" y="26" width="40" height="4" rx="2" fill="#D6ECF8"/></svg>
+    <span class="bt-pulse"></span>
+  </section>
+
+  <!-- 하단 띠 -->
+  <div class="bt-ribbon" aria-hidden="true"><span>✦ ARCH MEDICAL CENTER ✦ THE CLINICAL GUIDING PROTOCOL ✦ PURE × UXI ✦ RUNNING AWAY IS NOT ALLOWED ✦ ARCH MEDICAL CENTER ✦ THE CLINICAL GUIDING PROTOCOL ✦ PURE × UXI ✦ RUNNING AWAY IS NOT ALLOWED&nbsp;</span></div>
+
+  <div class="bt-notch bt-nbr">
+    <div class="bt-state"><span>ADMISSION</span><b id="btState">STAND BY</b></div>
+    <button type="button" class="bt-enter" id="btEnter" data-fx-big disabled>
+      <span class="bt-lbl" id="btLbl">LOADING</span>
+      <span class="bt-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+    </button>
+  </div>
+ </div>
+</div>
+
+<!-- 알림 팝업 -->
+<div class="noti-wrap" id="syNoti" aria-live="polite"></div>
+
+<!-- ══════════════ 시작 메뉴 (하단 ARCH 버튼) ══════════════ -->
+<div class="start" id="syStart" hidden>
+  <div class="st-head">
+    <span class="st-logo"><svg><use href="#i-cross"/></svg></span>
+    <div class="st-who"><b data-set="title">Syringe</b><small>© <span data-set="blogger">HYUN</span> · <span class="sy-dday">D+000</span></small></div>
+  </div>
+  <p class="st-cap">APPLICATIONS</p>
+  <div class="st-apps">
+    <button type="button" data-open="profile" class="ap-prof"><span class="ic"><svg class="ico"><use href="#i-id"/></svg></span>AGENT</button>
+    <button type="button" data-open="dday" class="ap-dday"><span class="ic"><svg class="ico"><use href="#i-heart"/></svg></span>D-DAY</button>
+    <button type="button" data-open="chat" class="ap-chat"><span class="ic"><svg class="ico"><use href="#i-chat"/></svg></span>ARCHtalk</button>
+    <button type="button" data-open="radar" class="ap-radar"><span class="ic"><svg class="ico"><use href="#i-radar"/></svg></span>Sentinel Care</button>
+    <button type="button" data-open="kit" class="ap-kit"><span class="ic"><svg class="ico"><use href="#i-syringe"/></svg></span>Med Kit</button>
+    <button type="button" data-open="memo" class="ap-memo"><span class="ic"><svg class="ico"><use href="#i-memo"/></svg></span>Memo</button>
+    <button type="button" data-open="player" class="ap-player"><span class="ic"><svg class="ico"><use href="#i-music"/></svg></span>Player</button>
+    <button type="button" data-open="web" class="ap-web"><span class="ic"><svg class="ico"><use href="#i-globe"/></svg></span>Internet</button>
+    <button type="button" data-open="aol" class="ap-aol"><span class="ic"><svg class="ico"><use href="#i-sword"/></svg></span>AoL</button>
+    <button type="button" data-open="hub" class="ap-hub"><span class="ic"><svg class="ico"><use href="#i-hub"/></svg></span>Link Hub</button>
+    <button type="button" data-open="link" class="ap-link"><span class="ic"><svg class="ico"><use href="#i-link"/></svg></span>Neighbors</button>
+    <button type="button" data-open="cat" class="ap-cat"><span class="ic"><svg class="ico"><use href="#i-folder"/></svg></span>Records</button>
+  </div>
+  <p class="st-cap">QUICK</p>
+  <div class="st-list">
+    <a href="?c=" data-list=""><svg class="ico"><use href="#i-folder"/></svg>전체 기록 보기</a>
+    <a href="?notice" data-list="notice"><svg class="ico"><use href="#i-bell"/></svg>공지사항</a>
+    <a href="https://app.pagescms.org/" data-set-href="cmsUrl" target="_blank" rel="noopener"><svg class="ico"><use href="#i-pen"/></svg>글쓰기 · 관리자</a>
+    <a href="#" data-set-href="repoUrl" target="_blank" rel="noopener"><svg class="ico"><use href="#i-gear"/></svg>저장소 (GitHub)</a>
+  </div>
+  <div class="st-foot">
+    <button type="button" id="stBoot"><svg class="ico"><use href="#i-power"/></svg>시스템 종료</button>
+    <button type="button" id="stTile"><svg class="ico"><use href="#i-tile"/></svg>창 정렬</button>
+  </div>
+</div>
+
+<!-- ══════════════ 상단 메뉴 바 ══════════════ -->
+<header class="sy-bar">
+  <a class="sy-logo" id="syLogo" href="?" aria-label="홈">
+    <svg><use href="#i-cross"/></svg>
+    <span><b>SYRINGE-01</b><small>ARCH CLINIC</small></span>
+  </a>
+  <nav class="sy-menu" aria-label="메뉴">
+    <a href="?" class="m-home"><span class="mtxt">HOME</span><svg class="ico" style="display:none"><use href="#i-cross"/></svg></a>
+    <button type="button" data-open="cat" aria-label="카테고리"><svg class="ico"><use href="#i-folder"/></svg><span class="mtxt">CATEGORY</span></button>
+    <a href="?notice" data-list="notice" id="sy-notice-link" hidden aria-label="공지사항"><svg class="ico"><use href="#i-bell"/></svg><span class="mtxt">NOTICE</span></a>
+    <a href="#" id="sy-luv-link" target="_blank" rel="noopener" hidden aria-label="luvinfo"><svg class="ico"><use href="#i-heart"/></svg><span class="mtxt">LUVINFO</span></a>
+  </nav>
+  <div class="sy-tray">
+    <span class="sy-status"><i class="live-dot"></i>PROTOCOL ONLINE</span>
+    <span class="sy-clock" id="syClock">--:--</span>
+    <span class="sq ghost sy-dnd" id="syDnd" hidden title="방해금지 · 글을 읽는 동안엔 알림이 오지 않아요" aria-label="방해금지 모드"><svg class="ico"><use href="#i-moon"/></svg></span>
+    <button type="button" class="sq ghost" id="syReset" title="창 정렬" aria-label="창 정렬" hidden><svg class="ico"><use href="#i-tile"/></svg></button>
+    <a class="sq ghost" href="https://app.pagescms.org/" data-set-href="cmsUrl" target="_blank" rel="noopener" title="글쓰기 (관리자 화면)" aria-label="글쓰기"><svg class="ico"><use href="#i-pen"/></svg></a>
+    <a class="sq" href="#" data-set-href="repoUrl" target="_blank" rel="noopener" title="저장소 (GitHub)" aria-label="저장소"><svg class="ico"><use href="#i-gear"/></svg></a>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     홈 (메인 화면에서만 보임) — 바탕화면 + 창들
+     ══════════════════════════════════════════════════════ -->
+<div id="sy-home">
+ <main class="sy-desk" id="syDesk">
+
+  <!-- 포스터 : 타이틀 + D+ 다이얼 -->
+  <section class="sy-hero hp-poster" id="syHero">
+    <div class="hp-notch"><span class="hp-chip"><i class="live-dot"></i>INFIRMARY · OPEN 24H</span><span class="hp-chip g sy-aegis">—</span></div>
+    <div class="hp-dial">
+      <svg viewBox="-100 -100 200 200" aria-hidden="true"><g class="hp-ticks"><line class="tk M" x1="0.00" y1="-96.00" x2="0.00" y2="-88.00"/><line class="tk" x1="8.37" y1="-95.63" x2="8.02" y2="-91.65"/><line class="tk" x1="16.67" y1="-94.54" x2="15.98" y2="-90.60"/><line class="tk" x1="24.85" y1="-92.73" x2="23.81" y2="-88.87"/><line class="tk" x1="32.83" y1="-90.21" x2="31.47" y2="-86.45"/><line class="tk" x1="40.57" y1="-87.01" x2="38.88" y2="-83.38"/><line class="tk M" x1="48.00" y1="-83.14" x2="44.00" y2="-76.21"/><line class="tk" x1="55.06" y1="-78.64" x2="52.77" y2="-75.36"/><line class="tk" x1="61.71" y1="-73.54" x2="59.14" y2="-70.48"/><line class="tk" x1="67.88" y1="-67.88" x2="65.05" y2="-65.05"/><line class="tk" x1="73.54" y1="-61.71" x2="70.48" y2="-59.14"/><line class="tk" x1="78.64" y1="-55.06" x2="75.36" y2="-52.77"/><line class="tk M" x1="83.14" y1="-48.00" x2="76.21" y2="-44.00"/><line class="tk" x1="87.01" y1="-40.57" x2="83.38" y2="-38.88"/><line class="tk" x1="90.21" y1="-32.83" x2="86.45" y2="-31.47"/><line class="tk" x1="92.73" y1="-24.85" x2="88.87" y2="-23.81"/><line class="tk" x1="94.54" y1="-16.67" x2="90.60" y2="-15.98"/><line class="tk" x1="95.63" y1="-8.37" x2="91.65" y2="-8.02"/><line class="tk M" x1="96.00" y1="-0.00" x2="88.00" y2="-0.00"/><line class="tk" x1="95.63" y1="8.37" x2="91.65" y2="8.02"/><line class="tk" x1="94.54" y1="16.67" x2="90.60" y2="15.98"/><line class="tk" x1="92.73" y1="24.85" x2="88.87" y2="23.81"/><line class="tk" x1="90.21" y1="32.83" x2="86.45" y2="31.47"/><line class="tk" x1="87.01" y1="40.57" x2="83.38" y2="38.88"/><line class="tk M" x1="83.14" y1="48.00" x2="76.21" y2="44.00"/><line class="tk" x1="78.64" y1="55.06" x2="75.36" y2="52.77"/><line class="tk" x1="73.54" y1="61.71" x2="70.48" y2="59.14"/><line class="tk" x1="67.88" y1="67.88" x2="65.05" y2="65.05"/><line class="tk" x1="61.71" y1="73.54" x2="59.14" y2="70.48"/><line class="tk" x1="55.06" y1="78.64" x2="52.77" y2="75.36"/><line class="tk M" x1="48.00" y1="83.14" x2="44.00" y2="76.21"/><line class="tk" x1="40.57" y1="87.01" x2="38.88" y2="83.38"/><line class="tk" x1="32.83" y1="90.21" x2="31.47" y2="86.45"/><line class="tk" x1="24.85" y1="92.73" x2="23.81" y2="88.87"/><line class="tk" x1="16.67" y1="94.54" x2="15.98" y2="90.60"/><line class="tk" x1="8.37" y1="95.63" x2="8.02" y2="91.65"/><line class="tk M" x1="0.00" y1="96.00" x2="0.00" y2="88.00"/><line class="tk" x1="-8.37" y1="95.63" x2="-8.02" y2="91.65"/><line class="tk" x1="-16.67" y1="94.54" x2="-15.98" y2="90.60"/><line class="tk" x1="-24.85" y1="92.73" x2="-23.81" y2="88.87"/><line class="tk" x1="-32.83" y1="90.21" x2="-31.47" y2="86.45"/><line class="tk" x1="-40.57" y1="87.01" x2="-38.88" y2="83.38"/><line class="tk M" x1="-48.00" y1="83.14" x2="-44.00" y2="76.21"/><line class="tk" x1="-55.06" y1="78.64" x2="-52.77" y2="75.36"/><line class="tk" x1="-61.71" y1="73.54" x2="-59.14" y2="70.48"/><line class="tk" x1="-67.88" y1="67.88" x2="-65.05" y2="65.05"/><line class="tk" x1="-73.54" y1="61.71" x2="-70.48" y2="59.14"/><line class="tk" x1="-78.64" y1="55.06" x2="-75.36" y2="52.77"/><line class="tk M" x1="-83.14" y1="48.00" x2="-76.21" y2="44.00"/><line class="tk" x1="-87.01" y1="40.57" x2="-83.38" y2="38.88"/><line class="tk" x1="-90.21" y1="32.83" x2="-86.45" y2="31.47"/><line class="tk" x1="-92.73" y1="24.85" x2="-88.87" y2="23.81"/><line class="tk" x1="-94.54" y1="16.67" x2="-90.60" y2="15.98"/><line class="tk" x1="-95.63" y1="8.37" x2="-91.65" y2="8.02"/><line class="tk M" x1="-96.00" y1="0.00" x2="-88.00" y2="0.00"/><line class="tk" x1="-95.63" y1="-8.37" x2="-91.65" y2="-8.02"/><line class="tk" x1="-94.54" y1="-16.67" x2="-90.60" y2="-15.98"/><line class="tk" x1="-92.73" y1="-24.85" x2="-88.87" y2="-23.81"/><line class="tk" x1="-90.21" y1="-32.83" x2="-86.45" y2="-31.47"/><line class="tk" x1="-87.01" y1="-40.57" x2="-83.38" y2="-38.88"/><line class="tk M" x1="-83.14" y1="-48.00" x2="-76.21" y2="-44.00"/><line class="tk" x1="-78.64" y1="-55.06" x2="-75.36" y2="-52.77"/><line class="tk" x1="-73.54" y1="-61.71" x2="-70.48" y2="-59.14"/><line class="tk" x1="-67.88" y1="-67.88" x2="-65.05" y2="-65.05"/><line class="tk" x1="-61.71" y1="-73.54" x2="-59.14" y2="-70.48"/><line class="tk" x1="-55.06" y1="-78.64" x2="-52.77" y2="-75.36"/><line class="tk M" x1="-48.00" y1="-83.14" x2="-44.00" y2="-76.21"/><line class="tk" x1="-40.57" y1="-87.01" x2="-38.88" y2="-83.38"/><line class="tk" x1="-32.83" y1="-90.21" x2="-31.47" y2="-86.45"/><line class="tk" x1="-24.85" y1="-92.73" x2="-23.81" y2="-88.87"/><line class="tk" x1="-16.67" y1="-94.54" x2="-15.98" y2="-90.60"/><line class="tk" x1="-8.37" y1="-95.63" x2="-8.02" y2="-91.65"/></g><circle class="hair" r="78"/><circle class="hair dash" r="64"/><circle class="arc" id="hpArc" r="78" pathLength="100" transform="rotate(-90)"/><g class="orb"><circle cx="0" cy="-96" r="2.6"/></g></svg>
+      <div class="hp-dc"><small>SINCE P×U</small><b class="sy-dday">D+000</b><em id="hpNext">NEXT D+100</em></div>
+    </div>
+    <div class="hp-l">
+      <p class="hp-eye"><span>ARCH CLINIC · RESIDENCE</span><i></i><span class="m" data-set="heroSub">PURE × UXI · ARCH</span></p>
+      <h1 class="hp-t" aria-label="SYRINGE">SYR<span class="cap" aria-hidden="true"></span>NGE</h1>
+      <div class="hp-pair"><b>PURE<i>×</i>UXI</b><span>LOVE DISORDER CLINIC ✦</span><span class="x">5.0 mL · STERILE // OPEN 24H</span></div>
+    </div>
+  </section>
+
+  <!-- 앱 패널 : 바탕화면 아이콘 (data-open = 열 창 이름) -->
+  <div class="hp-apps">
+    <span class="hp-tab">APPLICATIONS<b id="hpCount">10</b></span>
+    <nav class="sy-icons" id="syIcons" aria-label="바탕화면">
+    <button type="button" class="dico ap-prof" data-open="profile"><span class="ic"><svg class="ico"><use href="#i-id"/></svg></span><span>AGENT</span></button>
+    <button type="button" class="dico ap-dday" data-open="dday"><span class="ic"><svg class="ico"><use href="#i-heart"/></svg></span><span>D-DAY</span></button>
+    <button type="button" class="dico ap-chat" data-open="chat"><span class="ic"><svg class="ico"><use href="#i-chat"/></svg></span><span>ARCHtalk</span></button>
+    <button type="button" class="dico ap-radar" data-open="radar"><span class="ic"><svg class="ico"><use href="#i-radar"/></svg></span><span>Sentinel Care</span></button>
+    <button type="button" class="dico ap-kit" data-open="kit"><span class="ic"><svg class="ico"><use href="#i-syringe"/></svg></span><span>Med Kit</span></button>
+    <button type="button" class="dico ap-memo" data-open="memo"><span class="ic"><svg class="ico"><use href="#i-memo"/></svg></span><span>Memo</span></button>
+    <button type="button" class="dico ap-player" data-open="player"><span class="ic"><svg class="ico"><use href="#i-music"/></svg></span><span>Player</span></button>
+    <button type="button" class="dico ap-link" data-open="link"><span class="ic"><svg class="ico"><use href="#i-link"/></svg></span><span>Neighbors</span></button>
+    <button type="button" class="dico ap-web" data-open="web"><span class="ic"><svg class="ico"><use href="#i-globe"/></svg></span><span>Internet</span></button>
+    <button type="button" class="dico ap-aol" data-open="aol"><span class="ic"><svg class="ico"><use href="#i-sword"/></svg></span><span>ARCH of Legends</span></button>
+    <button type="button" class="dico ap-hub" data-open="hub"><span class="ic"><svg class="ico"><use href="#i-hub"/></svg></span><span>Link Hub</span></button>
+    <button type="button" class="dico ap-cat" data-open="cat"><span class="ic"><svg class="ico"><use href="#i-folder"/></svg></span><span>Records</span></button>
+    <button type="button" class="dico ap-notice" data-open="notice" id="dico-notice" hidden><span class="ic"><svg class="ico"><use href="#i-bulletin"/></svg></span><span>Notice</span></button>
+  </nav>
+    <div class="hp-ribbon" aria-hidden="true"><span>✦ ARCH MEDICAL CENTER ✦ THE CLINICAL GUIDING PROTOCOL ✦ PURE × UXI ✦ RUNNING AWAY IS NOT ALLOWED ✦ ARCH MEDICAL CENTER ✦ THE CLINICAL GUIDING PROTOCOL ✦ PURE × UXI ✦ RUNNING AWAY IS NOT ALLOWED&nbsp;</span></div>
+  </div>
+
+  <!-- 오른쪽 : 블루프린트 도면 + 표제란 -->
+  <aside class="hp-side">
+    <div class="hp-bp"><svg viewBox="0 0 270 740" preserveAspectRatio="xMidYMid meet" fill="none" aria-hidden="true"><path class="dm" d="M14 56H44M14 688H44M24 56V688"/><path class="ar" d="M24 56l-3.5 8h7zM24 688l-3.5-8h7z"/><text class="s" transform="translate(18 412) rotate(-90)">OVERALL · 884 (1:1)</text><g transform="translate(112 372) rotate(-84) scale(0.72) translate(-442 -60)"><path class="ln" d="M0 60 L40 56 H190 V64 H40 Z"/><rect class="ln" x="186" y="38" width="60" height="44" rx="10"/><rect class="ln" x="244" y="14" width="420" height="92" rx="20"/><rect class="fl" x="256" y="24" width="250" height="72" rx="12"/><g class="th"><path d="M276 24V44"/><path d="M306 24V34"/><path d="M336 24V44"/><path d="M366 24V34"/><path d="M396 24V44"/><path d="M426 24V34"/><path d="M456 24V44"/><path d="M486 24V34"/><path d="M516 24V44"/><path d="M546 24V34"/><path d="M576 24V44"/><path d="M606 24V34"/><path d="M636 24V44"/></g><rect class="ln" x="506" y="24" width="22" height="72" rx="6"/><rect class="ln" x="528" y="50" width="330" height="20" rx="5"/><rect class="ln" x="664" y="-4" width="22" height="128" rx="11"/><rect class="ln" x="858" y="6" width="26" height="108" rx="13"/></g><g class="co"><circle class="dot" cx="88.4" cy="609.9" r="3"/><path class="dm" d="M88.4 609.9 L156 640 H168"/><text x="170" y="637">① NEEDLE</text><text class="s" x="170" y="649">25G · BEVEL TIP</text></g><g class="co"><circle class="dot" cx="153.8" cy="291.0" r="3"/><path class="dm" d="M153.8 291.0 L156 430 H168"/><text x="170" y="427">② BARREL</text><text class="s" x="170" y="439">5.0 mL · GRADUATED</text></g><g class="co"><circle class="dot" cx="128.8" cy="418.7" r="3"/><path class="dm" d="M128.8 418.7 L156 535 H168"/><text x="170" y="532">③ DOSE</text><text class="s" x="170" y="544">B-P-M · PURE → UXI</text></g><g class="co"><circle class="dot" cx="175.4" cy="210.0" r="3"/><path class="dm" d="M175.4 210.0 L156 300 H168"/><text x="170" y="297">④ FLANGE</text><text class="s" x="170" y="309">FINGER GRIP</text></g><g class="co"><circle class="dot" cx="183.0" cy="68.9" r="3"/><path class="dm" d="M183.0 68.9 L156 150 H168"/><text x="170" y="147">⑤ PLUNGER</text><text class="s" x="170" y="159">RUBBER STOPPER</text></g><circle class="th" cx="78.7" cy="688.5" r="22"/><path class="th" d="M48.7 688.5H108.7M78.7 658.5V718.5"/><text class="s" x="106.7" y="714.5">DETAIL A</text></svg></div>
+    <div class="hp-tblock">
+      <div class="tb-hd"><small>DRAWING Nº SY-01 · ARCH CLINIC</small><b>SPEC SHEET</b><svg class="ico"><use href="#i-cross"/></svg></div>
+      <dl class="hero-stat">
+        <div><dt>GUIDE</dt><dd>PURE</dd></div>
+        <div><dt>SENTINEL</dt><dd>UXI</dd></div>
+        <div><dt>SINCE P×U</dt><dd class="sy-dday">D+000</dd></div>
+        <div><dt>TODAY</dt><dd class="sy-aegis">—</dd></div>
+        <div><dt>DRAWN BY</dt><dd data-set="blogger">⤷ PpLE</dd></div>
+        <div><dt>SCALE</dt><dd>1 : 1</dd></div>
+      </dl>
+    </div>
+  </aside>
+
+  <div class="sy-stack">
+
+    <!-- ── 안내사항 : 시스템 알림창 (스킨 설정 '공지 기능' 글을 불러옴) ── -->
+    <section class="win app-alert" id="w-notice" data-win="notice" data-home data-title="Notice" aria-label="안내사항">
+      <header class="wbar"><b class="wname">System Notice</b><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="wbody">
+        <div class="al-wrap">
+          <div class="al-ico" aria-hidden="true">!</div>
+          <div class="al-txt"><b id="noticeSub" data-set="infoTitle">안내사항</b><div class="info-wrap" id="info-win"></div></div>
+        </div>
+      </div>
+      <footer class="al-foot"><button type="button" class="al-ok wx2">확인</button></footer>
+    </section>
+
+    <!-- ── MEDICAL KIT : 정물 스테이지(주사기·캡슐·정제·약병) + 조제실 미니게임 ── -->
+    <section class="win app-kit" id="w-kit" data-win="kit" data-home data-title="Med Kit" aria-label="메디컬 키트">
+      <header class="wbar"><span class="kt-ic"><svg><use href="#i-syringe"/></svg></span><span class="kt-tt"><b class="wname">Med Kit</b><small>ARCH FIRST-AID · MK-01</small></span><span class="kit-led"><i></i>STERILE</span><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="wbody">
+        <div class="kit">
+          <svg class="k-defs" width="0" height="0" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="kGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset=".45" stop-color="#F3F9FD" stop-opacity=".75"/><stop offset="1" stop-color="#D7EAF6" stop-opacity=".9"/></linearGradient>
+              <linearGradient id="kLiq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A6DDF6"/><stop offset=".5" stop-color="#4DB3E6"/><stop offset="1" stop-color="#1E8FD6"/></linearGradient>
+              <linearGradient id="kSteel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#DCE6EE"/><stop offset="1" stop-color="#8FA5B6"/></linearGradient>
+              <linearGradient id="kNavy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A78B6"/><stop offset="1" stop-color="#0B4A7E"/></linearGradient>
+              <linearGradient id="kWhite" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E3EEF5"/></linearGradient>
+              <linearGradient id="kCapB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCFF3"/><stop offset=".55" stop-color="#2FA4DE"/><stop offset="1" stop-color="#1676BD"/></linearGradient>
+              <linearGradient id="kVialG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E6F2F9" stop-opacity=".95"/><stop offset=".3" stop-color="#FFFFFF" stop-opacity=".7"/><stop offset="1" stop-color="#CFE3F0" stop-opacity=".95"/></linearGradient>
+              <linearGradient id="kVialL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7CCBF0"/><stop offset="1" stop-color="#1572B8"/></linearGradient>
+              <linearGradient id="kTabA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E9F1F6"/></linearGradient>
+              <linearGradient id="kTabB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE7AE"/><stop offset="1" stop-color="#F3B94B"/></linearGradient>
+              <linearGradient id="kTabD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9ECFB"/><stop offset="1" stop-color="#5BBDEB"/></linearGradient>
+              <pattern id="kDot" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.05" fill="#fff"/></pattern>
+              <pattern id="kDotB" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r=".95" fill="#2FA4DE"/></pattern>
+              <linearGradient id="kFadeV" x1="0" y1="0" x2="0" y2="1"><stop offset=".15" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>
+              <mask id="kMV" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#kFadeV)"/></mask>
+              <clipPath id="kBarrel"><rect x="130" y="31" width="268" height="48" rx="9"/></clipPath>
+            </defs>
+          </svg>
+
+          <div class="tank" id="tank">
+            <span class="tlab tl">SPECIMEN · MK-01</span>
+            <span class="tlab tr">05 ITEMS</span>
+            <span class="tlab bl" id="tankMsg">✦</span>
+            <span class="plinth" aria-hidden="true"></span>
+            <span class="twk w1" aria-hidden="true">✦</span><span class="twk w2" aria-hidden="true">✦</span><span class="twk w3" aria-hidden="true">✦</span>
+
+            <!-- 1. 주사기 (가로) -->
+            <span class="o-shadow s-syr" aria-hidden="true"></span>
+            <button type="button" class="obj o-syr" id="objSyr" data-label="01 SYRINGE · 5.0 mL" aria-label="주사기">
+              <svg viewBox="0 0 730 110" fill="none">
+                <path d="M4 55 L16 52.6 H96 V57.4 H16 Z" fill="url(#kSteel)"/>
+                <rect x="16" y="52.6" width="80" height="1.2" fill="#fff"/>
+                <path d="M90 44 H118 Q126 44 126 52 V58 Q126 66 118 66 H90 Q86 66 86 62 V48 Q86 44 90 44 Z" fill="url(#kWhite)" stroke="#BCD6E8" stroke-width="1.2"/>
+                <g stroke="#CFE3F0" stroke-width="1.4"><path d="M96 46V64M102 46V64M108 46V64"/></g>
+                <rect x="124" y="25" width="280" height="60" rx="15" fill="url(#kGlass)"/>
+                <g clip-path="url(#kBarrel)">
+                  <rect id="kLiqR" x="130" y="31" width="268" height="48" fill="url(#kLiq)"/>
+                  <rect id="kLiqD" x="130" y="31" width="268" height="48" fill="url(#kDot)" mask="url(#kMV)" opacity=".55"/>
+                </g>
+                <g fill="#6FB2DA"><rect x="152" y="31" width="1.6" height="11" rx=".8"/><rect x="175" y="31" width="1.6" height="7" rx=".8"/><rect x="198" y="31" width="1.6" height="11" rx=".8"/><rect x="221" y="31" width="1.6" height="7" rx=".8"/><rect x="244" y="31" width="1.6" height="11" rx=".8"/><rect x="267" y="31" width="1.6" height="7" rx=".8"/><rect x="290" y="31" width="1.6" height="11" rx=".8"/><rect x="313" y="31" width="1.6" height="7" rx=".8"/><rect x="336" y="31" width="1.6" height="11" rx=".8"/><rect x="359" y="31" width="1.6" height="7" rx=".8"/><rect x="382" y="31" width="1.6" height="11" rx=".8"/></g>
+                <rect x="138" y="70" width="240" height="4" rx="2" fill="#fff" opacity=".55"/>
+                <rect x="136" y="30" width="250" height="3.2" rx="1.6" fill="#fff" opacity=".95"/>
+                <rect x="124" y="25" width="280" height="60" rx="15" stroke="#B5D2E6" stroke-width="1.6"/>
+                <g id="kPl">
+                  <rect x="130" y="33" width="16" height="44" rx="5" fill="url(#kNavy)"/>
+                  <path d="M135 33V77M140 33V77" stroke="#4E97D0" stroke-width="1.4"/>
+                  <rect x="146" y="48" width="296" height="14" rx="4" fill="url(#kWhite)" stroke="#C3DAEA" stroke-width="1.1"/>
+                  <rect x="146" y="53.5" width="296" height="1.2" fill="#D4E6F2"/>
+                  <rect x="440" y="16" width="14" height="78" rx="7" fill="url(#kNavy)"/>
+                  <rect x="442.5" y="22" width="3" height="66" rx="1.5" fill="#fff" opacity=".35"/>
+                </g>
+                <rect x="402" y="8" width="13" height="94" rx="6.5" fill="url(#kWhite)" stroke="#B5D2E6" stroke-width="1.3"/>
+                <rect x="404.5" y="14" width="3" height="80" rx="1.5" fill="#fff"/>
+              </svg>
+            </button>
+
+            <!-- 2. 캡슐 -->
+            <span class="o-shadow s-cap" aria-hidden="true"></span>
+            <span class="obj o-cap" data-label="02 CAPSULE · 500mg">
+              <svg viewBox="0 0 150 56" fill="none">
+                <path d="M28 4H75V52H28A24 24 0 0 1 28 4Z" fill="url(#kCapB)"/>
+                <path d="M28 4H75V52H28A24 24 0 0 1 28 4Z" fill="url(#kDot)" mask="url(#kMV)" opacity=".6"/>
+                <path d="M75 4H122A24 24 0 0 1 122 52H75Z" fill="url(#kWhite)"/>
+                <path d="M75 4H122A24 24 0 0 1 122 52H75Z" stroke="#C9DEEC" stroke-width="1.2"/>
+                <rect x="72" y="3" width="6" height="50" rx="2" fill="#EAF4FA"/>
+                <rect x="72" y="3" width="6" height="50" rx="2" stroke="#C9DEEC" stroke-width="1"/>
+                <rect x="16" y="11" width="50" height="6" rx="3" fill="#fff" opacity=".6"/>
+                <rect x="86" y="11" width="34" height="6" rx="3" fill="#fff"/>
+              </svg>
+            </span>
+
+            <!-- 3·4. 정제 -->
+            <span class="obj o-p1" data-label="03 TABLET · A">
+              <svg viewBox="0 0 60 60" fill="none"><ellipse cx="30" cy="31.5" rx="26" ry="25" fill="#C9DAE6"/><circle cx="30" cy="28.5" r="25" fill="url(#kTabA)"/><circle cx="30" cy="28.5" r="20" stroke="#E2ECF3" stroke-width="1.4"/><path d="M12 28.5H48" stroke="#D3E2EC" stroke-width="2" stroke-linecap="round"/><path d="M15 19a17 17 0 0 1 13-8" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+            </span>
+            <span class="obj o-p2" data-label="04 TABLET · B">
+              <svg viewBox="0 0 60 60" fill="none"><ellipse cx="30" cy="32" rx="25" ry="17" fill="#D99A2B" opacity=".55"/><ellipse cx="30" cy="29" rx="25" ry="17" fill="url(#kTabB)"/><ellipse cx="30" cy="29" rx="20" ry="12.5" stroke="#FFF2CF" stroke-width="1.2" opacity=".8"/><path d="M14 23a19 12 0 0 1 14-6" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85"/></svg>
+            </span>
+
+            <!-- 5. 약병 -->
+            <span class="o-shadow s-vial" aria-hidden="true"></span>
+            <span class="obj o-vial" data-label="05 VIAL · B-P-M">
+              <svg viewBox="0 0 120 150" fill="none">
+                <rect x="34" y="2" width="52" height="20" rx="5" fill="url(#kNavy)"/>
+                <path d="M41 4V20M48 4V20M55 4V20M62 4V20M69 4V20M76 4V20" stroke="#3E8BC8" stroke-width="1.6"/>
+                <rect x="34" y="2" width="52" height="5" rx="2.5" fill="#fff" opacity=".22"/>
+                <rect x="40" y="21" width="40" height="10" rx="2.5" fill="#D9E8F2"/>
+                <path d="M41 31V38C41 44 12 46 12 62V130C12 140 20 146 30 146H90C100 146 108 140 108 130V62C108 46 79 44 79 38V31Z" fill="url(#kVialG)"/>
+                <path d="M12 92H108V130C108 140 100 146 90 146H30C20 146 12 140 12 130Z" fill="url(#kVialL)"/>
+                <path d="M12 92H108V130C108 140 100 146 90 146H30C20 146 12 140 12 130Z" fill="url(#kDot)" mask="url(#kMV)" opacity=".6"/>
+                <path d="M12 92H108" stroke="#BDE6FA" stroke-width="2"/>
+                <rect x="22" y="58" width="76" height="46" rx="8" fill="#fff"/>
+                <rect x="22" y="58" width="76" height="46" rx="8" stroke="#D6E6F0" stroke-width="1"/>
+                <rect x="30" y="66" width="10" height="10" rx="2.5" fill="#2FA4DE"/><rect x="33.4" y="66" width="3.2" height="10" fill="#fff"/><rect x="30" y="69.4" width="10" height="3.2" fill="#fff"/>
+                <text x="45" y="74.5" font-family="Pretendard,sans-serif" font-weight="900" font-size="9.5" letter-spacing="-.3" fill="#0D5A96">B-P-M</text>
+                <rect x="30" y="83" width="58" height="3.4" rx="1.7" fill="#DCEAF3"/>
+                <rect x="30" y="91" width="38" height="3.4" rx="1.7" fill="#DCEAF3"/>
+                <text x="90" y="98" text-anchor="end" font-family="Pretendard,sans-serif" font-weight="800" font-size="6.5" fill="#2FA4DE">5mL</text>
+                <path d="M41 31V38C41 44 12 46 12 62V130C12 140 20 146 30 146H90C100 146 108 140 108 130V62C108 46 79 44 79 38V31" stroke="#B5D2E6" stroke-width="1.6"/>
+                <rect x="16" y="64" width="4" height="72" rx="2" fill="#fff" opacity=".85"/>
+                <rect x="100" y="66" width="2.4" height="60" rx="1.2" fill="#fff" opacity=".5"/>
+              </svg>
+            </span>
+          </div>
+
+          <div class="lcd">
+            <div class="lc-vol"><span>VOLUME</span><p><b id="kitVol">5.00</b><em>mL</em></p><div class="rd-bar"><i id="kitBar"></i></div></div>
+            <div><span>TEMP</span><p><b>36.5</b><em>°C</em></p></div>
+            <div><span>PRESSURE</span><p><b id="kitPrs">101</b><em>kPa</em></p></div>
+          </div>
+
+          <!-- 조제실 미니게임 -->
+          <div class="lab">
+            <div class="lab-h">
+              <span class="lab-t"><b>조제실</b><small>PHARMACY · MIX UP TO 3</small></span>
+              <span class="lab-dex" id="labDex" title="발견한 레시피">도감 <b>0</b>/34</span>
+            </div>
+            <p class="lab-mis">오늘의 미션 <em id="labMission">—</em></p>
+            <div class="lab-row">
+              <div class="lab-pills" id="labPills">
+                <button type="button" draggable="true" data-pill="A" title="진정 정제"><span class="pt"></span><span class="pn"><b>진정</b><small>SEDATIVE</small></span></button>
+                <button type="button" draggable="true" data-pill="B" title="각성 정제"><span class="pt"></span><span class="pn"><b>각성</b><small>STIMULANT</small></span></button>
+                <button type="button" draggable="true" data-pill="C" title="캡슐"><span class="pt"></span><span class="pn"><b>캡슐</b><small>CAPSULE</small></span></button>
+                <button type="button" draggable="true" data-pill="D" title="물약"><span class="pt"></span><span class="pn"><b>물약</b><small>SOLUTION</small></span></button>
+              </div>
+              <div class="lab-vial" id="labVial" aria-label="플라스크 (여기로 끌어다 놓기)">
+                <svg class="lv-flask" viewBox="0 0 120 140" fill="none" aria-hidden="true">
+                  <defs><clipPath id="kFlask"><path d="M48 40V50L20 112C16 122 22 132 33 132H87C98 132 104 122 100 112L72 50V40Z"/></clipPath></defs>
+                  <ellipse cx="60" cy="134" rx="40" ry="4" fill="#0D5A96" opacity=".1"/>
+                  <path d="M48 40V50L20 112C16 122 22 132 33 132H87C98 132 104 122 100 112L72 50V40Z" fill="#F6FBFE"/>
+                  <g clip-path="url(#kFlask)">
+                    <g id="labLiqG" transform="translate(0 132)">
+                      <path class="lv-wave" d="M-120 0 Q-105 -5 -90 0 T-60 0 T-30 0 T0 0 T30 0 T60 0 T90 0 T120 0 T150 0 T180 0 T210 0 T240 0 V140 H-120 Z" id="labLiq" fill="#8FD3F2"/>
+                      <rect x="0" y="0" width="120" height="140" fill="url(#kDot)" mask="url(#kMV)" opacity=".35"/>
+                    </g>
+                    <g class="lv-spark" fill="#fff"><path d="M40 112l1.6 3.4 3.4 1.6-3.4 1.6L40 122l-1.6-3.4-3.4-1.6 3.4-1.6z"/><path d="M76 100l1.2 2.6 2.6 1.2-2.6 1.2L76 107.6l-1.2-2.6-2.6-1.2 2.6-1.2z"/><path d="M60 118l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></g>
+                  </g>
+                  <path d="M48 40V50L20 112C16 122 22 132 33 132H87C98 132 104 122 100 112L72 50V40" stroke="#A9CBE2" stroke-width="2" stroke-linejoin="round"/>
+                  <rect x="44" y="34" width="32" height="7" rx="3.5" fill="#fff" stroke="#A9CBE2" stroke-width="2"/>
+                  <path d="M26 108L50 54" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+                  <g stroke="#A9CBE2" stroke-width="1.4" stroke-linecap="round"><path d="M84 112H92M80 102H86M76 92H84M72 82H78"/></g>
+                </svg>
+                <span class="lv-slots" id="labSlots"><i></i><i></i><i></i></span>
+              </div>
+            </div>
+            <div class="lab-act"><button type="button" class="lab-mix" id="labMix">조제하기</button><button type="button" class="lab-clr" id="labClear">비우기</button></div>
+            <div class="lab-out" id="labOut"><span class="lo-sw"></span><p>알약을 플라스크에 3개까지 넣고 조제해 보세요 ✦</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── D-DAY : 환자 등록증 (사진 = 스킨 설정 'D-DAY 사진 URL' / 뒷면 메모 = 'D-DAY 사진 뒷면 메모') ── -->
+    <section class="win app-dday" id="w-dday" data-win="dday" data-home data-title="D-DAY" aria-label="디데이">
+      <header class="wbar"><span class="dd-brand"><svg><use href="#i-cross"/></svg>ARCH MEDICAL CENTER</span><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="wbody">
+        <div class="dd">
+          <div class="dd-top"><span>PAIR INFORMATION</span><b>No. PU-0424</b></div>
+          <button type="button" class="dd-flip" id="ddFlip" aria-label="사진 뒤집기">
+            <span class="dd-face dd-front">
+              <img id="ddImg" alt="" hidden>
+              <span class="dd-ph"><svg class="ico"><use href="#i-heart"/></svg>PHOTO · 16:9</span>
+              <i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i>
+              <em class="dd-hint">↻ 뒤집기</em>
+            </span>
+            <span class="dd-face dd-back">
+              <small>CLINICAL NOTE</small>
+              <span class="dd-memo" data-set="ddayMemo"></span>
+              <em>— PURE</em>
+            </span>
+          </button>
+          <div class="dd-row">
+            <div><p class="dd-k">ADMITTED</p><p class="dd-v dd-since">—</p></div>
+            <div><p class="dd-k">PAIR</p><p class="dd-v" data-set="ddayTitle">PURE × UXI</p></div>
+            <div><p class="dd-k">STATUS</p><p class="dd-v"><span class="dd-chip">BONDED</span></p></div>
+          </div>
+          <div class="dd-count">
+            <span class="dd-lab">TOGETHER FOR</span>
+            <b><em>D+</em><span class="dd-n">0</span></b>
+          </div>
+          <div class="dd-next">
+            <div class="dd-nl"><span>NEXT · <b class="dd-goal">D+200</b></span><span class="dd-left">—</span></div>
+            <div class="dd-bar"><i class="dd-prog"></i></div>
+            <div class="dd-nl sm"><span class="dd-goal-date">—</span><span class="dd-pct">0%</span></div>
+          </div>
+          <div class="dd-band"><span class="dd-code" aria-hidden="true"></span><span>A-CLASS GUIDE × S-CLASS SENTINEL</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Messenger : 대화방·대사는 head의 SY_CHAT에서 수정 ── -->
+    <section class="win app-chat" id="w-chat" data-win="chat" data-home data-title="Messenger" aria-label="메신저">
+      <style>
+        /* 프로필 이미지 — 여기서 교체 */
+        :root{
+          --img-uxi:url('https://zznaptime.notion.site/image/attachment%3A9af9196e-11f5-4ae1-9775-a04c765bf025%3Aimage.png?table=block&id=3d359038-68be-8063-b860-ea9e55cefe9a&spaceId=04de8492-de44-4801-8c4e-55d9333a50e5&width=610&userId=&cache=v2&imgBuildSrc=requestProxiedImageUrl');
+          --img-pure:url('https://zznaptime.notion.site/image/attachment%3Af45774cc-2655-411f-9d9f-121b63b924ca%3Aimage.png?table=block&id=3d359038-68be-8057-9514-d34e98e0440b&spaceId=04de8492-de44-4801-8c4e-55d9333a50e5&width=640&userId=&cache=v2&imgBuildSrc=requestProxiedImageUrl');
+        }
+      </style>
+      <header class="wbar"><button type="button" class="ch-back" id="chBack" aria-label="대화 목록" hidden><svg class="ico"><use href="#i-back"/></svg></button><span class="ch-av" id="chAv"></span><span class="ch-tt"><b class="wname" id="chName">ARCHtalk</b><small id="chSub">대화 3</small></span><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="wbody" id="chatBody">
+        <ul class="ch-rooms" id="chRooms"></ul>
+        <div class="chat" id="chatLog" hidden></div>
+      </div>
+      <div class="ch-chips" id="chChips" hidden></div>
+      <form class="ch-input" id="chatForm" autocomplete="off" hidden>
+        <button type="button" class="ch-plus" aria-label="스티커">+</button>
+        <input type="text" id="chatIn" placeholder="메시지 입력" maxlength="120" aria-label="메시지 입력">
+        <button type="submit" class="ch-send" aria-label="보내기"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5z"/></svg></button>
+      </form>
+    </section>
+
+    <!-- ── SENTINEL CARE : 추적 + 심박 + 가이딩 필요도 관리 ── -->
+    <section class="win app-radar" id="w-radar" data-win="radar" data-home data-title="Sentinel Care" aria-label="센티넬 관리">
+      <header class="wbar"><span class="tr-logo" aria-hidden="true"><svg class="ico"><use href="#i-radar"/></svg></span><b class="wname">Sentinel Care</b><small class="wsub">ARCH 센티넬 관리 시스템</small>
+        <span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="wbody">
+        <div class="sc">
+          <!-- 위치 추적 -->
+          <section class="sc-card sc-map">
+            <h5><span>TRACKING</span><em><i class="live-dot"></i>LIVE</em></h5>
+            <div class="sc-scope"><canvas id="scMap"></canvas></div>
+            <div class="sc-dist"><div><span>거리</span><b id="scDist">—</b></div><div><span>퓨어 위치</span><b id="scZoneP">—</b></div><div><span>유시 위치</span><b id="scZoneU">—</b></div></div>
+          </section>
+          <!-- 심박 -->
+          <section class="sc-card sc-vitals">
+            <h5><span>VITALS</span><em>HEART RATE</em></h5>
+            <div class="sc-pt" id="scP">
+              <i class="k-pf p-pure"></i>
+              <div class="sc-who"><b>퓨어</b><small>GUIDE · A-CLASS</small></div>
+              <canvas class="sc-ecg"></canvas>
+              <div class="sc-bpm"><b>72</b><small>BPM</small></div>
+            </div>
+            <div class="sc-pt" id="scU">
+              <i class="k-pf p-uxi"></i>
+              <div class="sc-who"><b>유시</b><small>SENTINEL · S-CLASS</small></div>
+              <canvas class="sc-ecg"></canvas>
+              <div class="sc-bpm"><b>80</b><small>BPM</small></div>
+            </div>
+          </section>
+          <!-- 가이딩 필요도 -->
+          <section class="sc-card sc-need">
+            <h5><span>GUIDING NEED</span><em>유시</em></h5>
+            <div class="sc-gauge">
+              <svg viewBox="0 0 120 68" aria-hidden="true"><path class="tr" d="M10 62a50 50 0 0 1 100 0"/><path class="fg" id="scArc" d="M10 62a50 50 0 0 1 100 0" pathLength="100"/></svg>
+              <div class="sc-pct"><b id="scNeed">24</b><small>%</small></div>
+            </div>
+            <p class="sc-state" id="scState">안정</p>
+            <div class="sc-scale"><span>안정</span><span>주의</span><span>가이딩 필요</span></div>
+            <button type="button" class="sc-guide" id="scGuide">퓨어에게 가이딩 요청</button>
+            <p class="sc-last">마지막 가이딩 <b id="scLast">—</b></p>
+          </section>
+        </div>
+        <ol class="tr-log sc-log" id="scLog"></ol>
+      </div>
+      <footer class="tr-foot"><span><i class="live-dot"></i>MONITORING</span><span>WARD 3F · 의무실</span><span id="scClock">00:00:00</span></footer>
+    </section>
+
+    <!-- ── Memo : 메모장 (탭 = 여러 장 / 체크박스는 눌러서 체크) ── -->
+    <section class="win app-memo" id="w-memo" data-win="memo" data-home data-title="Memo" aria-label="메모">
+      <header class="wbar"><span class="mm-ic" aria-hidden="true"><svg class="ico"><use href="#i-memo"/></svg></span><b class="wname">Memo</b><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="m-tabs" id="mTabs"><button type="button" class="on">진료 메모</button><button type="button">할 일</button><button type="button">낙서장</button></div>
+      <div class="wbody">
+        <div class="memo m-page on">
+          <p class="m-date"><span class="sy-aegis">—</span> · 의무실</p>
+          <h3>PURE<i>×</i>UXI</h3>
+          <p class="m-sub">LOVE DISORDER CLINIC ✦</p>
+          <p>검사 도중에 <mark><b>도망</b> 금지!</mark></p>
+          <ul class="m-check">
+            <li data-k="m1" class="done">파장 검사</li>
+            <li data-k="m2" class="done">각인 안정화</li>
+            <li data-k="m3">가이딩 프로토콜 진행</li>
+          </ul>
+        </div>
+        <div class="memo m-page">
+          <p class="m-date">TO DO · PURE</p>
+          <ul class="m-check">
+            <li data-k="t1" class="done">광어회 포장해온 거 신선하게 챙겨 먹이기<br>(클리어! 아주 잘 먹음 예뻐 죽겠음)</li>
+            <li data-k="t2">3팀 브리핑 끝나는 시간(11:30) 맞춰서 마중</li>
+            <li data-k="t3">정기검진 (매일!)</li>
+            <li data-k="t4">연이 잠투정 심해진 거 체크</li>
+            <li data-k="t5">헤이즐넛 시럽 주문</li>
+          </ul>
+          <p class="m-date">TO DO · UXI</p>
+          <ul class="m-check">
+            <li data-k="t6" class="done">미팅 자료 - 화요일까지</li>
+            <li data-k="t2">온열 안대 주문</li>
+            <li data-k="t3" class="done">새벽 4시 전에 자기 ← 그냥 포기</li>
+            <li data-k="t4">뱅3팀 회식 장소 예약</li>
+            <li data-k="t5">집무실 서류 더미 정리</li>
+          </ul>
+        </div>
+        <div class="memo m-page">
+          <p class="m-date">SECRET · 비밀 노트</p>
+          <p>고민 중 🐱</p>
+          <ul class="m-check">
+            <li data-k="s1">의무실에 연이 전용 침대 하나 빼둘까?<br>닥터가 알면 미쳤냐고 하겠지만 내 권한으로...</li>
+          </ul>
+        </div>
+      </div>
+      <footer class="m-foot"><button type="button" id="mPrev" aria-label="이전 장">‹</button><span id="mPage">1 / 3</span><button type="button" id="mNext" aria-label="다음 장">›</button></footer>
+    </section>
+
+
+    <!-- ── PAIR PROFILE : 단말기 (PURE 밝은색 / UXI 어두운색) · 문서는 profiles 폴더 html (assets/js/profile.js 에서 목록 수정) ── -->
+    <section class="win app-prof" id="w-profile" data-win="profile" data-home data-title="Profile" aria-label="페어 프로필">
+      <header class="wbar"><span class="pf-led" aria-hidden="true"><i></i><i></i><i></i></span><b class="wname">AGENT PROFILE</b><small class="wsub">ARCH TERMINAL · <span id="pfCode">—</span></small><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="wbody">
+        <div class="pf-dev" id="pfDev" data-theme="light">
+          <div class="pf-who" id="pfWho"></div>
+          <div class="pf-screen">
+            <div class="pf-tabbar"><div class="pf-tabs" id="pfTabs"></div><a class="pf-ext" id="pfExt" href="#" target="_blank" rel="noopener" title="새 탭에서 열기" hidden>↗</a></div>
+            <div class="pf-view"><iframe id="pfFrame" title="프로필 문서" loading="lazy"></iframe><span class="pf-boot" id="pfBoot" aria-hidden="true"><i></i></span></div>
+          </div>
+          <div class="pf-foot"><span id="pfDoc">FILE 01 / 01</span><span class="pf-sig" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>ARCH MEDICAL CENTER</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ARCH of LEGENDS : 게임 클라이언트 + 미니게임 (assets/js/aol.js) ── -->
+    <section class="win app-aol" id="w-aol" data-win="aol" data-home data-title="ARCH of Legends" aria-label="ARCH of Legends">
+      <header class="wbar"><span class="aol-mark" aria-hidden="true"><b>A</b></span><b class="wname">ARCH of LEGENDS</b><small class="wsub">CLIENT</small><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+      <div class="wbody"><div class="aol" id="aol"></div></div>
+    </section>
+
+  </div><!-- /.sy-stack -->
+
+  <div class="sy-foot"><span>© <span data-set="blogger">HYUN</span></span><span>Syringe.</span></div>
+ </main>
+</div><!-- /#sy-home -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     내부 페이지 (카테고리 목록 / 글 / 공지 / 보호글)
+     ══════════════════════════════════════════════════════ -->
+<div class="sy-page">
+
+  <section class="mhero">
+    <p class="crumb"><i class="live-dot"></i><a href="?">ARCH CLINIC</a><i>/</i><span id="crumb1">RECORDS</span><i id="crumbSep" hidden>/</i><span id="crumb2"></span></p>
+    <a href="?" class="big" aria-label="SYRINGE">SYR<span class="cap" aria-hidden="true"></span>NGE</a>
+  </section>
+
+  <section class="doc" id="syDoc">
+    <header class="wbar"><span class="wno" id="docNo">RX</span><b class="wname" id="docName">Records</b><small class="wsub" id="docSub"></small>
+      <span class="wbtns"><a href="#" onclick="dsGoBack(); return false;" aria-label="돌아가기" title="돌아가기"><svg><use href="#i-x"/></svg></a></span></header>
+    <div class="wbody">
+
+      <div id="info-inline"></div>
+
+      <!-- ══ 본문 영역 : 글 목록 / 공지 / 글 보기는 assets/js/site.js 가 posts/posts.json 으로 채워요 ══ -->
+      <div class="card-container" id="card-container"></div>
+      <div class="card-container" id="notice-card-container"></div>
+      <div id="post-slot"></div>
+
+    </div>
+  </section>
+</div><!-- /.sy-page -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     어느 페이지에서나 열리는 창 (카테고리 / 링크 / 플레이어)
+     ══════════════════════════════════════════════════════ -->
+<div class="sy-float">
+
+  <!-- ── Records : 카테고리 탐색기 ── -->
+  <section class="win app-cat" id="w-cat" data-win="cat" data-title="Records" aria-label="카테고리">
+    <header class="wbar"><svg class="ico ex-ico"><use href="#i-folder"/></svg><b class="wname">Records</b><small class="wsub">카테고리</small><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+    <div class="ex-tool"><span class="ex-nav"><i>‹</i><i>›</i></span><span class="ex-path"><svg class="ico"><use href="#i-cross"/></svg>ARCH <i>›</i> Records</span></div>
+    <div class="wbody">
+      <div class="ex-head"><span>이름</span><span>종류</span></div>
+      <ul class="cats" id="catList"><!-- settings.json 의 categories 로 자동 생성 --></ul>
+    </div>
+    <footer class="ex-foot"><span id="catCount">—</span><span>ARCH CLINIC</span></footer>
+  </section>
+
+
+  <!-- ── Records 목록 : 폴더를 누르면 이 창에 글 카드가 떠요 ── -->
+  <section class="win app-list" id="w-list" data-win="list" data-title="Records" aria-label="기록 목록">
+    <header class="wbar"><svg class="ico ex-ico"><use href="#i-folder"/></svg><b class="wname" id="lsName">Records</b><small class="wsub" id="lsSub">전체 기록</small><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+    <div class="ex-tool"><span class="ex-nav"><i data-open="cat" title="폴더 목록">‹</i><i>›</i></span><span class="ex-path"><svg class="ico"><use href="#i-cross"/></svg>ARCH <i>›</i> Records <i>›</i> <b id="lsPath">전체</b></span>
+      <span class="ls-view"><button type="button" onclick="setLayout('grid')" title="그리드" aria-label="그리드"><svg class="ico"><use href="#i-tile"/></svg></button><button type="button" onclick="setLayout('list')" title="리스트" aria-label="리스트"><svg class="ico"><use href="#i-list"/></svg></button></span></div>
+    <div class="wbody"><div class="ls-body" id="lsBody"></div></div>
+    <footer class="ex-foot"><span id="lsCount">—</span><span>ARCH CLINIC</span></footer>
+  </section>
+
+  <!-- ── Neighbors : 링크(배너) 브라우저 ── -->
+  <section class="win app-link" id="w-link" data-win="link" data-title="Neighbors" aria-label="링크">
+    <header class="wbar"><span class="wbtns lights"><button type="button" class="wx" aria-label="닫기"></button><button type="button" class="wmin" aria-label="최소화"></button><i></i></span>
+      <span class="br-tab"><svg class="ico"><use href="#i-heart"/></svg><b class="wname">Neighbors</b></span></header>
+    <div class="br-url"><span><svg class="ico"><use href="#i-lock"/></svg>arch://neighbors<b>/link</b></span></div>
+    <div class="wbody">
+      <div class="links">
+
+        <a href="https://major-code.tistory.com/28" target="_blank" class="bn mine">
+          <div class="bn-frame"><img src="https://cdn.jsdelivr.net/gh/zZnaptime/datasave@main//Syringe-A.gif" alt="Syringe"></div>
+          <div class="bn-info"><div class="bn-title">Syringe</div><div class="bn-desc">클릭하면 배너교환 페이지로 이동</div></div>
+        </a>
+
+        <hr class="divider">
+
+        <a href="https://liam.tistory.com/" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://blog.kakaocdn.net/dna/ccMocT/dJMcadclxzF/AAAAAAAAAAAAAAAAAAAAAJb5zES_bLbBIIKMGaWyqCQ7D_7wuKX4JOahzXvZbTV1/img.gif?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1793458799&allow_ip=&allow_referer=&signature=lhcIsKnf%2F%2BTcs7xQ0OF9LzYQsaU%3D" alt="codename-liam" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">codenameliam</div><div class="bn-desc">지구인 인증</div></div>
+        </a>
+
+        <a href="https://shapexxlove.tistory.com/" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://blog.kakaocdn.net/dna/ESJA2/dJMb99OylIk/AAAAAAAAAAAAAAAAAAAAAJ8SQJFo3i3NZUro2GKitg3boaKi_LyRybUj8fdz5hTn/yohan-bn.gif?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1793458799&allow_ip=&allow_referer=&signature=0ISPmbwvx3%2Btyu5hUfLtidE4b7g%3D&attach=1&knm=img.gif" alt="shape of love" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">shape of love</div><div class="bn-desc">온 세상의 사랑을 다 끌어모아서<br>너에게 줄게.</div></div>
+        </a>
+
+        <a href="https://overheat-sign.tistory.com/" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FuTZit%2FdJMcadh55Nn%2FAAAAAAAAAAAAAAAAAAAAAEL5fxznkoKOH4q4rnIpBMcAZelHQebhy4c6OkhqvbcV%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1782831599%26allow_ip%3D%26allow_referer%3D%26signature%3DccK7kQbdpbA7lo8uUGpR3szk9SI%253D" alt="Ashen Gale" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">Ashen Gale</div><div class="bn-desc">An unexpected wind has occurred.</div></div>
+        </a>
+
+        <a href="https://syndrome.love/" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2Ft7rt8%2FdJMcabK1MZ1%2FAAAAAAAAAAAAAAAAAAAAAHuR--bSZj-aUCuw0EmH4M_lat_hDe_tv5ZWUHEtwort%2Fimg.jpg%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1780239599%26allow_ip%3D%26allow_referer%3D%26signature%3DC5BU9bblqEth7tmYLHfIDLJzAOs%253D" alt="syndromic archive" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">syndromic archive</div><div class="bn-desc">THREAT LEVEL: CATASTROPHIC</div></div>
+        </a>
+
+        <a href="https://meunz94.github.io/exe" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://vance.zip/images/notion/neighbors/by_banner2.webp" alt="Limbic System" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">Limbic System</div><div class="bn-desc">되어줄게 네 인생의 유일한 변수</div></div>
+        </a>
+
+        <a href="https://codenamenoah.tistory.com/" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://blog.kakaocdn.net/dna/rhiyS/dJMcabMEdFB/AAAAAAAAAAAAAAAAAAAAABsTFatxo4LXopGzHqHbATWnLAH6H5nD_2kA5_St0vF7/img.gif?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1793458799&allow_ip=&allow_referer=&signature=ZdbEb28OG3sQHMV4zAl6zIA37YI%3D" alt="N's arch" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">ETERNAL ANCHORAGE</div><div class="bn-desc">떠돌던 배는 마침내 닻을 내렸고,<br>바다는 비로소 잔잔해졌다.</div></div>
+        </a>
+
+        <a href="https://my-eden.tistory.com/" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FkZQNE%2FdJMcajvGkbt%2FAAAAAAAAAAAAAAAAAAAAAPuLIgAVQJWifu4PRUv2Pc32Z72A3lxU5LOFzUtWrgEq%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1782831599%26allow_ip%3D%26allow_referer%3D%26signature%3DbL6sIs6NVSaqN38uJOOpbRgyygE%253D" alt="Utopia" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">Utopia</div><div class="bn-desc">가이드는 이미 배정됐어. 너랑 나.</div></div>
+        </a>
+
+        <a href="https://xn--ej5b23ebun.love" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FF0fzj%2FdJMcajjweD9%2FAAAAAAAAAAAAAAAAAAAAAI6WuvzeTEzyI4YT2GL6A0R4sjJ5u1tJ03JIvPweXAO1%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1790780399%26allow_ip%3D%26allow_referer%3D%26signature%3DqEBWrcDxraDrIvk42kr3yCcLyg0%253D" alt="♡" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">♡</div><div class="bn-desc">바보라서, 너 같은 애를 좋아하나 봐.</div></div>
+        </a>
+
+        <a href="https://bluecomplex.tistory.com/" target="_blank" class="bn">
+          <div class="bn-frame"><img src="https://blog.kakaocdn.net/dna/b9WFod/dJMb992frQN/AAAAAAAAAAAAAAAAAAAAALUTV9VEukzt5qVmDXAFr7-dtOCp7SlTISaDJk6a2IgK/img.gif?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1793458799&allow_ip=&allow_referer=&signature=HBzmjhgG%2F7idsb0sph17Lr7v%2FME%3D" alt="into the deep blue" loading="lazy"></div>
+          <div class="bn-info"><div class="bn-title">into the deep blue</div><div class="bn-desc">대형견 임시 보호소</div></div>
+        </a>
+
+        <!-- 배너 없는 블로그 추가 양식
+        <a href="지인블로그주소" target="_blank" class="bn">
+          <div class="bn-frame"><span>새로운 지인 블로그 추가 중...</span></div>
+          <div class="bn-info"><div class="bn-title">대기 중</div><div class="bn-desc">배너 교환하실 분ㅋㅋ</div></div>
+        </a>
+        -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Player (곡 목록 · 색 · 가사는 head의 SY_TRACKS에서 수정) ── -->
+  <section class="win app-player" id="w-player" data-win="player" data-title="Player" aria-label="플레이어">
+    <div class="pl-bg"><img id="plBg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""></div>
+    <header class="wbar"><b class="wname">♪ MUSIC PLAYER</b><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+    <div class="wbody">
+      <div class="player">
+        <div class="pl-art" id="plCd">
+          <div class="pa-img"><img id="plCover" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""><span class="pa-ph" aria-hidden="true"><svg class="ico"><use href="#i-music"/></svg></span></div>
+          <svg class="pa-ring" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path class="pa-track" d="M50 1.5H90.5A8 8 0 0 1 98.5 9.5V90.5A8 8 0 0 1 90.5 98.5H9.5A8 8 0 0 1 1.5 90.5V9.5A8 8 0 0 1 9.5 1.5Z"/>
+            <path class="pa-prog" id="plRing" pathLength="100" d="M50 1.5H90.5A8 8 0 0 1 98.5 9.5V90.5A8 8 0 0 1 90.5 98.5H9.5A8 8 0 0 1 1.5 90.5V9.5A8 8 0 0 1 9.5 1.5Z"/>
+          </svg>
+          <i class="pa-dot" id="plDot" aria-hidden="true"></i>
+        </div>
+        <div class="pl-top">
+          <div class="pl-meta"><small>NOW PLAYING</small><b id="plTitle">곡을 불러오는 중…</b><span id="plArtist">—</span></div>
+        </div>
+        <canvas class="pl-viz" id="plViz" aria-hidden="true"></canvas>
+        <div class="pl-lyr" id="plLyr"><p class="l0"></p><p class="l1">♪</p><p class="l2"></p></div>
+        <div class="pl-prog"><span id="plCur">0:00</span><input type="range" class="sy-range" id="plSeek" min="0" max="100" step="0.1" value="0" aria-label="재생 위치"><span id="plDur">0:00</span></div>
+        <div class="pl-ctrl">
+          <button type="button" id="plShuf" class="pl-mode" aria-label="셔플"><svg viewBox="0 0 24 24"><path d="M3 7h3.5c2 0 3.2 1 4.3 2.7l2.4 4.6C14.3 16 15.5 17 17.5 17H21M3 17h3.5c2 0 3.2-1 4.3-2.7M14.2 9.7C15.3 8 16.5 7 18.5 7H21M18 4l3 3-3 3M18 14l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button type="button" id="plPrev" aria-label="이전 곡"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+          <button type="button" class="pl-main" id="plPlay" aria-label="재생/일시정지"><svg viewBox="0 0 24 24"><path class="i-play" d="M8 5v14l11-7z"/><path class="i-pause" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg></button>
+          <button type="button" id="plNext" aria-label="다음 곡"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5l11 7-11 7z"/></svg></button>
+          <button type="button" id="plRep" class="pl-mode" aria-label="반복"><svg viewBox="0 0 24 24"><path d="M17 3l3 3-3 3M4 11V9a3 3 0 0 1 3-3h13M7 21l-3-3 3-3M20 13v2a3 3 0 0 1-3 3H4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><i class="one">1</i></button>
+        </div>
+        <ol class="pl-list" id="plList"></ol>
+        <div class="pl-vol"><svg class="ico"><use href="#i-vol"/></svg><input type="range" class="sy-range" id="plVol" min="0" max="100" value="50" aria-label="볼륨"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Internet : 퓨어의 OTT / 유시의 게임 전적 (내용은 head의 SY_WEB에서 수정) ── -->
+  <section class="win app-web" id="w-web" data-win="web" data-title="Internet" aria-label="인터넷">
+    <header class="wbar"><span class="wbtns lights"><button type="button" class="wx" aria-label="닫기"></button><button type="button" class="wmin" aria-label="최소화"></button><i></i></span><span class="wb-tabs" id="wbTabs"><button type="button" class="wb-tab on" data-t="ott"><i class="fv fv-ott">P</i><span>Pureflix</span></button><button type="button" class="wb-tab" data-t="game"><i class="fv fv-gg">G</i><span>ARCH.GG</span></button></span></header>
+    <div class="br-url"><span class="br-nav"><i>‹</i><i>›</i><i id="wbReload">↻</i></span><span class="br-addr"><svg class="ico"><use href="#i-lock"/></svg><b id="wbUrl">Pureflix.tv</b><em id="wbPath">/browse/pure</em></span></div>
+    <div class="wbody">
+      <div class="wb-page ott on" id="wbOtt"></div>
+      <div class="wb-page gg" id="wbGame"></div>
+    </div>
+  </section>
+
+  <!-- ── Link Hub : 내 사이트 모음 (head의 SY_HUB에서 수정) ── -->
+  <section class="win app-hub" id="w-hub" data-win="hub" data-title="Link Hub" aria-label="링크 허브">
+    <header class="wbar"><span class="hb-av"><svg><use href="#i-cross"/></svg></span><span class="hb-tt"><b class="wname">Link Hub</b><small>⤷ 바로가기 모음</small></span><span class="wbtns"><button type="button" class="wmin" aria-label="최소화"><svg><use href="#i-min"/></svg></button><button type="button" class="wx" aria-label="닫기"><svg><use href="#i-x"/></svg></button></span></header>
+    <div class="wbody"><div class="hub" id="hubList"></div></div>
+    <footer class="hb-foot"><span>✚ ARCH PERSONAL DIRECTORY</span><span id="hubCount">0 LINKS</span></footer>
+  </section>
+
+</div><!-- /.sy-float -->
+
+<!-- ══════════════ 하단 태스크바 ══════════════ -->
+<footer class="sy-task" id="syTask">
+  <button type="button" class="tk-start" id="tkStart" aria-label="시작 메뉴" aria-expanded="false"><svg><use href="#i-cross"/></svg><span>ARCH</span></button>
+  <div class="tk-tabs" id="tkTabs"></div>
+  <div class="tk-np" id="tkNp">
+    <button type="button" class="np-go" data-open="player" aria-label="플레이어 열기">
+      <span class="np-av"><img id="npAv" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""></span>
+      <span class="np-txt"><small>BGM</small><b id="npTitle">—</b></span>
+      <span class="np-eq"><i></i><i></i><i></i></span>
+    </button>
+    <button type="button" class="np-btn" id="npPlay" aria-label="재생/일시정지"><svg viewBox="0 0 24 24"><path class="i-play" d="M8 5v14l11-7z"/><path class="i-pause" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg></button>
+  </div>
+  <div class="tk-tray">
+    <button type="button" class="sq tk-util" data-open="cat" aria-label="카테고리"><svg class="ico"><use href="#i-folder"/></svg></button>
+    <button type="button" class="sq" data-open="link" aria-label="링크"><svg class="ico"><use href="#i-link"/></svg></button>
+    <button type="button" class="sq tk-util" data-open="player" aria-label="플레이어"><svg class="ico"><use href="#i-music"/></svg></button>
+    <button type="button" class="sq" id="tkTop" aria-label="맨 위로"><svg class="ico"><use href="#i-up"/></svg></button>
+    <span class="tk-copy">© <span data-set="blogger">HYUN</span><br><b>Syringe.</b></span>
+  </div>
+</footer>
+
+<audio id="sy-audio" preload="none"></audio>
+
+
+<script src="assets/js/site.js"></script>
+<script src="assets/js/apps.js"></script>
+<script src="assets/js/profile.js"></script>
+<script src="assets/js/aol.js"></script>
+<script src="assets/js/song.js"></script>
+<!-- 클릭 반짝 + 효과음 : 끄고 싶으면 아래 한 줄을 지우면 돼요 -->
+<script src="assets/js/fx.js"></script>
+</body>
+</html>

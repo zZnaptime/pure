@@ -1,0 +1,229 @@
+<style>
+  /* 쭈아악 늘어났다 띠용 돌아오는 고무줄 효과 (A-CLASS ENTITY) */
+  @keyframes rubberBand {
+    from {
+      transform: scale3d(1, 1, 1);
+    }
+    30% {
+      transform: scale3d(1.25, 0.75, 1);
+    }
+    40% {
+      transform: scale3d(0.75, 1.25, 1);
+    }
+    50% {
+      transform: scale3d(1.15, 0.85, 1);
+    }
+    65% {
+      transform: scale3d(0.95, 1.05, 1);
+    }
+    75% {
+      transform: scale3d(1.05, 0.95, 1);
+    }
+    to {
+      transform: scale3d(1, 1, 1);
+    }
+  }
+
+  /* 좌우로 기우뚱 흔들리는 효과 (HANDLING PROTOCOL 경고 아이콘) */
+  @keyframes wobble {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    15% {
+      transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+    }
+    30% {
+      transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+    }
+    45% {
+      transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+    }
+    60% {
+      transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+    }
+    75% {
+      transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* 함께 쓰인 펄스 & 확대 효과 (필요 시 함께 적용) */
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  /* 줌인 효과 */
+  @keyframes zoomIn {
+    from {
+      opacity: 0;
+      transform: scale3d(0.9, 0.9, 0.9);
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* 페이드인 효과 */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
+<div class="relative mt-6 px-1 max-h-auto overflow-visible">
+  <div class="markdown-body transform-[scale(1)] text-sm">
+
+    <!-- [1] 캐릭터 메인 카드 (배너 & 프로필/능력치) -->
+    <div style="background: #080808; max-width: 100%; margin: auto; font-family: 'Inter', 'Noto Sans KR', sans-serif; border-radius: 12px; overflow: hidden; border: 1px solid rgba(141, 210, 221, 0.15); box-shadow: 0 0 80px rgba(0, 0, 0, 0.6);">
+      
+      <!-- 상단 히어로 배너 이미지 -->
+      <div style="height: 600px; width: 100%; background: url('https://zznaptime.notion.site/image/attachment%3A73f71a4a-e6a3-4548-8e3b-81394201eaa3%3A%EC%9C%A0%EC%8B%9C-%ED%94%84%EB%A1%9C%ED%95%84.png?table=block&id=3d359038-68be-80a5-a019-c93c0eeb3716&spaceId=04de8492-de44-4801-8c4e-55d9333a50e5&width=1410&userId=&cache=v2&imgBuildSrc=requestProxiedImageUrl') no-repeat center 20% / cover; position: relative; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; padding: 40px; box-sizing: border-box; text-shadow: 0 5px 20px rgba(0,0,0,0.9);">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(8,8,8,1) 5%, rgba(8,8,8,0.85) 15%, rgba(8,8,8,0) 60%); z-index: 1;"></div>
+          
+        <!-- 썸네일 낚아채기용 투명 1px 메인 이미지 -->
+        <img src="https://zznaptime.notion.site/image/attachment%3A73f71a4a-e6a3-4548-8e3b-81394201eaa3%3A%EC%9C%A0%EC%8B%9C-%ED%94%84%EB%A1%9C%ED%95%84.png?table=block&id=3d359038-68be-80a5-a019-c93c0eeb3716&spaceId=04de8492-de44-4801-8c4e-55d9333a50e5&width=1410&userId=&cache=v2&imgBuildSrc=requestProxiedImageUrl" alt="thumb" style="width:1px; height:1px; opacity:0; position:absolute; top:0; left:0; pointer-events:none; margin:0; padding:0; border:0;">
+          
+          
+        <div style="position: absolute; top: 25px; right: 25px; z-index: 3;">
+          <span style="display: block; background: #8dd2dd; color: #ffffff; padding: 8px 15px; font-size: 13px; font-weight: 800; border-radius: 5px; text-transform: uppercase; letter-spacing: 1.5px; animation: rubberBand 2.5s infinite 1s;">S-CLASS ENTITY</span>
+        </div>
+        <div style="position: relative; z-index: 2; animation: zoomIn 1.8s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s;">
+          <p style="margin: 0; color: #8dd2dd; font-size: 16px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;">[ THREAT LEVEL: CONTROL ]</p>
+          <p style="margin: 2px 0 0 0; color: #ffffff; font-size: 80px; font-weight: 900; line-height: 1; letter-spacing: -4px;">UXI</p>
+          <p style="margin: 15px 0 0 0; max-width: 600px; color: #d0d0d0; font-size: 16px; line-height: 1.7; font-weight: 400; word-break: keep-all;">가장 날카로운 섬광은, 가장 깊은 암전을 갈망한다. 코드네임 '유시'. 단정함의 경계 너머 곤두선 그녀의 푸른 전류는, 완벽한 침묵 속에서만 비로소 숨을 고른다.</p>
+        </div>
+      </div>
+
+      <!-- 하단 요원 프로필 & 어빌리티 설명 -->
+      <div style="background: #121212; padding: 40px; border-top: 2px solid #8dd2dd;">
+        <div style="display: block; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 30px;">
+          
+          <div style="flex: 3 1 450px; min-width: 300px; background: #1a1a1a; padding: 30px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: space-between; gap: 20px; animation: fadeIn 1.5s ease-out 0.5s; margin-bottom: 30px;">
+            <div>
+              <p style="margin: 0 0 20px 0; font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: 1px; padding-bottom: 12px; border-bottom: 3px solid #8dd2dd;">AGENT PROFILE</p>
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 10px 15px; border-radius: 4px;">
+                  <p style="margin: 0; font-size: 13px; font-weight: 600; color: #aaaaaa; text-transform: uppercase;">Codename</p>
+                  <p style="margin: 0; font-size: 15px; font-weight: 500; color: #ffffff;">유시 (Uxi)</p>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 10px 15px; border-radius: 4px;">
+                  <p style="margin: 0; font-size: 13px; font-weight: 600; color: #aaaaaa; text-transform: uppercase;">Classification</p>
+                  <p style="margin: 0; font-size: 15px; font-weight: 500; color: #ffffff; text-align: right;">S-Class Elemental Sentinel</p>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 10px 15px; border-radius: 4px;">
+                  <p style="margin: 0; font-size: 13px; font-weight: 600; color: #aaaaaa; text-transform: uppercase;">Attribute</p>
+                  <p style="margin: 0; font-size: 15px; font-weight: 700; color: #8dd2dd; animation: pulse 2s infinite;"> [ 전기 (Fulmen) ]</p>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 10px 15px; border-radius: 4px;">
+                  <p style="margin: 0; font-size: 13px; font-weight: 600; color: #aaaaaa; text-transform: uppercase;">Age/Nationality</p>
+                  <p style="margin: 0; font-size: 15px; font-weight: 500; color: #ffffff; text-align: right;">24세 / 한국</p>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 15px;">
+              <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 600; color: #aaaaaa; text-transform: uppercase;">Psychological Evaluation</p>
+              <div style="background: rgba(141, 210, 221, 0.08); border-left: 5px solid #8dd2dd; padding: 18px; border-radius: 0 4px 4px 0;">
+                <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #e0e0e0; font-style: italic;">"타인의 무능과 태만을 견디지 못하는 강박적 완벽주의자로, 통제권이 흔들리는 순간 뇌전의 불안정성이 급격히 증가함. 격리된 개인 공간에서의 감정 분출 및 절대적인 정지(Off) 상태를 비롯한 상시 정신적 압력 배출 장치의 보장이 필수적인 것으로 판단."</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 2 1 300px; min-width: 280px; display: flex; flex-direction: column; gap: 25px; animation: fadeIn 1.5s ease-out 0.8s;">
+            <div style="background: #1a1a1a; padding: 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; height: 100%;">
+              <p style="margin: 0 0 18px 0; font-size: 18px; font-weight: 700; color: #8dd2dd; border-bottom: 2px solid #444; padding-bottom: 10px; letter-spacing: 1px;">ABILITY OVERVIEW</p>
+              <div style="display: flex; flex-direction: column; gap: 15px; flex-grow: 1;">
+                <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 4px; border-left: 3px solid #8dd2dd;">
+                  <p style="margin: 0 0 5px 0; font-size: 15px; font-weight: 700; color: #AFEEEE;">단절의 궤적 <span style="font-size: 13px; color: #aaa; font-weight: 500;">(Cutoff Trajectory)</span></p>
+                  <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #d0d0d0;">대기 중의 전하를 압축해 은백색의 고전압 뇌전을 구현하고 다루는 능력. 공간의 전위차를 왜곡해 전장 전체를 거대한 전자기적 그리드로 구현하며, 철저한 상황 분석을 바탕으로 정해진 루트를 강제하는 뇌전을 펼친다.</p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <p style="margin: 0; font-size: 12px; font-weight: 600; color: #aaaaaa; text-transform: uppercase; letter-spacing: 1px;">Major Skills</p>
+                  <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #d0d0d0;"><span style="color: #AFEEEE; font-weight: bold;">• 순간 전도 (Flashover Step):</span> 체내 전류를 신경계와 대기에 동조시켜 순간적인 전자기적 가속을 얻는다. 육안으로는 은백색 잔상만이 보이는 초고속 기동술.</p>
+                  <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #d0d0d0;"><span style="color: #AFEEEE; font-weight: bold;">• 창공의 쐐기 (Arc Piercer):</span> 압축된 고밀도의 은백색 전류를 날카로운 송곳 형태로 구현해 적의 급소에 내리꽂는다.</p>
+                  <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #d0d0d0;"><span style="color: #AFEEEE; font-weight: bold;">• 표적화 (Pin Point):</span> 대기 중의 전하를 통해 표적의 신경계 좌표를 정확히 특정해낸 후, 적중하는 첫 번째 공격을 치명타(True Damage) 형태로 강제 허용한다.</p>
+                </div>
+                <div style="background: rgba(141, 210, 221, 0.1); padding: 12px; border-radius: 4px; border-left: 3px solid #8dd2dd; margin-top: 10px;">
+                  <p style="margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #AFEEEE;">폭주 징조 (RAMPAGE PROTOCOL)</p>
+                  <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #d0d0d0;">체내 전위차가 급격히 불안정해지면 모든 에너지를 쏟아내는 '전면 방전(Over-Discharge)' 상태에 돌입한다. 폭주가 지속될수록 극심한 체온 저하와 편두통을 동반한 신경계 셧다운이 가속화되므로, 즉각적인 가이딩을 통해 과열된 체내 회로를 강제로 정지(Off)시켜야만 한다.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid rgba(255, 72, 0, 0.1);">
+          <p style="&lt;/div"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- [2] 특별 관리 프로토콜 (여백 margin: auto 원본 유지) -->
+    <div style="background: linear-gradient(145deg, #001a1a, #000000 70%); max-width: 100%; margin: auto; padding: 25px; font-family: 'Noto Sans KR', sans-serif; border: 1px solid rgba(141, 210, 221, 0.2); border-radius: 10px; box-shadow: 0 0 50px rgba(141, 210, 221, 0.2), inset 0 0 20px rgba(0,0,0,0.5); color: #e0e0e0;">
+      <div style="border-bottom: 2px solid rgba(141, 210, 221, 0.5); padding-bottom: 20px; margin-bottom: 25px; text-align: center; animation: fadeIn 1s ease-out;">
+        <p style="margin: 0; font-size: 14px; font-weight: 700; color: #8dd2dd; letter-spacing: 5px; text-transform: uppercase; animation: pulse 2.5s infinite;">[ EMERGENCY DIRECTIVE ]</p>
+        <p style="margin: 5px 0 0 0; font-size: 20px; font-weight: 900; color: #ffffff; text-shadow: 0 0 10px rgba(141, 210, 221, 0.7);">S급 센티넬 '유시' 특별 관리 프로토콜</p>
+        <p style="margin: 8px 0 0 0; font-size: 15px; color: #a0a0a0;">기관 최고 기밀 | 담당자 외 열람 절대 금지</p>
+      </div>
+      <div style="display: block; flex-wrap: wrap; gap: 25px; align-items: flex-start;">
+        <div style="flex: 1 1 300px; min-width: 280px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); animation: zoomIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.2s; margin-bottom: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 18px; font-weight: 700; color: #8dd2dd; border-bottom: 1px solid rgba(141, 210, 221, 0.3); padding-bottom: 10px;">SITUATION REPORT</p>
+            
+          <p style="margin: 0; font-size: 14.5px; line-height: 1.8; color: #c0c0c0;">
+            불과 얼마 전까지만 해도 그녀의 전장은 <b style="color: #ffffff;">모니터 앞</b>이었습니다. 연구실에서 밤을 새우며 기획을 디벨롭하고, 끝없는 데드라인에 쫓기던 평범한 연구원. 늘 수면 결핍을 달고 살던 그녀의 일상은 <b style="color: #8dd2dd;">‘속성 발현 잠재군’</b>으로 분류되어 ARCH에 강제 격리 조치당하며 한순간에 산산조각 났습니다.
+          </p>
+            
+          <p style="margin: 20px 0 0 0; font-size: 14.5px; line-height: 1.8; color: #c0c0c0;">
+              잠재되어 있던 전위차는 가장 최악의 타이밍에 터져 나왔습니다. 기관 내에서 능력 하나 쓰지 못하는 '미발현자'라는 꼬리표와, <b style="color: #8dd2dd;">스스로가 가장 혐오하던 무능한 존재</b>로 묶여 있다는 치욕감에 짓눌리던 한계의 순간, 대기를 찢는 은백색 뇌전이 폭발하며 강제 각성했습니다.
+          </p>
+                        
+          <p style="margin: 20px 0 0 0; font-size: 14.5px; line-height: 1.8; color: #c0c0c0;">
+              미발현자 출신으로 최단기간에 <b style="color: #ffffff;">뱅가드 3팀장</b>이라는 직함을 목에 걸었으나, 완벽주의 성향 탓에 누적된 피로로 그녀의 신경질적인 스파크는 매일 임계치를 넘나들고 있습니다.
+          </p>
+                        
+          <p style="margin: 20px 0 0 0; font-size: 14.5px; line-height: 1.8; color: #c0c0c0;">
+              게임의 룰을 설계하던 기획자에서 전장의 궤적을 강제하는 센티넬 <b style="font-size: 18px; color: #8dd2dd; font-weight: bold; text-shadow: 0 0 8px rgba(141, 210, 221, 0.8);">'유시'</b>가 된 그녀에게, 지금 가장 간절한 것은 그저 모든 전원을 내리고 기절하듯 잠들 수 있는 단 한 번의 안식입니다.
+          </p>
+            
+        </div>
+        <div style="flex: 1 1 300px; min-width: 280px; display: flex; flex-direction: column; gap: 25px; animation: zoomIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.5s;">
+          <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 25px; border: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin: 0 0 15px 0; font-size: 18px; font-weight: 700; color: #8dd2dd; border-bottom: 1px solid rgba(141, 210, 221, 0.3); padding-bottom: 10px;">SUBJECT ANALYSIS [TMI]</p>
+              
+            <p style="margin: 0 0 10px 0; font-size: 13px; color: #a0a0a0; text-transform: uppercase; letter-spacing: 1px;">외형적 특징 (Visual Data)</p>
+              
+            <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #c0c0c0;"><b style="color: #ffffff;">• 신장/체격:</b> 168cm. 전체적으로 선이 얇은 슬림한 실루엣.</p>
+              
+            <p style="margin: 5px 0 0 0; font-size: 14px; line-height: 1.7; color: #c0c0c0;"><b style="color: #ffffff;">• 주요 특징:</b> 한쪽으로 단정하게 넘긴 뱅 헤어와 끝이 삐죽한 흑발. 묘하게 피곤해 보이는 검은 눈매.</p>
+              
+            <p style="margin: 5px 0 0 0; font-size: 14px; line-height: 1.7; color: #c0c0c0;"><b style="color: #ffffff;">• 복장:</b> 목까지 칼라가 올라오는 크롭 기장의 센티넬 제복 자켓, 검정 구두.</p>
+
+            <p style="margin: 15px 0 10px 0; font-size: 13px; color: #a0a0a0; text-transform: uppercase; letter-spacing: 1px;">성향 및 기호 (Behavioral Pattern)</p>
+              
+                            
+            <p style="margin: 5px 0 0 0; font-size: 14px; line-height: 1.7; color: #c0c0c0;"><b style="color: #ffffff;">• 식성:</b> 가공되지 않은 날것이나 담백한 원물 위주의 식단.</p>
+                                          
+            <p style="margin: 5px 0 0 0; font-size: 14px; line-height: 1.7; color: #c0c0c0;"><b style="color: #ffffff;">• 버릇:</b> 머릿속이 복잡해지면 무의식적으로 손을 올려 송곳니를 감춘 입술 부근을 매만지는 습관.</p>
+              
+            <p style="margin: 5px 0 0 0; font-size: 14px; line-height: 1.7; color: #c0c0c0;"><b style="color: #ffffff;">• 감정 표출:</b> 만족스러운 상황에 긴장이 느슨해지면 머리칼 끝에서 푸른 스파크가 정전기처럼 튄다. (아직 컨트롤이 미숙한 생체 반응)</p>
+
+          </div>
+          <div style="background: rgba(0, 150, 150, 0.2); border-radius: 8px; padding: 25px; border: 1px solid rgba(141, 210, 221, 0.4); box-shadow: 0 0 20px rgba(141, 210, 221, 0.2);">
+            <p style="margin: 0 0 15px 0; font-size: 18px; font-weight: 700; color: #AFEEEE; border-bottom: 1px solid rgba(175, 238, 238, 0.3); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+              <span style="display: inline-block; animation: wobble 2s infinite;">⚠️</span> HANDLING PROTOCOL
+            </p>
+            <p style="margin: 0; font-size: 14.5px; line-height: 1.8; color: #AFEEEE;">미발현자 시절부터 누적된 강박과 비효율적인 행동에 대한 스트레스가 <b style="color: #bbf1ff;">전위차 폭등의 직접적 트리거</b>로 작용합니다. 임계치에 도달하면 극심한 편두통과 안압 상승으로 이성을 잃고 본능적인 거부 반응을 보이며, 부정적인 피드백이나 일방적인 통제 시도는 공격성을 유발하므로 절대 엄금합니다. 거리를 서서히 좁히며 부드러운 체온을 전하는 <b style="color: #ffffff;">섬세한 접근</b>이 필수적입니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

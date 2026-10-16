@@ -1,0 +1,47 @@
+[
+ {
+  "slug": "2026-10-16-120000",
+  "title": "의무실 일지 #01",
+  "date": "2026-10-16 12:00",
+  "dateText": "2026. 10. 16.",
+  "category": "PURE",
+  "notice": false,
+  "thumbnail": "",
+  "summary": "오늘의 기록. 의무실에서 있었던 일을 짧게 정리했어요.",
+  "sub": "",
+  "status": "",
+  "price": "",
+  "html": "<p>깃허브로 이사 온 <strong>첫 번째 기록</strong>이에요.</p>\n<p>관리자 화면(Pages CMS)에서 이렇게 글을 쓰면, 저장하는 순간 자동으로 홈에 올라와요.</p>\n<blockquote>\n<p>링거는 꽂지 않았습니다.</p>\n</blockquote>",
+  "no": 3
+ },
+ {
+  "slug": "2026-10-15-090000",
+  "title": "커미션 안내",
+  "date": "2026-10-15 09:00",
+  "dateText": "2026. 10. 15.",
+  "category": "PURE",
+  "notice": false,
+  "thumbnail": "",
+  "summary": "커미션 안내 예시 글이에요. 관리자 화면의 커미션 상태 / 금액 / 부제목 칸을 채우면 카드에 OPEN 뱃지와 금액이 붙어요. 필요 없으면 이 글은 지워도 돼요.",
+  "sub": "퓨윳 그림 커미션",
+  "status": "OPEN",
+  "price": "30000",
+  "html": "<p>커미션 안내 예시 글이에요. 관리자 화면의 <strong>커미션 상태 / 금액 / 부제목</strong> 칸을 채우면 카드에 OPEN 뱃지와 금액이 붙어요.</p>\n<p>필요 없으면 이 글은 지워도 돼요.</p>",
+  "no": 2
+ },
+ {
+  "slug": "2026-10-14-200000",
+  "title": "공지 · 홈 이사했어요",
+  "date": "2026-10-14 20:00",
+  "dateText": "2026. 10. 14.",
+  "category": "",
+  "notice": true,
+  "thumbnail": "",
+  "summary": "티스토리에서 깃허브 개인 홈으로 옮겼어요. 공지로 올린 글은 상단 NOTICE 메뉴에 모여요.",
+  "sub": "",
+  "status": "",
+  "price": "",
+  "html": "<p>티스토리에서 깃허브 개인 홈으로 옮겼어요. 공지로 올린 글은 상단 <strong>NOTICE</strong> 메뉴에 모여요.</p>",
+  "no": 1
+ }
+]
