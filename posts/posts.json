@@ -11,8 +11,12 @@
   "sub": "",
   "status": "",
   "price": "",
+  "song": "",
+  "songCover": "",
+  "artist": "",
+  "lyrics": "",
   "html": "<p>깃허브로 이사 온 <strong>첫 번째 기록</strong>이에요.</p>\n<p>관리자 화면(Pages CMS)에서 이렇게 글을 쓰면, 저장하는 순간 자동으로 홈에 올라와요.</p>\n<blockquote>\n<p>링거는 꽂지 않았습니다.</p>\n</blockquote>",
-  "no": 3
+  "no": 4
  },
  {
   "slug": "2026-10-15-090000",
@@ -26,8 +30,12 @@
   "sub": "퓨윳 그림 커미션",
   "status": "OPEN",
   "price": "30000",
+  "song": "",
+  "songCover": "",
+  "artist": "",
+  "lyrics": "",
   "html": "<p>커미션 안내 예시 글이에요. 관리자 화면의 <strong>커미션 상태 / 금액 / 부제목</strong> 칸을 채우면 카드에 OPEN 뱃지와 금액이 붙어요.</p>\n<p>필요 없으면 이 글은 지워도 돼요.</p>",
-  "no": 2
+  "no": 3
  },
  {
   "slug": "2026-10-14-200000",
@@ -41,7 +49,30 @@
   "sub": "",
   "status": "",
   "price": "",
+  "song": "",
+  "songCover": "",
+  "artist": "",
+  "lyrics": "",
   "html": "<p>티스토리에서 깃허브 개인 홈으로 옮겼어요. 공지로 올린 글은 상단 <strong>NOTICE</strong> 메뉴에 모여요.</p>",
+  "no": 2
+ },
+ {
+  "slug": "2026-10-17-071152",
+  "title": "Kato | Theme BGM 01",
+  "date": "2026-05-23 07:00",
+  "dateText": "2026. 5. 23.",
+  "category": "♪ music",
+  "notice": false,
+  "thumbnail": "assets/uploads/katotheme.png",
+  "summary": "",
+  "sub": "",
+  "status": "",
+  "price": "",
+  "song": "assets/uploads/Kato_Theme BGM 01.mp3",
+  "songCover": "assets/uploads/katotheme.png",
+  "artist": "Kato",
+  "lyrics": "",
+  "html": "",
   "no": 1
  }
 ]
