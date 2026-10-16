@@ -1,30 +1,37 @@
 {
   "title": "Syringe",
-  "blogger": "HYUN",
+  "blogger": "⤷ PpLE",
   "heroSub": "PURE × UXI · ARCH",
   "sinceDate": "2026-04-24",
-  "pureImg": "",
-  "uxiImg": "",
-  "ddayImage": "",
+  "ddayImage": "/assets/uploads/dday.png",
   "ddayMemo": "오늘도 무사히 퇴원 보류. 내일도 같은 병실에서.",
   "ddayTitle": "PURE × UXI",
-  "xUrl": "",
+  "xUrl": "https://syringe.luvinfo.me/",
   "cmsUrl": "https://app.pagescms.org/",
-  "repoUrl": "",
   "infoTitle": "안내사항",
-  "info": [],
   "infoScope": "home",
   "categories": [
-    { "name": "PURE", "icon": "heart" },
-    { "name": "♪ music", "icon": "disc" },
-    { "name": "etc", "icon": "rec" },
-    { "name": "!", "icon": "bell" }
+    {
+      "name": "PURE",
+      "icon": "heart"
+    },
+    {
+      "name": "♪ music",
+      "icon": "disc"
+    },
+    {
+      "name": "etc",
+      "icon": "rec"
+    },
+    {
+      "name": "!",
+      "icon": "bell"
+    }
   ],
   "newDays": 3,
   "priceLabel": "금액",
   "showSummary": true,
   "showUncategorized": true,
-  "thumbFallback": "",
   "cardCols": "3",
   "cardRadius": true,
   "postImgRadius": true,

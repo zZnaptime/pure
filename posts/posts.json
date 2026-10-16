@@ -17,26 +17,6 @@
   "artist": "",
   "lyrics": "",
   "html": "<p>깃허브로 이사 온 <strong>첫 번째 기록</strong>이에요.</p>\n<p>관리자 화면(Pages CMS)에서 이렇게 글을 쓰면, 저장하는 순간 자동으로 홈에 올라와요.</p>\n<blockquote>\n<p>링거는 꽂지 않았습니다.</p>\n</blockquote>",
-  "no": 4
- },
- {
-  "slug": "2026-10-15-090000",
-  "title": "커미션 안내",
-  "date": "2026-10-15 09:00",
-  "dateText": "2026. 10. 15.",
-  "category": "PURE",
-  "notice": false,
-  "thumbnail": "",
-  "summary": "커미션 안내 예시 글이에요. 관리자 화면의 커미션 상태 / 금액 / 부제목 칸을 채우면 카드에 OPEN 뱃지와 금액이 붙어요. 필요 없으면 이 글은 지워도 돼요.",
-  "sub": "퓨윳 그림 커미션",
-  "status": "OPEN",
-  "price": "30000",
-  "song": "",
-  "songTitle": "",
-  "songCover": "",
-  "artist": "",
-  "lyrics": "",
-  "html": "<p>커미션 안내 예시 글이에요. 관리자 화면의 <strong>커미션 상태 / 금액 / 부제목</strong> 칸을 채우면 카드에 OPEN 뱃지와 금액이 붙어요.</p>\n<p>필요 없으면 이 글은 지워도 돼요.</p>",
   "no": 3
  },
  {
