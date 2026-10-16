@@ -74,6 +74,7 @@ def main():
             'status': str(meta.get('status') or '').upper() if meta.get('status') else '',
             'price': re.sub(r'[^0-9]', '', str(price)) if price not in (None, '') else '',
             'song': rel(meta.get('song')),
+            'songTitle': str(meta.get('songTitle') or ''),
             'songCover': rel(meta.get('songCover')),
             'artist': str(meta.get('artist') or ''),
             'lyrics': str(meta.get('lyrics') or ''),

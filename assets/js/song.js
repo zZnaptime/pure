@@ -37,7 +37,7 @@
     if (w._song) return; w._song = 1;
     var slug = (w.getAttribute('data-win') || '').replace(/^post-/, ''), p = post(slug);
     if (!p || !p.song) return;
-    var src = rel(p.song), cover = rel(p.songCover || p.thumbnail || ''), title = (S().cleanTitle ? S().cleanTitle(p.title) : p.title);
+    var src = rel(p.song), cover = rel(p.songCover || p.thumbnail || ''), title = p.songTitle || (S().cleanTitle ? S().cleanTitle(p.title) : p.title);
     var fname = (src.split('/').pop() || 'song.mp3').split('?')[0];
     var L = parseLyrics(p.lyrics);
     var box = D.createElement('div'); box.className = 'sg';
@@ -62,6 +62,27 @@
       '<audio preload="metadata" src="' + esc(src) + '"></audio>';
     var anchor = w.querySelector('.post-rules') || w.querySelector('.post-body');
     if (anchor) anchor.parentNode.insertBefore(box, anchor); else return;
+
+    /* 카드 색 : 앨범 커버 색을 뽑아서 따라감 (커버 없으면 화이트 무채색) */
+    var card = box.querySelector('.sg-card');
+    if (cover){
+      card.classList.add('has-art'); card.style.setProperty('--sg-img', 'url("' + cover.replace(/"/g, '%22') + '")');
+      var im = new Image(); im.onload = function(){
+        try {
+          var c = D.createElement('canvas'); c.width = c.height = 24; var g = c.getContext('2d'); g.drawImage(im, 0, 0, 24, 24);
+          var d = g.getImageData(0, 0, 24, 24).data, r = 0, gg = 0, b = 0, n = 0;
+          for (var i = 0; i < d.length; i += 4){
+            var mx = Math.max(d[i], d[i+1], d[i+2]), mn = Math.min(d[i], d[i+1], d[i+2]), wgt = 1 + (mx - mn) / 40;  /* 채도 높은 색에 가중치 */
+            r += d[i] * wgt; gg += d[i+1] * wgt; b += d[i+2] * wgt; n += wgt;
+          }
+          r /= n; gg /= n; b /= n;
+          var k = Math.min(1, 70 / Math.max(1, (r + gg + b) / 3));  /* 너무 밝으면 어둡게 눌러서 흰 글씨가 보이게 */
+          card.style.setProperty('--sg-c', 'rgb(' + Math.round(r * k) + ',' + Math.round(gg * k) + ',' + Math.round(b * k) + ')');
+          card.style.setProperty('--sg-a', 'rgb(' + Math.round(r + (255 - r) * .55) + ',' + Math.round(gg + (255 - gg) * .55) + ',' + Math.round(b + (255 - b) * .55) + ')');
+        } catch(e){}
+      };
+      im.src = cover;
+    } else card.classList.add('mono');
 
     var au = box.querySelector('audio'), btn = box.querySelector('.sg-play'), seek = box.querySelector('.sg-seek'), tt = box.querySelector('.sg-t');
     var ls = box.querySelector('.sg-ls'), rows = ls ? Array.prototype.slice.call(ls.children) : [], cur = -1, drag = false;
