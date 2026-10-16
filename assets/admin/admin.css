@@ -14,7 +14,8 @@ a{color:inherit}
 /* 상단 */
 .ad-top{position:sticky;top:0;z-index:40;height:var(--topH);display:flex;align-items:center;gap:18px;padding:0 22px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .ad-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
-.ad-logo i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-style:normal;font-size:14px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--deep))}
+.ad-logo i{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-style:normal;background:linear-gradient(180deg,#fff,#E9EFF4);box-shadow:inset 0 0 0 1px #CBD8E3,0 2px 6px -2px rgba(20,50,74,.18)}
+.ad-logo i svg,.ad-lock i svg{width:62%;height:62%;fill:var(--blue2);filter:drop-shadow(0 1px 1px rgba(13,90,150,.25))}
 .ad-logo b{font-weight:900;font-size:16px;letter-spacing:-.04em}
 .ad-logo small{font-weight:800;font-size:9.5px;letter-spacing:.16em;color:var(--blue2);padding:2px 6px;border-radius:5px;background:var(--wash)}
 .ad-nav{display:flex;gap:4px}
@@ -50,7 +51,7 @@ a{color:inherit}
 
 /* 출입금지 */
 .ad-lock{min-height:calc(100vh - var(--topH));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px 80px}
-.ad-lock i{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-style:normal;font-size:30px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--deep));box-shadow:0 14px 30px -12px rgba(13,90,150,.6);margin-bottom:22px}
+.ad-lock i{width:68px;height:68px;border-radius:21px;display:grid;place-items:center;font-style:normal;background:linear-gradient(180deg,#fff,#E9EFF4);box-shadow:inset 0 0 0 1.5px #CBD8E3,0 16px 30px -14px rgba(20,50,74,.35);margin-bottom:22px}
 .ad-lock h1{margin:0 0 10px;font-weight:900;font-size:30px;letter-spacing:.08em;color:var(--ink)}
 .ad-lock p{margin:0 0 26px;color:var(--ink3);font-size:14px;line-height:1.7}
 .ad-lock .ad-btn{display:inline-grid;place-items:center;text-decoration:none;height:42px;padding:0 22px}
