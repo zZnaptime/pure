@@ -1,4 +1,6 @@
 /* ══════════════════════════════════════════════════════════════
+   SYRINGE — 글 창 꾸미기 (post-extras.js) : 노래 플레이어 · 파일 카드 · 가운데 정렬
+   
    SYRINGE — 노래 글 플레이어
    관리자 화면에서 글에 '음원(mp3)'을 넣으면, 그 글 창 맨 위에 플레이어 + 가사가 나와요.
    - 재생 / 일시정지 / 구간 이동 / mp3 다운로드
@@ -29,14 +31,31 @@
     return { synced: synced, lines: out };
   }
 
-  var DL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+  var DL = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
   var PLAY = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
   var PAUSE = '<svg viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>';
 
   /* ── 본문 꾸미기 : 가운데 정렬 + 파일 링크를 다운로드 카드로 ── */
   var FILE_RE = /\.(gif|png|jpe?g|webp|zip|rar|7z|pdf|psd|clip|txt|mp3|wav|m4a|mp4|ttf|otf)(\?.*)?$/i;
-  var FOLDER = '<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="currentColor"/></svg>';
+  var FOLDER = '<svg viewBox="0 0 24 24" width="28" height="28"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="currentColor"/></svg>';
   function size(n){ return n >= 1048576 ? (n / 1048576).toFixed(2) + 'MB' : n >= 1024 ? Math.round(n / 1024) + 'KB' : n + 'B'; }
+  /* 파일 카드 모양 (CSS 를 따로 안 넣어도 깨지지 않게 여기서 넣어 줌) */
+  (function(){
+    if (D.getElementById('sy-pbfile-css')) return;
+    var st = D.createElement('style'); st.id = 'sy-pbfile-css';
+    st.textContent =
+      '.post-body p.pb-filewrap{margin:1em auto;max-width:440px}' +
+      '.post-body a.pb-file{display:flex;align-items:center;gap:14px;max-width:440px;margin:0 auto;padding:16px 20px;border:1px solid var(--line,#DCE8F1);border-radius:10px;background:#fff;color:var(--ink,#14324A) !important;text-decoration:none !important;text-align:left;transition:border-color .2s,box-shadow .2s}' +
+      '.post-body a.pb-file:hover{border-color:var(--blue2,#1E8FD6);box-shadow:0 6px 18px -10px rgba(30,143,214,.45)}' +
+      '.post-body .pb-fi{flex:none;width:28px;height:28px;color:#2A2F36}' +
+      '.post-body .pb-fi svg,.post-body .pb-fd svg{width:100% !important;height:100% !important;display:block;margin:0 !important}' +
+      '.post-body .pb-fn{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}' +
+      '.post-body .pb-fn b{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
+      '.post-body .pb-fn small{font-size:10.5px;color:var(--ink3,#8A9DAE)}' +
+      '.post-body .pb-fd{flex:none;width:20px;height:20px;color:var(--ink2,#3A5570)}' +
+      '.post-body a.pb-file:hover .pb-fd{color:var(--blue2,#1E8FD6)}';
+    D.head.appendChild(st);
+  })();
   function enhance(w, p){
     var body = w.querySelector('.post-body'); if (!body) return;
     if (p.center) body.classList.add('pb-center');
