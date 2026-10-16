@@ -1,7 +1,5 @@
 /* ══════════════════════════════════════════════════════════════
    SYRINGE — 글 창 꾸미기 (post-extras.js) : 노래 플레이어 · 파일 카드 · 가운데 정렬
-   
-   SYRINGE — 노래 글 플레이어
    관리자 화면에서 글에 '음원(mp3)'을 넣으면, 그 글 창 맨 위에 플레이어 + 가사가 나와요.
    - 재생 / 일시정지 / 구간 이동 / mp3 다운로드
    - 가사에 [00:12.30] 같은 시간이 붙어 있으면 노래에 맞춰 줄이 하이라이트돼요
@@ -148,6 +146,44 @@
     /* 글 창을 닫으면 멈춤 */
     new MutationObserver(function(){ if (!w.classList.contains('open') && !au.paused) au.pause(); }).observe(w, { attributes: true, attributeFilter: ['class'] });
   }
+
+  /* ── 사진 크게 보기 : 글 안 사진을 누르면 화면 가득 (← → 로 넘기기 · ESC / 바깥 클릭으로 닫기) ── */
+  (function(){
+    var css = D.createElement('style');
+    css.textContent =
+      '.sy-lb{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:rgba(9,20,32,.86);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .22s}' +
+      '.sy-lb.on{opacity:1;pointer-events:auto}' +
+      '.sy-lb img{max-width:calc(100vw - 120px);max-height:calc(100vh - 110px);border-radius:10px;box-shadow:0 20px 60px -10px rgba(0,0,0,.6);transform:scale(.96);transition:transform .25s cubic-bezier(.2,.9,.25,1);cursor:zoom-out;user-select:none;-webkit-user-drag:none}' +
+      '.sy-lb.on img{transform:none}' +
+      '.sy-lb button{position:absolute;display:grid;place-items:center;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;transition:background .15s}' +
+      '.sy-lb button:hover{background:rgba(255,255,255,.24)}' +
+      '.sy-lb .x{top:16px;right:16px;width:40px;height:40px;font-size:22px}' +
+      '.sy-lb .pv,.sy-lb .nx{top:50%;width:46px;height:46px;margin-top:-23px;font-size:24px}' +
+      '.sy-lb .pv{left:18px}.sy-lb .nx{right:18px}' +
+      '.sy-lb .ct{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font:700 12px Pretendard,sans-serif;letter-spacing:.06em}' +
+      '.sy-lb.one .pv,.sy-lb.one .nx,.sy-lb.one .ct{display:none}' +
+      '@media (max-width:640px){.sy-lb img{max-width:100vw;max-height:calc(100vh - 120px);border-radius:0}.sy-lb .pv,.sy-lb .nx{display:none}}';
+    D.head.appendChild(css);
+    var lb = D.createElement('div'); lb.className = 'sy-lb'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-label', '사진 크게 보기');
+    lb.innerHTML = '<img alt=""><button type="button" class="x" aria-label="닫기">×</button><button type="button" class="pv" aria-label="이전">‹</button><button type="button" class="nx" aria-label="다음">›</button><span class="ct"></span>';
+    D.body.appendChild(lb);
+    var big = lb.querySelector('img'), list = [], idx = 0, sx = null;
+    function paint(){ var im = list[idx]; big.src = im.currentSrc || im.src; big.alt = im.alt || ''; lb.querySelector('.ct').textContent = (idx + 1) + ' / ' + list.length; lb.classList.toggle('one', list.length < 2); }
+    function open(im){ var body = im.closest('.post-body'); list = Array.prototype.filter.call(body.querySelectorAll('img'), function(x){ return !x.closest('a'); }); idx = Math.max(0, list.indexOf(im)); paint(); lb.classList.add('on'); }
+    function close(){ lb.classList.remove('on'); }
+    function go(d){ if (list.length < 2) return; idx = (idx + d + list.length) % list.length; paint(); }
+    D.addEventListener('click', function(e){
+      var im = e.target.closest && e.target.closest('.post-body img');
+      if (!im || im.closest('a') || im.closest('.sg')) return;
+      e.preventDefault(); e.stopPropagation(); open(im);
+    }, true);
+    lb.addEventListener('click', function(e){
+      if (e.target.classList.contains('pv')) go(-1); else if (e.target.classList.contains('nx')) go(1); else close();
+    });
+    D.addEventListener('keydown', function(e){ if (!lb.classList.contains('on')) return; if (e.key === 'Escape') close(); else if (e.key === 'ArrowLeft') go(-1); else if (e.key === 'ArrowRight') go(1); });
+    lb.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function(e){ if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50){ go(dx < 0 ? 1 : -1); } });
+  })();
 
   /* 한 번에 한 곡만 : 어떤 소리가 재생되면 나머지는 멈춤 (음악 앱 포함) */
   D.addEventListener('play', function(e){
