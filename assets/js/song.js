@@ -33,9 +33,29 @@
   var PLAY = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
   var PAUSE = '<svg viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>';
 
+  /* ── 본문 꾸미기 : 가운데 정렬 + 파일 링크를 다운로드 카드로 ── */
+  var FILE_RE = /\.(gif|png|jpe?g|webp|zip|rar|7z|pdf|psd|clip|txt|mp3|wav|m4a|mp4|ttf|otf)(\?.*)?$/i;
+  var FOLDER = '<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="currentColor"/></svg>';
+  function size(n){ return n >= 1048576 ? (n / 1048576).toFixed(2) + 'MB' : n >= 1024 ? Math.round(n / 1024) + 'KB' : n + 'B'; }
+  function enhance(w, p){
+    var body = w.querySelector('.post-body'); if (!body) return;
+    if (p.center) body.classList.add('pb-center');
+    Array.prototype.forEach.call(body.querySelectorAll('a[href]'), function(a){
+      var href = a.getAttribute('href') || '';
+      if (a.querySelector('img') || (!a.classList.contains('pb-attach') && (!/(^|\/)assets\/uploads\//.test(href) || !FILE_RE.test(href)))) return;
+      var name = (a.textContent || '').trim() || decodeURIComponent(href.split('/').pop().split('?')[0]);
+      a.className = 'pb-file'; a.setAttribute('download', decodeURIComponent(href.split('/').pop().split('?')[0]));
+      a.innerHTML = '<i class="pb-fi">' + FOLDER + '</i><span class="pb-fn"><b>' + esc(name) + '</b><small>&nbsp;</small></span><i class="pb-fd">' + DL + '</i>';
+      /* 단락에 링크만 있으면 단락째 카드로 */
+      var par = a.parentNode; if (par && par.tagName === 'P' && par.textContent.trim() === a.textContent.trim()) par.classList.add('pb-filewrap');
+      try { fetch(href, { method: 'HEAD' }).then(function(r){ var n = +r.headers.get('content-length'); if (n) a.querySelector('small').textContent = size(n); }).catch(function(){}); } catch(e){}
+    });
+  }
+
   function build(w){
     if (w._song) return; w._song = 1;
     var slug = (w.getAttribute('data-win') || '').replace(/^post-/, ''), p = post(slug);
+    if (p) enhance(w, p);
     if (!p || !p.song) return;
     var src = rel(p.song), cover = rel(p.songCover || p.thumbnail || ''), title = p.songTitle || (S().cleanTitle ? S().cleanTitle(p.title) : p.title);
     var fname = (src.split('/').pop() || 'song.mp3').split('?')[0];

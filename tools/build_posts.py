@@ -53,7 +53,10 @@ def main():
         mt = re.match(r'(\d{4})-(\d{2})-(\d{2})', slug)
         fb = datetime.datetime(int(mt.group(1)), int(mt.group(2)), int(mt.group(3))) if mt else datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(POSTS, fn)))
         d = to_date(meta.get('date'), fb)
-        body_html = markdown.markdown(body, extensions=['extra', 'sane_lists', 'nl2br'])
+        if str(meta.get('format') or '').lower() == 'html':
+            body_html = body.strip()          # 글쓰기 화면(admin.html)에서 쓴 글은 HTML 그대로
+        else:
+            body_html = markdown.markdown(body, extensions=['extra', 'sane_lists', 'nl2br'])
         body_html = re.sub(r'(src|href)="/(?!/)', r'\1="', body_html)
         thumb = rel(meta.get('thumbnail'))
         if not thumb:
@@ -73,6 +76,7 @@ def main():
             'sub': str(meta.get('sub') or ''),
             'status': str(meta.get('status') or '').upper() if meta.get('status') else '',
             'price': re.sub(r'[^0-9]', '', str(price)) if price not in (None, '') else '',
+            'center': bool(meta.get('center')),
             'song': rel(meta.get('song')),
             'songTitle': str(meta.get('songTitle') or ''),
             'songCover': rel(meta.get('songCover')),

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Syringe · 글쓰기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="assets/admin/admin.css">
+</head>
+<body>
+
+<!-- ════════ 상단 ════════ -->
+<header class="ad-top">
+  <a class="ad-logo" href="#list"><i>✚</i><b>Syringe</b><small>WRITE</small></a>
+  <nav class="ad-nav" id="adNav" hidden>
+    <a href="#list" data-nav="list">글 목록</a>
+    <a href="#new" data-nav="new" class="ad-new">＋ 새 글</a>
+  </nav>
+  <span class="ad-sp"></span>
+  <a class="ad-ghost" id="adSite" href="./" target="_blank" rel="noopener" hidden>사이트 보기 ↗</a>
+  <button type="button" class="ad-ghost" id="adLogout" hidden>연결 해제</button>
+</header>
+
+<!-- ════════ 남이 들어왔을 때 ════════ -->
+<main class="ad-view" id="vLock" hidden>
+  <section class="ad-lock">
+    <i>✚</i>
+    <h1>STAFF ONLY</h1>
+    <p>관계자 외 출입금지 구역입니다.<br>의무실 문으로 돌아가세요.</p>
+    <a class="ad-btn pri" href="./">홈으로 돌아가기</a>
+  </section>
+</main>
+
+<!-- ════════ 처음 연결 (admin.html#setup 으로 들어올 때만) ════════ -->
+<main class="ad-view" id="vLogin" hidden>
+  <section class="ad-login">
+    <h1>글쓰기 화면 연결하기</h1>
+    <p class="ad-lead">처음 한 번만 하면 돼요. 이 브라우저에만 저장되고, 사이트 코드에는 들어가지 않아요.</p>
+    <ol class="ad-steps">
+      <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">깃허브 토큰 만들기 페이지 ↗</a> 를 열어요.</li>
+      <li><b>Token name</b> 아무거나 (예: syringe-write) · <b>Expiration</b> 은 길게 (예: 1 year 또는 No expiration)</li>
+      <li><b>Repository access</b> → <b>Only select repositories</b> → 내 홈 저장소 하나만 선택</li>
+      <li><b>Permissions</b> → <b>Repository permissions</b> → <b>Contents</b> 를 <b>Read and write</b> 로</li>
+      <li>맨 아래 <b>Generate token</b> → 나온 <code>github_pat_…</code> 글자를 복사해서 아래에 붙여넣기</li>
+    </ol>
+    <label class="ad-f"><span>토큰</span><input id="lgToken" type="password" placeholder="github_pat_..." autocomplete="off"></label>
+    <div class="ad-row3">
+      <label class="ad-f"><span>깃허브 아이디</span><input id="lgOwner" placeholder="zZnaptime"></label>
+      <label class="ad-f"><span>저장소 이름</span><input id="lgRepo" placeholder="pure"></label>
+      <label class="ad-f"><span>브랜치</span><input id="lgBranch" value="main"></label>
+    </div>
+    <button type="button" class="ad-btn pri wide" id="lgGo">연결하기</button>
+    <p class="ad-err" id="lgErr"></p>
+  </section>
+</main>
+
+<!-- ════════ 글 목록 ════════ -->
+<main class="ad-view" id="vList" hidden>
+  <section class="ad-list">
+    <div class="ad-lhead">
+      <h1>글 목록 <em id="lsCnt"></em></h1>
+      <input type="search" id="lsQ" placeholder="제목 검색">
+    </div>
+    <div class="ad-chips" id="lsCats"></div>
+    <ul class="ad-rows" id="lsRows"><li class="ad-empty">불러오는 중…</li></ul>
+  </section>
+</main>
+
+<!-- ════════ 글쓰기 ════════ -->
+<main class="ad-view" id="vEdit" hidden>
+  <div class="ad-tool" id="tb">
+    <div class="tb-g">
+      <button type="button" data-act="image" title="사진 (여러 장 가능)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-9 9"/></svg></button>
+      <button type="button" data-act="file" title="파일 첨부"><svg viewBox="0 0 24 24"><path d="M21 11.5 12.6 20a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6l7.8-7.8"/></svg></button>
+      <button type="button" data-act="music" class="tb-music" title="노래 글 (mp3 · 가사)"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
+    </div>
+    <div class="tb-g">
+      <select data-act="block" title="문단 서식">
+        <option value="p">본문</option>
+        <option value="h2">제목 1</option>
+        <option value="h3">제목 2</option>
+        <option value="h4">제목 3</option>
+        <option value="small">작은 글</option>
+      </select>
+    </div>
+    <div class="tb-g">
+      <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)"><b>B</b></button>
+      <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)"><i style="font-family:Georgia,serif">I</i></button>
+      <button type="button" data-cmd="underline" title="밑줄 (Ctrl+U)"><u>U</u></button>
+      <button type="button" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
+      <button type="button" data-act="color" title="글자색" class="tb-color"><span>T</span><i id="tbFg"></i></button>
+      <button type="button" data-act="bg" title="배경색" class="tb-color"><span class="tb-bgT">T</span><i id="tbBg"></i></button>
+    </div>
+    <div class="tb-g">
+      <button type="button" data-cmd="justifyLeft" title="왼쪽 정렬"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg></button>
+      <button type="button" data-cmd="justifyCenter" title="가운데 정렬"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg></button>
+      <button type="button" data-cmd="justifyRight" title="오른쪽 정렬"><svg viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg></button>
+      <button type="button" data-cmd="justifyFull" title="양쪽 정렬"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
+    </div>
+    <div class="tb-g">
+      <button type="button" data-act="quote" title="인용"><svg viewBox="0 0 24 24"><path d="M10 11H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v6c0 2.5-1.5 4-4 4.5M19 11h-4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v6c0 2.5-1.5 4-4 4.5"/></svg></button>
+      <button type="button" data-act="table" title="표"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 10h17M3.5 14.5h17M12 4.5v15"/></svg></button>
+      <button type="button" data-act="link" title="링크"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></button>
+      <button type="button" data-cmd="insertUnorderedList" title="목록"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/></svg></button>
+      <button type="button" data-cmd="insertOrderedList" title="번호 목록"><svg viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 5l1.5-1v5M3.8 15.2a1.5 1.5 0 1 1 2.4 1.6L4 19h2.5"/></svg></button>
+      <button type="button" data-act="hr" title="구분선"><svg viewBox="0 0 24 24"><path d="M3 12h18"/></svg></button>
+      <button type="button" data-act="more" title="더보기" class="tb-more"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="18" cy="12" r="1.4" fill="currentColor"/></svg></button>
+    </div>
+    <div class="tb-g">
+      <button type="button" data-cmd="undo" title="되돌리기 (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+      <button type="button" data-cmd="redo" title="다시 실행 (Ctrl+Y)"><svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+    </div>
+    <span class="tb-sp"></span>
+    <select class="tb-mode" id="tbMode" title="편집 모드"><option value="wys">기본모드</option><option value="html">HTML</option></select>
+  </div>
+
+  <div class="ad-pop" id="popMore" hidden>
+    <button type="button" data-act="fold">접은글</button>
+    <button type="button" data-act="htmlblock">HTML 블록</button>
+    <button type="button" data-act="clear">서식 지우기</button>
+  </div>
+  <div class="ad-pop ad-swatch" id="popColor" hidden></div>
+
+  <div class="ad-paper" id="paper">
+    <select class="ad-cat" id="edCat"></select>
+    <textarea class="ad-title" id="edTitle" rows="1" placeholder="제목을 입력하세요"></textarea>
+
+    <!-- ♪ 노래 글 -->
+    <section class="ad-music" id="mu" hidden>
+      <header><b>♪ 노래 글</b><small>글 창 맨 위에 플레이어 + 가사가 나와요</small><button type="button" class="ad-x" id="muOff" title="노래 빼기">×</button></header>
+      <div class="mu-grid">
+        <button type="button" class="mu-cover" id="muCover" title="앨범 커버 넣기"><span>커버<br><small>정사각형</small></span></button>
+        <div class="mu-fields">
+          <div class="mu-src">
+            <button type="button" class="ad-btn" id="muPick">mp3 선택</button>
+            <span class="mu-name" id="muName">아직 음원이 없어요</span>
+          </div>
+          <audio id="muAudio" controls preload="metadata" hidden></audio>
+          <div class="ad-row2">
+            <label class="ad-f"><span>곡 제목 <small>(비우면 글 제목)</small></span><input id="muTitle"></label>
+            <label class="ad-f"><span>아티스트</span><input id="muArtist"></label>
+          </div>
+        </div>
+      </div>
+      <label class="ad-f"><span>가사 <small>· 줄 앞에 [00:12.30] 처럼 시간이 있으면 노래에 맞춰 하이라이트돼요</small></span>
+        <textarea id="muLyrics" rows="8" placeholder="가사를 붙여넣어요."></textarea></label>
+      <div class="mu-tools">
+        <button type="button" class="ad-btn" id="muStamp" title="노래를 틀어 두고, 가사 줄에 커서를 둔 채 누르면 그 줄 앞에 지금 시간이 찍히고 다음 줄로 넘어가요">⏱ 지금 시간 찍기</button>
+        <button type="button" class="ad-btn" id="muStrip">시간 지우기</button>
+        <small>노래를 틀고 → 가사 첫 줄에 커서 → 그 줄이 나올 때마다 ⏱ 버튼 (또는 Alt+Enter)</small>
+      </div>
+    </section>
+
+    <div class="ad-body post-body" id="edBody" contenteditable="true" spellcheck="false"></div>
+    <textarea class="ad-html" id="edHtml" hidden spellcheck="false"></textarea>
+  </div>
+
+  <div class="ad-imgbar" id="imgBar" hidden>
+    <button type="button" data-w="33">작게</button><button type="button" data-w="60">중간</button><button type="button" data-w="100">크게</button><button type="button" data-w="">원본</button>
+    <i></i>
+    <button type="button" data-al="left">왼쪽</button><button type="button" data-al="center">가운데</button><button type="button" data-al="right">오른쪽</button>
+    <i></i>
+    <button type="button" data-del class="del">삭제</button>
+  </div>
+
+  <footer class="ad-foot">
+    <span class="ad-state" id="edState"></span>
+    <span class="ad-sp"></span>
+    <button type="button" class="ad-btn" id="edDraft">임시저장</button>
+    <button type="button" class="ad-btn pri" id="edPub">완료</button>
+  </footer>
+
+  <!-- 발행 설정 -->
+  <div class="ad-drawer" id="dw" hidden>
+    <div class="dw-in">
+      <header><b>발행</b><button type="button" class="ad-x" id="dwX">×</button></header>
+      <label class="ad-f"><span>날짜</span><input type="datetime-local" id="dwDate"></label>
+      <label class="ad-chk"><input type="checkbox" id="dwNotice"><span>공지사항으로 올리기 <small>카테고리 대신 NOTICE 에 들어가요</small></span></label>
+      <div class="ad-f"><span>썸네일 <small>· 고르지 않으면 본문 첫 사진</small></span>
+        <div class="dw-thumbs" id="dwThumbs"></div>
+      </div>
+      <label class="ad-f"><span>요약 <small>· 카드에 보이는 짧은 설명</small></span><textarea id="dwSum" rows="2"></textarea></label>
+      <label class="ad-f"><span>부제목 <small>· 쓰면 카드에서 요약 대신 보여요</small></span><input id="dwSub"></label>
+      <div class="ad-row2">
+        <label class="ad-f"><span>커미션 상태</span><select id="dwStatus"><option value="">없음</option><option>OPEN</option><option>CLOSE</option></select></label>
+        <label class="ad-f"><span>금액 (숫자만)</span><input id="dwPrice" inputmode="numeric"></label>
+      </div>
+      <button type="button" class="ad-btn pri wide" id="dwGo">발행하기</button>
+      <p class="dw-note">저장하면 1~2분 뒤 사이트에 반영돼요.</p>
+    </div>
+  </div>
+</main>
+
+<!-- 입력창 (링크 · HTML 블록 등) -->
+<div class="ad-modal" id="md" hidden>
+  <div class="md-in">
+    <b id="mdT"></b>
+    <div id="mdBody"></div>
+    <div class="md-btns"><button type="button" class="ad-btn" id="mdNo">취소</button><button type="button" class="ad-btn pri" id="mdOk">확인</button></div>
+  </div>
+</div>
+
+<input type="file" id="fImg" accept="image/*" multiple hidden>
+<input type="file" id="fAny" multiple hidden>
+<input type="file" id="fSong" accept="audio/*,.mp3,.m4a,.wav,.ogg" hidden>
+<input type="file" id="fCover" accept="image/*" hidden>
+<input type="file" id="fThumb" accept="image/*" hidden>
+
+<div class="ad-toast" id="toast"></div>
+
+<script src="assets/admin/js-yaml.min.js"></script>
+<script src="assets/admin/admin.js"></script>
+</body>
+</html>

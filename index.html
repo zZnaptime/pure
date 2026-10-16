@@ -17,6 +17,7 @@
 <body id="tt-body-index">
 <script>/* 주소로 창 열기 : ?p=글 · ?c=카테고리 · ?notice=공지 (페이지 이동 없이 홈 안에서 창으로 열려요) */
 (function(){var q=new URLSearchParams(location.search),r=q.has('p')?'post':q.has('notice')?'notice':(q.has('c')||q.has('records'))?'list':'home';window.SY_ROUTE=r;if(r!=='home'){try{sessionStorage.setItem('sy-booted','1');}catch(e){}}})();</script>
+<script>try{if(!localStorage.getItem('sy-admin'))document.documentElement.classList.add('sy-guest');}catch(e){document.documentElement.classList.add('sy-guest');}</script>
 
 <!-- 아이콘 모음 (svg sprite) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">

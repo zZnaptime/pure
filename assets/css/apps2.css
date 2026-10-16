@@ -348,3 +348,15 @@
 .sg-card.mono .sg-seek::-webkit-slider-thumb{background:var(--ink,#14324A);box-shadow:0 0 0 3px rgba(20,50,74,.12)}
 .sg-card.mono .sg-dl{color:var(--ink2,#3A5570);background:var(--soft,#F1F5F8)}
 .sg-card.mono .sg-dl:hover{background:#E3EAF0}
+
+/* 글쓰기 화면(admin.html)에서 쓴 글 : 작은 글 · 접은글 · HTML 블록 · 정렬된 제목 */
+.post-body p.small{font-size:.86em;color:var(--ink3,#8A9DAE)}
+.post-body details{margin:1.2em 0;padding:12px 16px;border-radius:12px;background:var(--soft,#F6FAFD);border:1px solid var(--line,#DCE8F1);text-align:left}
+.post-body summary{font-weight:800;cursor:pointer;color:var(--blue2,#1E8FD6)}
+.post-body details[open] summary{margin-bottom:8px}
+.post-body .html-block{margin:1em 0}
+.post-body h2[style*="center"]::before{margin-left:auto;margin-right:auto}
+.post-body h2[style*="right"]::before{margin-left:auto}
+
+/* 글쓰기 · 저장소 버튼 : 이 브라우저에서 글쓰기 화면에 연결한 사람(=나)에게만 보여요 */
+.sy-guest [data-set-href="cmsUrl"],.sy-guest [data-set-href="repoUrl"]{display:none !important}
