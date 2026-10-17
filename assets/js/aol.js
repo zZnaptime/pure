@@ -26,15 +26,18 @@ window.SY_AOL = window.SY_AOL || {
     { name: '아이기스불주먹', img: 'assets/images/veronica.png', state: 'game', text: '게임 중 · 12:25' },
     { name: 'GGOcode', emoji: '💻', state: 'game', text: '게임 중 · 10:01' },
     { name: 'GGOcandy', emoji: '🍬', state: 'game', text: '게임 중 · 10:01' },
+    { name: '바보온달', emoji: '💙', state: 'on', text: '온라인' },
+    { name: '평강공주', emoji: '💗', state: 'on', text: '온라인' },
     { name: 'zzunsiki', img: 'assets/images/zzun.png', state: 'off', text: '오프라인' },
     { name: 'romdrom', img: 'assets/images/drom.png', state: 'off', text: '오프라인' },
     { name: '정의의 사도', img: 'assets/images/jf.jpg', state: 'off', text: '오프라인' },
     { name: '고기먹고싶다', emoji: '🌿', state: 'off', text: '오프라인' },
     { name: '연청아123', emoji: '💧', state: 'off', text: '오프라인' },
+    { name: 'Demon', emoji: '😈', state: 'off', text: '오프라인' },
+    { name: 'Cherry', emoji: '🍒', state: 'off', text: '오프라인' },
     { name: 'Ritsu', emoji: '🎸', state: 'off', text: '오프라인' },
     { name: 'Miyu', emoji: '🎨', state: 'off', text: '오프라인' },
-    { name: 'Demon', emoji: '😈', state: 'off', text: '오프라인' },
-    { name: 'Cherry', emoji: '🍒', state: 'off', text: '오프라인' }
+    { name: '여동이', emoji: '🍒', state: 'off', text: '오프라인' }
   ]
 };
 
@@ -502,7 +505,12 @@ window.SY_AOL = window.SY_AOL || {
   }
   function found(){
     screen('found'); var bar = $('#aqBar'), st = Date.now();
-    if (window.SyringeFx && SyringeFx.sound) try { SyringeFx.sound(true); } catch(_){}
+    /* 👇 기본 띠링 소리 대신 원하는 mp3 파일 재생 */
+    try { 
+      var qSnd = new Audio('assets/images/q.mp3');
+      qSnd.volume = 0.5;
+      qSnd.play(); 
+    } catch(_){}
     clearInterval(fTimer);
     fTimer = setInterval(function(){ var k = (Date.now() - st) / 10000; bar.style.width = (100 - k * 100) + '%'; if (k >= 1){ clearInterval(fTimer); screen('client'); } }, 50);
   }
