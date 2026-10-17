@@ -94,7 +94,7 @@
               '<input type="range" class="sg-seek" min="0" max="1000" value="0" step="1" aria-label="재생 위치">' +
               '<span class="sg-t">0:00 / 0:00</span>' +
               '<div class="sg-vol-wrap"><span class="sg-vol-btn">' + VOL + '</span><input type="range" class="sg-vol" min="0" max="100" value="50" aria-label="볼륨"></div>' +
-              '<a class="sg-dl" href="' + esc(src) + '" download="' + esc(fname) + '" title="mp3 다운로드" aria-label="mp3 다운로드">' + DL + '</a>' +
+              (p.songNoDl ? '' : '<a class="sg-dl" href="' + esc(src) + '" download="' + esc(fname) + '" title="mp3 다운로드" aria-label="mp3 다운로드">' + DL + '</a>') +
             '</div>' +
           '</div>' +
         '</div>' +

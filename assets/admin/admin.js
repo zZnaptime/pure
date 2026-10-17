@@ -508,6 +508,7 @@
   function musicFrom(m){
     mu.song = m.song || ''; mu.cover = m.songCover || '';
     $('#muTitle').value = m.songTitle || ''; $('#muArtist').value = m.artist || ''; $('#muAlbum').value = m.album || ''; $('#muLyrics').value = m.lyrics || '';
+    $('#muNoDl').checked = !!m.songNoDl;
     $('#mu').hidden = !(m.song || m.lyrics);
     musicPaint();
   }
@@ -583,11 +584,12 @@
     }
     if (thumbSel !== null && thumbSel !== undefined) m.thumbnail = thumbSel;
     m.song = mu.song; m.songCover = mu.cover; m.songTitle = $('#muTitle').value.trim(); m.artist = $('#muArtist').value.trim(); m.album = $('#muAlbum').value.trim(); m.lyrics = $('#muLyrics').value.replace(/\s+$/, '');
+    m.songNoDl = $('#muNoDl').checked;
     if (!m.date) m.date = nowDate();
     m.format = 'html';
     return m;
   }
-  var ORDER = ['title', 'date', 'category', 'notice', 'thumbnail', 'summary', 'sub', 'status', 'price', 'center', 'song', 'songTitle', 'songCover', 'artist', 'album', 'lyrics', 'draft', 'format'];
+  var ORDER = ['title', 'date', 'category', 'notice', 'thumbnail', 'summary', 'sub', 'status', 'price', 'center', 'song', 'songTitle', 'songCover', 'artist', 'album', 'songNoDl', 'lyrics', 'draft', 'format'];
   function yamlOf(m){
     var keys = ORDER.concat(Object.keys(m).filter(function(k){ return ORDER.indexOf(k) < 0 && k !== 'body'; }));
     return keys.map(function(k){

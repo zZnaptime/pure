@@ -485,3 +485,7 @@
     gap: 12px;
   }
 }
+
+.sg-ls {
+    overflow-x: hidden;
+}

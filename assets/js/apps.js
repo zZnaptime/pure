@@ -629,3 +629,8 @@
   new MutationObserver(function(ms){ ms.forEach(function(m){ m.addedNodes.forEach(function(x){ if (x.nodeType === 1) scan(x); }); }); }).observe(document.body, { childList: true, subtree: true });
   scan(document.body);
 })();
+
+/* 우클릭 방지 */
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
