@@ -392,3 +392,96 @@
 
 /* 글쓰기 · 저장소 버튼 : 이 브라우저에서 글쓰기 화면에 연결한 사람(=나)에게만 보여요 */
 .sy-guest [data-set-href="cmsUrl"],.sy-guest [data-set-href="repoUrl"]{display:none !important}
+
+/* ========================================================
+   노래 글 플레이어: 볼륨, 가사창 통합, 스크롤 버그 수정 
+======================================================== */
+.sg-card {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+.sg-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  position: relative;
+  z-index: 1; /* 커버 필터 위로 올라오게 */
+}
+
+/* ── 스크롤 버그 수정 ── */
+.sg-ls {
+  position: relative; /* ⭐️ 스크롤 좌표가 튀지 않게 기준점 잡아줌 */
+  max-height: 200px;
+}
+
+/* ── 가사 디자인 (배경 박스 안으로 통합) ── */
+.sg-lyr {
+  background: rgba(0, 0, 0, 0.15); /* 앨범 아트에 어우러지는 반투명 */
+  border: none;
+  border-radius: 12px;
+  padding: 14px 16px;
+  position: relative;
+  z-index: 1;
+}
+.sg-ls p {
+  color: rgba(255, 255, 255, 0.45); /* 안 켜진 가사 */
+}
+.sg-lyr.sync .sg-ls p.on {
+  color: #fff; /* 현재 나오는 가사 */
+}
+
+/* 커버 이미지가 없는 기본(mono) 상태일 때 가사 디자인 */
+.sg-card.mono .sg-lyr {
+  background: var(--soft, #F6FAFD);
+}
+.sg-card.mono .sg-ls p {
+  color: var(--ink3, #9AB0C2);
+}
+.sg-card.mono .sg-lyr.sync .sg-ls p.on {
+  color: var(--ink, #14324A);
+}
+
+/* ── 볼륨 조절기 ── */
+.sg-vol-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto; /* 볼륨바 우측 정렬 */
+}
+.sg-vol-btn {
+  display: flex;
+  opacity: 0.7;
+  color: inherit;
+}
+.sg-vol {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 54px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #fff var(--v, 50%), rgba(255,255,255,.22) var(--v, 50%));
+  cursor: pointer;
+  margin: 0;
+  outline: none;
+}
+.sg-vol::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+.sg-card.mono .sg-vol {
+  background: linear-gradient(90deg, var(--ink,#14324A) var(--v, 50%), #E3EAF0 var(--v, 50%));
+}
+.sg-card.mono .sg-vol::-webkit-slider-thumb {
+  background: var(--ink,#14324A);
+}
+
+/* ── 모바일 화면일 때 여백 좁히기 ── */
+@media (max-width:560px){
+  .sg-info {
+    gap: 12px;
+  }
+}

@@ -34,6 +34,7 @@
   var DL = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
   var PLAY = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
   var PAUSE = '<svg viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>';
+  var VOL = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
 
   /* ── 본문 꾸미기 : 가운데 정렬 + 파일 링크를 다운로드 카드로 ── */
   var FILE_RE = /\.(gif|png|jpe?g|webp|zip|rar|7z|pdf|psd|clip|txt|mp3|wav|m4a|mp4|ttf|otf)(\?.*)?$/i;
@@ -82,22 +83,25 @@
     var box = D.createElement('div'); box.className = 'sg';
     box.innerHTML =
       '<div class="sg-card">' +
-        '<div class="sg-cv">' + (cover ? '<img src="' + esc(cover) + '" alt="">' : '<span>♪</span>') + '</div>' +
-        '<div class="sg-main">' +
-          '<small class="sg-k">' + esc(p.album || 'TRACK') + '</small>' +
-          '<b class="sg-tt">' + esc(title) + '</b>' +
-          '<span class="sg-ar">' + esc(p.artist || '') + '</span>' +
-          '<div class="sg-ctrl">' +
-            '<button type="button" class="sg-play" aria-label="재생">' + PLAY + '</button>' +
-            '<input type="range" class="sg-seek" min="0" max="1000" value="0" step="1" aria-label="재생 위치">' +
-            '<span class="sg-t">0:00 / 0:00</span>' +
-            '<a class="sg-dl" href="' + esc(src) + '" download="' + esc(fname) + '" title="mp3 다운로드" aria-label="mp3 다운로드">' + DL + '</a>' +
+        '<div class="sg-info">' +
+          '<div class="sg-cv">' + (cover ? '<img src="' + esc(cover) + '" alt="">' : '<span>♪</span>') + '</div>' +
+          '<div class="sg-main">' +
+            '<small class="sg-k">' + esc(p.album || 'TRACK') + '</small>' +
+            '<b class="sg-tt">' + esc(title) + '</b>' +
+            '<span class="sg-ar">' + esc(p.artist || '') + '</span>' +
+            '<div class="sg-ctrl">' +
+              '<button type="button" class="sg-play" aria-label="재생">' + PLAY + '</button>' +
+              '<input type="range" class="sg-seek" min="0" max="1000" value="0" step="1" aria-label="재생 위치">' +
+              '<span class="sg-t">0:00 / 0:00</span>' +
+              '<div class="sg-vol-wrap"><span class="sg-vol-btn">' + VOL + '</span><input type="range" class="sg-vol" min="0" max="100" value="50" aria-label="볼륨"></div>' +
+              '<a class="sg-dl" href="' + esc(src) + '" download="' + esc(fname) + '" title="mp3 다운로드" aria-label="mp3 다운로드">' + DL + '</a>' +
+            '</div>' +
           '</div>' +
         '</div>' +
+        (L.lines.length ? '<div class="sg-lyr' + (L.synced ? ' sync' : '') + '"><div class="sg-ls">' +
+          L.lines.map(function(o, i){ return '<p data-i="' + i + '"' + (o.t != null ? ' data-t="' + o.t + '"' : '') + '>' + (esc(o.x) || '&nbsp;') + '</p>'; }).join('') +
+        '</div></div>' : '') +
       '</div>' +
-      (L.lines.length ? '<div class="sg-lyr' + (L.synced ? ' sync' : '') + '"><p class="sg-cap">LYRICS</p><div class="sg-ls">' +
-        L.lines.map(function(o, i){ return '<p data-i="' + i + '"' + (o.t != null ? ' data-t="' + o.t + '"' : '') + '>' + (esc(o.x) || '&nbsp;') + '</p>'; }).join('') +
-      '</div></div>' : '') +
       '<audio preload="metadata" src="' + esc(src) + '"></audio>';
     var anchor = w.querySelector('.post-rules') || w.querySelector('.post-body');
     if (anchor) anchor.parentNode.insertBefore(box, anchor); else return;
@@ -125,6 +129,22 @@
 
     var au = box.querySelector('audio'), btn = box.querySelector('.sg-play'), seek = box.querySelector('.sg-seek'), tt = box.querySelector('.sg-t');
     var ls = box.querySelector('.sg-ls'), rows = ls ? Array.prototype.slice.call(ls.children) : [], cur = -1, drag = false;
+    
+    /* 👇 볼륨 스크립트 추가 */
+    var vol = box.querySelector('.sg-vol');
+    if (vol) {
+      var savedVol = 50;
+      try { savedVol = localStorage.getItem('sy-vol') ? parseInt(localStorage.getItem('sy-vol')) : 50; } catch(e){}
+      au.volume = savedVol / 100;
+      vol.value = savedVol;
+      vol.style.setProperty('--v', savedVol + '%');
+      vol.addEventListener('input', function(){
+        this.style.setProperty('--v', this.value + '%');
+        au.volume = this.value / 100;
+        try { localStorage.setItem('sy-vol', this.value); } catch(e){}
+      });
+    }
+    
     function paint(){
       var d = au.duration || 0, c = au.currentTime || 0;
       if (!drag){ seek.value = d ? Math.round(c / d * 1000) : 0; }
