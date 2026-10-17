@@ -479,7 +479,7 @@ window.SY_AOL = window.SY_AOL || {
     if (!hist.length){ ul.innerHTML = '<li class="none">아직 전적이 없어요. 게임을 플레이하세요.</li>'; return; }
     ul.innerHTML = hist.map(function(g){
       var d = new Date(g.at), ds = (d.getMonth() + 1) + '.' + d.getDate();
-      return '<li class="' + (g.w ? 'win' : 'lose') + '"><b>' + (g.w ? '승리' : '패배') + '</b><i class="al-pic sm" data-who="uxi"></i><span>' + g.k + ' / ' + g.d + ' · CS ' + g.cs + '</span><em>Lv.' + g.lv + ' · ' + g.t + ' · ' + ds + '</em></li>';
+      return '<li class="' + (g.w ? 'aol-win' : 'aol-lose') + '"><b>' + (g.w ? '승리' : '패배') + '</b><i class="al-pic sm" data-who="uxi"></i><span>' + g.k + ' / ' + g.d + ' · CS ' + g.cs + '</span><em>Lv.' + g.lv + ' · ' + g.t + ' · ' + ds + '</em></li>';
     }).join('');
     loadImgs();
   }
