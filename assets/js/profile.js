@@ -15,8 +15,8 @@ window.SY_PROFILES = window.SY_PROFILES || [
     ],
     /* ♪ 테마송 : 노래 글 파일 이름을 post 에 적으면 탭 옆에 버튼이 생겨요. 비우면 숨김 */
     songs: [
-      { title: 'BGM', post: '' },
-      { title: 'CHARACTER SONG', post: '' }
+      { title: 'BGM', post: '2026-10-17-110734' },
+      { title: 'CHARACTER SONG', post: '2026-10-17-111906' }
     ]
   },
   {
@@ -27,8 +27,8 @@ window.SY_PROFILES = window.SY_PROFILES || [
     ],
     /* ♪ 테마송 : 노래 글 파일 이름을 post 에 적으면 탭 옆에 버튼이 생겨요. 비우면 숨김 */
     songs: [
-      { title: 'BGM', post: '' },
-      { title: 'CHARACTER SONG', post: '' }
+      { title: 'BGM', post: '2026-10-17-110936' },
+      { title: 'CHARACTER SONG', post: '2026-10-17-112806' }
     ]
   }
 ];
