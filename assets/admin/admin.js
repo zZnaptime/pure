@@ -364,20 +364,32 @@
   function openSwatch(btn, kind){
     swKind = kind; var p = $('#popColor');
     p.innerHTML = (kind === 'color' ? COLORS : BGS).map(function(c){ return '<button type="button" data-c="' + c + '" title="' + (c || '기본') + '"' + (c ? ' style="background:' + c + '"' : ' class="none"') + '></button>'; }).join('');
+    var last = localStorage.getItem('sy-pick-' + kind) || (kind === 'color' ? '#1E8FD6' : '#EAF6FD');
+    p.innerHTML += '<div class="sw-custom"><input type="color" id="swPick" value="' + last + '"><input id="swHex" value="' + last + '" maxlength="7" spellcheck="false"><button type="button" class="sw-ok" id="swOk">적용</button></div>';
     togglePop(p, btn);
   }
-  $('#popColor').addEventListener('mousedown', function(e){ e.preventDefault(); });
-  $('#popColor').addEventListener('click', function(e){
-    var b = e.target.closest('button'); if (!b) return; var c = b.getAttribute('data-c');
+  function applyColor(c){
     if (swKind === 'color'){ exec('foreColor', c || '#26394B'); if (!c) cleanColor('color'); $('#tbFg').style.background = c || ''; }
     else { exec('hiliteColor', c || 'transparent'); if (!c) cleanColor('background-color'); $('#tbBg').style.background = c || ''; }
+    if (c) localStorage.setItem('sy-pick-' + swKind, c);
+  }
+  $('#popColor').addEventListener('input', function(e){
+    if (e.target.id === 'swPick') $('#swHex').value = e.target.value;
+    else if (e.target.id === 'swHex' && /^#[0-9a-f]{6}$/i.test(e.target.value)) $('#swPick').value = e.target.value;
+  });
+  $('#popColor').addEventListener('keydown', function(e){ if (e.key === 'Enter' && e.target.id === 'swHex'){ e.preventDefault(); $('#swOk').click(); } });
+  $('#popColor').addEventListener('mousedown', function(e){ if (!e.target.closest('input')) e.preventDefault(); });
+  $('#popColor').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'swOk'){ var h = $('#swHex').value.trim(); if (!/^#?[0-9a-f]{6}$/i.test(h)) h = $('#swPick').value; if (h[0] !== '#') h = '#' + h; applyColor(h); closePops(); return; }
+    applyColor(b.getAttribute('data-c'));
     closePops();
   });
   function cleanColor(prop){ $$('span[style], font', ED).forEach(function(s){ if (s.style && s.style.getPropertyValue(prop) && /^(rgb\(38, 57, 75\)|transparent|rgba\(0, 0, 0, 0\))$/.test(s.style.getPropertyValue(prop))) s.style.removeProperty(prop); if (s.tagName === 'SPAN' && !s.getAttribute('style')) s.replaceWith.apply(s, Array.prototype.slice.call(s.childNodes)); }); }
   $('#popMore').addEventListener('mousedown', function(e){ e.preventDefault(); });
   $('#popMore').addEventListener('click', function(e){
     var a = (e.target.closest('button') || {}).getAttribute && e.target.closest('button').getAttribute('data-act'); closePops();
-    if (a === 'fold') insertBlocks('<details><summary>더보기</summary><p>접힌 내용을 여기에 써요.</p></details>');
+    if (a === 'fold') askFold();
     else if (a === 'htmlblock') askHtml();
     else if (a === 'clear') exec('removeFormat');
   });
@@ -397,6 +409,18 @@
       else insertHTML('<a href="' + esc(u) + '"' + nt + '>' + esc(($('#mdTxt').value || u).trim()) + '</a>&nbsp;');
     });
   }
+  function askFold(){
+    modal('접은글', '<label class="ad-f"><span>접은글 제목 <small>· 비우면 \'더보기\'</small></span><input id="mdFold" placeholder="더보기"></label>', function(){
+      var t = ($('#mdFold').value || '').trim() || '더보기';
+      insertBlocks('<details><summary>' + esc(t) + '</summary><p>접힌 내용을 여기에 써요.</p></details>');
+    });
+  }
+  /* 에디터 안 접은글 제목 바로 고치기 : 제목을 더블클릭 */
+  ED.addEventListener('dblclick', function(e){
+    var s = e.target.closest && e.target.closest('summary'); if (!s || !ED.contains(s)) return; e.preventDefault();
+    modal('접은글 제목 바꾸기', '<label class="ad-f"><span>제목</span><input id="mdFold"></label>', function(){ var t = ($('#mdFold').value || '').trim(); if (t){ s.textContent = t; touch(); } });
+    $('#mdFold').value = s.textContent;
+  });
   function askTable(){
     modal('표', '<div class="ad-row2"><label class="ad-f"><span>줄</span><input id="mdR" type="number" value="3" min="1" max="30"></label><label class="ad-f"><span>칸</span><input id="mdC" type="number" value="3" min="1" max="10"></label></div>', function(){
       var r = Math.max(1, Math.min(30, +$('#mdR').value || 3)), c = Math.max(1, Math.min(10, +$('#mdC').value || 3)), h = '<table><tbody>';
@@ -483,7 +507,7 @@
   function srcOf(v){ if (!v) return ''; if (v.indexOf('up:') === 0){ var p = pend[v.slice(3)]; return p ? p.url : ''; } return v.replace(/^\//, ''); }
   function musicFrom(m){
     mu.song = m.song || ''; mu.cover = m.songCover || '';
-    $('#muTitle').value = m.songTitle || ''; $('#muArtist').value = m.artist || ''; $('#muLyrics').value = m.lyrics || '';
+    $('#muTitle').value = m.songTitle || ''; $('#muArtist').value = m.artist || ''; $('#muAlbum').value = m.album || ''; $('#muLyrics').value = m.lyrics || '';
     $('#mu').hidden = !(m.song || m.lyrics);
     musicPaint();
   }
@@ -499,7 +523,7 @@
   $('#fSong').addEventListener('change', function(){ var f = this.files[0]; this.value = ''; if (!f) return; mu.song = 'up:' + newPending(f); if (!$('#muTitle').value) $('#muTitle').value = f.name.replace(/\.[^.]+$/, ''); musicPaint(); touch(); });
   $('#fCover').addEventListener('change', function(){ var f = this.files[0]; this.value = ''; if (!f) return; mu.cover = 'up:' + newPending(f); musicPaint(); touch(); });
   $('#muOff').addEventListener('click', function(){ if ((mu.song || $('#muLyrics').value) && !confirm('이 글에서 노래를 뺄까요? (음원 · 가사 칸이 비워져요)')) return; musicFrom({}); touch(); });
-  ['#muTitle', '#muArtist', '#muLyrics'].forEach(function(s){ $(s).addEventListener('input', touch); });
+  ['#muTitle', '#muArtist', '#muAlbum', '#muLyrics'].forEach(function(s){ $(s).addEventListener('input', touch); });
   /* LRC 만들기 : 지금 재생 위치를 커서가 있는 줄 앞에 찍고 다음 줄로 */
   function lrcTime(t){ var m = Math.floor(t / 60), s = t - m * 60; return '[' + pad(m) + ':' + (s < 10 ? '0' : '') + s.toFixed(2) + ']'; }
   function stamp(){
@@ -558,12 +582,12 @@
       m.status = $('#dwStatus').value; m.price = $('#dwPrice').value.replace(/[^0-9]/g, '');
     }
     if (thumbSel !== null && thumbSel !== undefined) m.thumbnail = thumbSel;
-    m.song = mu.song; m.songCover = mu.cover; m.songTitle = $('#muTitle').value.trim(); m.artist = $('#muArtist').value.trim(); m.lyrics = $('#muLyrics').value.replace(/\s+$/, '');
+    m.song = mu.song; m.songCover = mu.cover; m.songTitle = $('#muTitle').value.trim(); m.artist = $('#muArtist').value.trim(); m.album = $('#muAlbum').value.trim(); m.lyrics = $('#muLyrics').value.replace(/\s+$/, '');
     if (!m.date) m.date = nowDate();
     m.format = 'html';
     return m;
   }
-  var ORDER = ['title', 'date', 'category', 'notice', 'thumbnail', 'summary', 'sub', 'status', 'price', 'center', 'song', 'songTitle', 'songCover', 'artist', 'lyrics', 'draft', 'format'];
+  var ORDER = ['title', 'date', 'category', 'notice', 'thumbnail', 'summary', 'sub', 'status', 'price', 'center', 'song', 'songTitle', 'songCover', 'artist', 'album', 'lyrics', 'draft', 'format'];
   function yamlOf(m){
     var keys = ORDER.concat(Object.keys(m).filter(function(k){ return ORDER.indexOf(k) < 0 && k !== 'body'; }));
     return keys.map(function(k){

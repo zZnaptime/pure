@@ -330,7 +330,7 @@
 
 /* 노래 플레이어 색 : 앨범아트 따라가기 / 커버 없으면 화이트 */
 .sg-card.has-art{background:var(--sg-c,#2A2F36);box-shadow:0 12px 30px -14px rgba(0,0,0,.45)}
-.sg-card.has-art::before{content:"";position:absolute;inset:-40px;background:var(--sg-img) center/cover no-repeat;filter:blur(30px) saturate(1.25);opacity:.55;pointer-events:none}
+.sg-card.has-art::before{content:"";position:absolute;inset:-40px;background:var(--sg-img) center/cover no-repeat;filter:blur(30px) saturate(1.25);opacity:.35;pointer-events:none}
 .sg-card.has-art::after{background:linear-gradient(90deg,rgba(0,0,0,.18),rgba(0,0,0,.42))}
 .sg-card > *{position:relative;z-index:1}
 .sg-card.has-art .sg-k{color:var(--sg-a,#fff);opacity:.95}
@@ -351,9 +351,40 @@
 
 /* 글쓰기 화면(admin.html)에서 쓴 글 : 작은 글 · 접은글 · HTML 블록 · 정렬된 제목 */
 .post-body p.small{font-size:.86em;color:var(--ink3,#8A9DAE)}
-.post-body details{margin:1.2em 0;padding:12px 16px;border-radius:12px;background:var(--soft,#F6FAFD);border:1px solid var(--line,#DCE8F1);text-align:left}
-.post-body summary{font-weight:800;cursor:pointer;color:var(--blue2,#1E8FD6)}
-.post-body details[open] summary{margin-bottom:8px}
+.post-body blockquote p:last-child{margin-bottom:0}
+
+/* ── 링크 : 밑에서 차오르는 하늘색 형광펜 + 외부 링크 화살표 ── */
+.post-body a:not(.pb-attach):not(.sg-dl){color:var(--blue2,#1E8FD6);font-weight:600;text-decoration:none;padding:0 2px;border-radius:3px;
+  background:linear-gradient(var(--sky,#CDE9F7),var(--sky,#CDE9F7)) left bottom/100% 2px no-repeat;transition:background-size .25s ease,color .2s}
+.post-body a:not(.pb-attach):not(.sg-dl):hover{background-size:100% 100%;color:var(--deep,#0D5A96)}
+.post-body a[target="_blank"]:not(.pb-attach):not(.sg-dl)::after{content:"";display:inline-block;width:.62em;height:.62em;margin-left:3px;vertical-align:.08em;background:currentColor;opacity:.7;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M4 2h6v6M10 2 2 10' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'/></svg>") center/contain no-repeat;
+          mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M4 2h6v6M10 2 2 10' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'/></svg>") center/contain no-repeat}
+.post-body a:has(img){background:none;padding:0}
+.post-body a:has(img)::after{display:none !important}
+
+/* ── 구분선 : 가운데 심전도 한 박자 ── */
+.post-body hr{border:0;height:24px;margin:2.4em 0;position:relative;overflow:visible;
+  background:linear-gradient(90deg,transparent,var(--line2,#CFDCE6) 18%,var(--line2,#CFDCE6) 40%,transparent 40%,transparent 60%,var(--line2,#CFDCE6) 60%,var(--line2,#CFDCE6) 82%,transparent) center/100% 1px no-repeat}
+.post-body hr::before{content:"";position:absolute;left:50%;top:0;width:min(30%,170px);height:24px;transform:translateX(-50%);background:var(--blue,#2FA4DE);
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24' preserveAspectRatio='none'><path d='M0 12h44l4-5 4 5h4l3 8 5-19 5 16 3-5h48' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'/></svg>") center/100% 100% no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24' preserveAspectRatio='none'><path d='M0 12h44l4-5 4 5h4l3 8 5-19 5 16 3-5h48' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'/></svg>") center/100% 100% no-repeat;filter:drop-shadow(0 0 3px rgba(47,164,222,.45))}
+.post-body hr::after{content:"";position:absolute;right:calc(50% - min(15%,85px) - 3px);top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--mint2,#3FD0AC);box-shadow:0 0 0 3px rgba(110,231,200,.25);animation:ecgBeat 1.6s ease-in-out infinite}
+@keyframes ecgBeat{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+@media (prefers-reduced-motion:reduce){.post-body hr::after{animation:none}}
+
+/* ── 접은글 : 차트 카드 + 회전 화살표 ── */
+.post-body details{margin:1.4em 0;padding:0;border-radius:14px;background:#fff;border:1px solid var(--line,#DCE8F1);text-align:left;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.post-body details:hover{border-color:var(--sky,#CDE9F7)}
+.post-body details[open]{border-color:var(--sky,#CDE9F7);box-shadow:0 6px 18px -10px rgba(13,90,150,.25)}
+.post-body summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 16px;font-weight:800;cursor:pointer;color:var(--ink,#14324A);background:var(--soft,#F6FAFD);user-select:none}
+.post-body summary::-webkit-details-marker{display:none}
+.post-body summary::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--blue,#2FA4DE);box-shadow:0 0 0 3px var(--wash,#EDF5FA)}
+.post-body summary::after{content:"";margin-left:auto;flex:none;width:20px;height:20px;border-radius:50%;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='m8 10 4 4 4-4' fill='none' stroke='%231E8FD6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/14px no-repeat;border:1px solid var(--line,#DCE8F1);transition:transform .25s}
+.post-body details[open] summary{border-bottom:1px dashed var(--line,#DCE8F1);color:var(--blue2,#1E8FD6)}
+.post-body details[open] summary::after{transform:rotate(180deg)}
+.post-body details > :not(summary){margin-left:16px;margin-right:16px}
+.post-body details > summary + *{margin-top:14px}
+.post-body details > :last-child{margin-bottom:14px}
 .post-body .html-block{margin:1em 0}
 .post-body h2[style*="center"]::before{margin-left:auto;margin-right:auto}
 .post-body h2[style*="right"]::before{margin-left:auto}

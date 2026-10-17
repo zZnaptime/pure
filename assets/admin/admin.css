@@ -232,3 +232,12 @@ body[data-view="vEdit"]{padding-bottom:var(--footH)}
   .r-cat{display:none}
   .ad-foot{padding:0 12px}
 }
+/* 컬러피커 (직접 고르기) */
+.ad-swatch .sw-custom{grid-column:1/-1;display:flex;align-items:center;gap:6px;margin-top:4px;padding-top:8px;border-top:1px solid var(--line)}
+.ad-swatch .sw-custom input[type=color]{width:30px;height:26px;padding:0;border:1px solid var(--line2);border-radius:7px;background:none;cursor:pointer}
+.ad-swatch .sw-custom input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+.ad-swatch .sw-custom input[type=color]::-webkit-color-swatch{border:0;border-radius:5px}
+.ad-swatch .sw-custom #swHex{flex:1;min-width:0;width:80px;height:26px;padding:0 8px;border:1px solid var(--line2);border-radius:7px;font:600 12px ui-monospace,monospace;color:var(--ink)}
+.ad-swatch .sw-custom .sw-ok{width:auto;height:26px;padding:0 10px;border-radius:7px;background:var(--blue2);color:#fff;font-weight:700;font-size:12px;box-shadow:none}
+.ad-swatch .sw-custom .sw-ok:hover{transform:none;background:var(--deep)}
+.ad-body summary{user-select:text}

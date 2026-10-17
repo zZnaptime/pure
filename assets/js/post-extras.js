@@ -82,7 +82,7 @@
       '<div class="sg-card">' +
         '<div class="sg-cv">' + (cover ? '<img src="' + esc(cover) + '" alt="">' : '<span>♪</span>') + '</div>' +
         '<div class="sg-main">' +
-          '<small class="sg-k">TRACK · ' + esc(p.category || 'MUSIC') + '</small>' +
+          '<small class="sg-k">' + esc(p.album || 'TRACK') + '</small>' +
           '<b class="sg-tt">' + esc(title) + '</b>' +
           '<span class="sg-ar">' + esc(p.artist || '') + '</span>' +
           '<div class="sg-ctrl">' +

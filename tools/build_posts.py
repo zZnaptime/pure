@@ -81,6 +81,7 @@ def main():
             'songTitle': str(meta.get('songTitle') or ''),
             'songCover': rel(meta.get('songCover')),
             'artist': str(meta.get('artist') or ''),
+            'album': str(meta.get('album') or ''),
             'lyrics': str(meta.get('lyrics') or ''),
             'html': body_html,
         })
