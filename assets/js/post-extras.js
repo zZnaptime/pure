@@ -17,6 +17,8 @@
 
   /* ── 가사 : [mm:ss.xx] 가 있으면 싱크 가사 ── */
   function parseLyrics(t){
+    if (!t || !String(t).trim()) return { synced: false, lines: [] };
+    
     var lines = String(t || '').replace(/\r/g, '').split('\n'), out = [], synced = false;
     lines.forEach(function(l){
       var tags = [], m, re = /\[(\d{1,2}):(\d{1,2}(?:\.\d{1,3})?)\]/g;
