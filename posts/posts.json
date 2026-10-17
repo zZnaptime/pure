@@ -17,8 +17,8 @@
   "songCover": "",
   "artist": "",
   "lyrics": "",
-  "html": "<p>깃허브로 이사 온 <strong>첫 번째 기록</strong>이에요.</p>\n<p>관리자 화면(Pages CMS)에서 이렇게 글을 쓰면, 저장하는 순간 자동으로 홈에 올라와요.</p>\n<blockquote>\n<p>링거는 꽂지 않았습니다.</p>\n</blockquote>",
-  "no": 3
+  "html": "<p>깃허브로 이사 온 <strong>첫 번째 기록</strong>이에요.</p><table><tbody><tr><td>123</td><td>456</td><td>678</td></tr><tr><td>7969</td><td>456464</td><td>474747</td></tr><tr><td>4747</td><td><br></td><td><br></td></tr></tbody></table><p>&nbsp;</p><ul><li><br></li></ul><p>&nbsp;</p><p><a href=\"https://zznaptime.github.io/pure/?\" target=\"_blank\" rel=\"noopener\">링크</a></p>\n<p>관리자 화면(Pages CMS)에서 이렇게 글을 쓰면, 저장하는 순간 자동으로 홈에 올라와요.</p><details><summary>더보기</summary><p>접힌 내용을 여기에 써요.</p></details><hr><p>&nbsp;</p>\n<blockquote>\n<p>링거는 꽂지 않았습니다.</p>\n</blockquote>",
+  "no": 4
  },
  {
   "slug": "2026-10-14-200000",
@@ -39,6 +39,27 @@
   "artist": "",
   "lyrics": "",
   "html": "<h3 style=\"text-align: center;\"><font color=\"#4a4a4a\">① 기본 배너</font></h3>\n<p><img src=\"assets/uploads/Syringe-A.gif\" alt=\"\" style=\"width: 60%;\"></p>\n<p class=\"pb-filewrap\"><a class=\"pb-attach\" href=\"assets/uploads/Syringe-A-2.gif\">Syringe-A.gif</a></p>\n<p>&nbsp;</p>\n<h3 style=\"text-align: center;\"><b>② 로고 배너</b></h3>\n<p style=\"text-align: center;\" class=\"small\"><span style=\"font-size: 13.33px;\">*지인 배너가 블로그에 <b>작게</b> 들어가는 분들께 권장</span></p>\n<p><img src=\"assets/uploads/Syringe-B.gif\" alt=\"\" style=\"width: 60%;\"></p>\n<p class=\"pb-filewrap\"><a class=\"pb-attach\" href=\"assets/uploads/Syringe-B-2.gif\">Syringe-B.gif</a></p>\n<p style=\"text-align: center;\"><br></p>\n<h3 style=\"text-align: center;\">✦ Title(alt) ✦</h3>\n<div style=\"text-align: center;\">Syringe</div>\n<h3 style=\"text-align:center;color:rgb(20, 50, 74);font-weight:800;font-style:normal\"><br>✦ Link ✦</h3><p style=\"text-align: center;\"><!--StartFragment--><!--EndFragment--></p><div style=\"text-align:center;color:rgb(38, 57, 75);font-weight:400;font-style:normal\">링크...</div><!--StartFragment--><h3 style=\"text-align: center;\"><br><span style=\"color: rgb(154, 176, 194);\">✦ Subtitle ✦</span></h3><p style=\"text-align: center;\"></p><div style=\"text-align: center;\"><div><span style=\"color: rgb(154, 176, 194);\">beats per minute</span></div><div><span style=\"color: rgb(154, 176, 194);\">(필수 X)</span></div></div><!--EndFragment-->",
+  "no": 3
+ },
+ {
+  "slug": "2026-10-17-083241",
+  "title": "🎧 Ripple | Theme BGM 01",
+  "date": "2026-05-23 08:32",
+  "dateText": "2026. 5. 23.",
+  "category": "♪ music",
+  "notice": false,
+  "thumbnail": "assets/uploads/rippletheme-2.png",
+  "summary": "",
+  "sub": "",
+  "status": "",
+  "price": "",
+  "center": false,
+  "song": "assets/uploads/Ripple_Theme-BGM-01.mp3",
+  "songTitle": "Ripple | Theme BGM 01",
+  "songCover": "assets/uploads/rippletheme-2.png",
+  "artist": "Ripple",
+  "lyrics": "",
+  "html": "",
   "no": 2
  },
  {
