@@ -28,7 +28,7 @@
 .pf-led i:nth-child(2){background:var(--mint);box-shadow:0 0 6px var(--mint);animation:liveBlink 1.6s infinite}
 .pf-led i:nth-child(3){background:var(--sky);box-shadow:none}
 .app-prof .wbody{padding:0;display:flex;overflow:hidden}
-.pf-dev{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--dv-bg);color:var(--dv-ink);transition:background .5s,color .5s}
+.pf-dev{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--dv-bg);color:var(--dv-ink);transition:background .5s,color .5s}
 .pf-who{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;padding:4px;border-radius:14px;background:rgba(127,160,190,.12);box-shadow:inset 0 0 0 1px var(--dv-line)}
 .pf-who button{display:flex;align-items:center;gap:9px;min-width:0;padding:7px 10px;border-radius:11px;text-align:left;color:var(--dv-sub);transition:background .3s,color .3s,box-shadow .3s}
 .pf-who button .k-pf{width:30px;height:30px;border-radius:50%;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.6)}
@@ -219,9 +219,14 @@
 
 /* 모바일 */
 @media not all and (min-width:861px) and (min-height:600px){
-  .app-prof .pf-dev{min-height:72vh}
-  .app-prof .pf-view{min-height:56vh}
-  .app-aol .aol{height:min(76vh,600px)}
+  /* 카드 창 공통 70vh 제한이 단말기·게임 창 하단을 잘라서 해제 */
+  .sy-stack .app-prof .wbody,.sy-stack .app-aol .wbody{max-height:none}
+  .app-prof .pf-dev{min-height:72vh;min-height:72dvh}
+  .app-prof .pf-view{min-height:56vh;min-height:56dvh}
+  .app-aol .aol{height:min(76vh,600px);height:min(76dvh,600px)}
+  /* 테마송 버튼은 탭 위 한 줄로 (탭이 밀려 잘리지 않게) */
+  .pf-tabbar{flex-wrap:wrap}
+  .pf-tabbar .pf-songs{order:-1;flex:1 0 100%;justify-content:flex-end;margin:0 0 6px}
   .ac-social,.ag-help,.ac-art,.ac-cur{display:none}
   .ac-nav{gap:8px;padding:0 10px}
   .ac-play{padding:0 14px;letter-spacing:.12em}

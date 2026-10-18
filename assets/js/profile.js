@@ -69,8 +69,8 @@ window.SY_PROFILES = window.SY_PROFILES || [
       if (d){
         if (!quiet){ boot.classList.remove('run'); void boot.offsetWidth; boot.classList.add('run'); }
         if (frame.getAttribute('src') !== d.src) frame.setAttribute('src', d.src);
-        ext.href = d.src; ext.hidden = false;
-      } else { frame.removeAttribute('src'); ext.hidden = true; }
+        if (ext){ ext.href = d.src; ext.hidden = false; }
+      } else { frame.removeAttribute('src'); if (ext) ext.hidden = true; }
       try { localStorage.setItem(KEY, JSON.stringify({ p: cur, d: doc })); } catch(e){}
     }
     who.addEventListener('click', function(e){ var b = e.target.closest('button[data-i]'); if (b) show(+b.getAttribute('data-i'), 0); });
@@ -91,6 +91,22 @@ window.SY_PROFILES = window.SY_PROFILES || [
           '::-webkit-scrollbar-thumb{background:' + c.th + ' !important;border-radius:8px;border:2px solid ' + c.tr + '}' +
           '::-webkit-scrollbar-thumb:hover{background:' + c.hv + ' !important}::-webkit-scrollbar-button{display:none !important}';
         (d.head || d.documentElement).appendChild(s);
+        /* 좁은 화면(모바일)에서 프로필 html 의 고정 폭·여백을 풀어 가로로 잘리지 않게 */
+        if (!d.getElementById('sy-fit')){
+          var f = d.createElement('style'); f.id = 'sy-fit';
+          f.textContent = 'html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;overflow-x:hidden}img{max-width:100%;height:auto}' +
+            '@media (max-width:600px){' +
+              '[style*="min-width"]{min-width:0 !important}' +
+              '[style*="flex-wrap: wrap"]>[style*="flex:"]{flex-basis:100% !important}' +
+              '[style*="width: 600px"],[style*="max-width: 600px"]{max-width:100% !important}' +
+              '[style*="padding: 40px"]{padding:22px 18px !important}' +
+              '[style*="padding: 30px"],[style*="padding: 28px"],[style*="padding: 25px"]{padding:18px !important}' +
+              '[style*="height: 750px"],[style*="height: 600px"]{height:auto !important;min-height:440px;padding-top:70px !important}' +
+              '[style*="font-size: 80px"]{font-size:54px !important;letter-spacing:-2px !important}' +
+              '[style*="top: 25px; right: 25px"]{top:14px !important;right:14px !important}' +
+            '}';
+          (d.head || d.documentElement).appendChild(f);
+        }
       } catch(e){}
     }
     frame.addEventListener('load', paint);

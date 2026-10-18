@@ -912,8 +912,11 @@ div[data-ke-type='moreLess']{position:relative}
 /* 하단 독 아래로 글이 비치지 않게 부드럽게 지우기 */
 body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(var(--taskH) + 22px);pointer-events:none;z-index:8990;
   background:linear-gradient(to top,var(--bg) 0%,var(--bg) 58%,rgba(244,247,250,0) 100%)}
-#tt-body-index::after{display:none}
-@media not all and (min-width:861px) and (min-height:600px){ #tt-body-index::after{display:block} }
+/* PC 홈 : 독 아래·뒤로 창이 비치지 않게 은은하게 (바탕화면 아이콘 이름은 안 덮이는 높이) */
+@media (min-width:861px) and (min-height:600px){
+  #tt-body-index::after{height:calc(var(--taskH) + 8px);
+    background:linear-gradient(to top,var(--bg) 0%,rgba(244,247,250,.8) 40%,rgba(244,247,250,0) 100%)}
+}
 
 /* 알약 위치 오른쪽으로 */
 .big .cap{margin:0 .025em 0 .07em}
@@ -1891,6 +1894,12 @@ i.k-pf.k-ini{display:grid;place-items:center}
 @media not all and (min-width:861px) and (min-height:600px){
   .sy-float .app-post,.sy-float .app-list{max-height:calc(100dvh - var(--barH) - var(--taskH) - 20px)}
   .app-post .pw-in{padding:18px 16px 26px}
+  /* 모바일 본문 글자 : 15.5px / 행간 1.9 → 14px / 1.75 */
+  .post-body{font-size:calc(14px * var(--font-scale));line-height:1.75}
+  .post-body h2{font-size:calc(18px * var(--font-scale))}
+  .post-body h3{font-size:calc(16px * var(--font-scale))}
+  .post-body blockquote{padding:12px 16px}
+  .app-post .post-title{font-size:calc(21px * var(--font-scale))}
   .app-list .ls-body{padding:12px}
   .app-list .card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 }
