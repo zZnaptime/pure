@@ -494,3 +494,25 @@
 .sg-ls {
     overflow-x: hidden;
 }
+/* ========================================================
+   노래 글 플레이어 : 앨범 커버 크게 보기 + 모바일 세로 배치
+   (커버 크게 → 앨범명·제목·가수 → 재생+재생바 → 볼륨+다운로드)
+======================================================== */
+.sg-cv.zoom{cursor:url('../images/cursor-h.cur'),zoom-in !important;transition:transform .25s cubic-bezier(.2,.9,.2,1),box-shadow .25s}
+.sg-cv.zoom:hover{transform:scale(1.03);box-shadow:0 12px 26px -8px rgba(0,0,0,.55)}
+@media (max-width:560px){
+  .sg-info{flex-direction:column;align-items:stretch;gap:14px}
+  .sg-cv{width:min(240px,72%);height:auto;aspect-ratio:1;margin:4px auto 0;border-radius:16px}
+  .sg-main{align-items:center;text-align:center;gap:4px}
+  .sg-tt{white-space:normal;font-size:18px;line-height:1.25}
+  /* 재생 버튼(가운데) → 재생바(한 줄 전체) + 시간 → 볼륨 + 다운로드 */
+  .sg-ctrl{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"play play" "seek seek" "time time" "vol dl";align-items:center;gap:6px 12px;width:100%;margin-top:14px}
+  .sg-play{grid-area:play;justify-self:center;width:54px;height:54px;margin-bottom:8px}
+  .sg-play svg{width:22px;height:22px}
+  .sg-seek{grid-area:seek;width:100%}
+  .sg-t{grid-area:time;display:block;justify-self:end;font-size:10px;margin-top:-1px}
+  .sg-vol-wrap{grid-area:vol;margin:6px 0 0;gap:8px;min-width:0}
+  .sg-vol{flex:1;width:auto;min-width:0}
+  .sg-dl{grid-area:dl;justify-self:end;margin-top:6px}
+  .sg-card:not(:has(.sg-dl)) .sg-ctrl{grid-template-areas:"play play" "seek seek" "time time" "vol vol"}
+}

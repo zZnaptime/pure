@@ -84,7 +84,7 @@
     box.innerHTML =
       '<div class="sg-card">' +
         '<div class="sg-info">' +
-          '<div class="sg-cv">' + (cover ? '<img src="' + esc(cover) + '" alt="">' : '<span>♪</span>') + '</div>' +
+          '<div class="sg-cv' + (cover ? ' zoom' : '') + '"' + (cover ? ' title="앨범자켓 확대"' : '') + '>' + (cover ? '<img src="' + esc(cover) + '" alt="' + esc(title) + ' 앨범 커버">' : '<span>♪</span>') + '</div>' +
           '<div class="sg-main">' +
             '<small class="sg-k">' + esc(p.album || 'TRACK') + '</small>' +
             '<b class="sg-tt">' + esc(title) + '</b>' +
@@ -94,7 +94,7 @@
               '<input type="range" class="sg-seek" min="0" max="1000" value="0" step="1" aria-label="재생 위치">' +
               '<span class="sg-t">0:00 / 0:00</span>' +
               '<div class="sg-vol-wrap"><span class="sg-vol-btn">' + VOL + '</span><input type="range" class="sg-vol" min="0" max="100" value="50" aria-label="볼륨"></div>' +
-              (p.songNoDl ? '' : '<a class="sg-dl" href="' + esc(src) + '" download="' + esc(fname) + '" title="mp3 다운로드" aria-label="mp3 다운로드">' + DL + '</a>') +
+              (p.songNoDl ? '' : '<a class="sg-dl" href="' + esc(src) + '" download="' + esc(fname) + '" title="Mp3 다운로드" aria-label="mp3 다운로드">' + DL + '</a>') +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -173,9 +173,9 @@
   (function(){
     var css = D.createElement('style');
     css.textContent =
-      '.sy-lb{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:rgba(9,20,32,.86);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .22s}' +
+      '.sy-lb{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(255,255,255,.22) .7px,transparent 1.1px) 0 0/14px 14px,rgba(9,20,32,.50);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .22s}' +
       '.sy-lb.on{opacity:1;pointer-events:auto}' +
-      '.sy-lb img{max-width:calc(100vw - 120px);max-height:calc(100vh - 110px);border-radius:10px;box-shadow:0 20px 60px -10px rgba(0,0,0,.6);transform:scale(.96);transition:transform .25s cubic-bezier(.2,.9,.25,1);cursor:zoom-out;user-select:none;-webkit-user-drag:none}' +
+      '.sy-lb img{max-width:min(calc(100vw - 240px),1100px);max-height:calc(100vh - 260px);border-radius:10px;box-shadow:0 20px 60px -10px rgba(0,0,0,.6);transform:scale(.96);transition:transform .25s cubic-bezier(.2,.9,.25,1);cursor:zoom-out;user-select:none;-webkit-user-drag:none}' +
       '.sy-lb.on img{transform:none}' +
       '.sy-lb button{position:absolute;display:grid;place-items:center;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;transition:background .15s}' +
       '.sy-lb button:hover{background:rgba(255,255,255,.24)}' +
@@ -184,7 +184,7 @@
       '.sy-lb .pv{left:18px}.sy-lb .nx{right:18px}' +
       '.sy-lb .ct{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font:700 12px Pretendard,sans-serif;letter-spacing:.06em}' +
       '.sy-lb.one .pv,.sy-lb.one .nx,.sy-lb.one .ct{display:none}' +
-      '@media (max-width:640px){.sy-lb img{max-width:100vw;max-height:calc(100vh - 120px);border-radius:0}.sy-lb .pv,.sy-lb .nx{display:none}}';
+      '@media (max-width:640px){.sy-lb img{max-width:calc(100vw - 56px);max-height:calc(100vh - 200px);border-radius:8px}.sy-lb .pv,.sy-lb .nx{display:none}}';
     D.head.appendChild(css);
     var lb = D.createElement('div'); lb.className = 'sy-lb'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-label', '사진 크게 보기');
     lb.innerHTML = '<img alt=""><button type="button" class="x" aria-label="닫기">×</button><button type="button" class="pv" aria-label="이전">‹</button><button type="button" class="nx" aria-label="다음">›</button><span class="ct"></span>';
@@ -195,6 +195,9 @@
     function close(){ lb.classList.remove('on'); }
     function go(d){ if (list.length < 2) return; idx = (idx + d + list.length) % list.length; paint(); }
     D.addEventListener('click', function(e){
+      /* 노래 글 : 앨범 커버를 누르면 커버만 크게 */
+      var cv = e.target.closest && e.target.closest('.sg-cv img');
+      if (cv){ e.preventDefault(); e.stopPropagation(); list = [cv]; idx = 0; paint(); lb.classList.add('on'); return; }
       var im = e.target.closest && e.target.closest('.post-body img');
       if (!im || im.closest('a') || im.closest('.sg')) return;
       e.preventDefault(); e.stopPropagation(); open(im);

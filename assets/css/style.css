@@ -915,7 +915,7 @@ body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(var(--
 /* PC 홈 : 독 아래·뒤로 창이 비치지 않게 은은하게 (바탕화면 아이콘 이름은 안 덮이는 높이) */
 @media (min-width:861px) and (min-height:600px){
   #tt-body-index::after{height:calc(var(--taskH) + 8px);
-    background:linear-gradient(to top,var(--bg) 0%,rgba(244,247,250,.8) 40%,rgba(244,247,250,0) 100%)}
+    background:linear-gradient(to top,var(--bg) 0%,rgba(244,247,250,.5) 40%,rgba(244,247,250,0) 100%)}
 }
 
 /* 알약 위치 오른쪽으로 */

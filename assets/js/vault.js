@@ -265,7 +265,7 @@
           var looks = c.looks || [], cur = looks[S.look[ci] || 0] || looks[0];
           if (!hasFace(cur)) return '';
           var off = !!S.noface[ci];
-          return '<button type="button" class="vd-face' + (off ? ' off' : '') + '" data-face="' + ci + '" aria-pressed="' + !off + '" title="' + (off ? '표정 빼고 보는 중 · 누르면 표정 넣기' : '표정 넣고 보는 중 · 누르면 표정 빼기') + '">' + (off ? I_FACE_OFF : I_FACE_ON) + '<span>표정 ' + (off ? 'OFF' : 'ON') + '</span></button>';
+          return '<button type="button" class="vd-face' + (off ? ' off' : '') + '" data-face="' + ci + '" aria-pressed="' + !off + '" title="' + (off ? '클릭 → 표정 넣기' : '클릭 → 표정 빼기') + '">' + (off ? I_FACE_OFF : I_FACE_ON) + '<span>표정 ' + (off ? 'OFF' : 'ON') + '</span></button>';
         })() +
         '<button type="button" class="vd-copy" data-copy="' + ci + '">' + I_COPY + '<span>COPY</span></button></header>' +
         (function(){
