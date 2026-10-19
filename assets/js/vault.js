@@ -199,6 +199,7 @@
   /* ════════ 화면 ════════ */
   function render(){
     if (!win) return;
+    unzoom();
     var root = $('#vtRoot', win), h = '';
     if (!S.key) h = lockHTML();
     else if (S.view === 'pair' && S.data.pairs[S.pi]) h = pairHTML(S.data.pairs[S.pi]);
@@ -281,20 +282,35 @@
     }).join('');
     return '<div class="vt-detail">' + I_CLIP +
       '<div class="vd-top"><button type="button" class="vd-back" data-back>' + I_BACK + 'INDEX</button><span class="vd-path">SUBJECT FILE Nº ' + pad(S.pi + 1) + '</span></div>' +
-      '<div class="vd-head' + (S.big ? ' big' : '') + '">' +
+      '<div class="vd-head">' +
         '<div class="vd-id">' +
           (p.genre ? '<span class="vd-genre">' + esc(p.genre) + '</span>' : '') + labelHTML('vd-label', p.label) +
           '<h2 class="vd-name">' + esc(p.name || '') + '</h2>' + (p.sub ? '<p class="vd-sub">' + esc(p.sub) + '</p>' : '') +
           (p.tags.length ? '<div class="vd-tags">' + p.tags.map(function(t){ return '<i>#' + esc(t) + '</i>'; }).join('') + '</div>' : '') +
           '<dl class="vd-facts"><div><dt>SUBJECTS</dt><dd>' + pad(p.chars.length) + '</dd></div><div><dt>OUTFITS</dt><dd>' + pad(p.outfits.length) + '</dd></div><div><dt>WEARING</dt><dd>' + esc(o ? (o.name || '의상 ' + (S.oi + 1)) : 'NONE') + '</dd></div></dl>' +
         '</div>' +
-        '<button type="button" class="vd-photo" data-zoom title="사진 크게 / 작게">' + imgBox('vd-img', img) + '<span class="vd-cap">' + esc(o ? (o.name || '') + (o.sub ? ' · ' + o.sub : '') : 'BASE') + '</span></button>' +
+        '<button type="button" class="vd-photo" data-zoom title="사진 크게 보기">' + imgBox('vd-img', img) + '<span class="vd-cap">' + esc(o ? (o.name || '') + (o.sub ? ' · ' + o.sub : '') : 'BASE') + '</span></button>' +
       '</div>' +
       '<div class="vd-sec"><span>OUTFIT</span><i></i></div>' +
       '<div class="vd-ctrl">' + tabs + mode + '</div>' +
       '<div class="vd-chars' + (p.chars.length > 1 ? ' two' : '') + '">' + (chars || '<p class="vt-empty">캐릭터 프롬프트가 없어요.</p>') + '</div>' +
     '</div>';
   }
+  /* 사진 크게 보기 : 레이아웃은 그대로 두고, 서류철 안을 덮는 어둑한 하프톤 막 위에 꽉 차게 */
+  function zoom(btn){
+    var im = $('.vd-img img', btn); if (!im) return;
+    unzoom();
+    var z = D.createElement('div'); z.className = 'vt-zoom'; z.setAttribute('data-unzoom', ''); z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', '사진 크게 보기');
+    var cap = $('.vd-cap', btn);
+    z.innerHTML = '<img alt="" src="' + im.getAttribute('src') + '">' + (cap && cap.textContent ? '<span class="vz-cap">' + esc(cap.textContent) + '</span>' : '') +
+      '<button type="button" class="vz-x" aria-label="닫기"><svg viewBox="0 0 12 12"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>';
+    $('.vt-folder', win).appendChild(z);
+    requestAnimationFrame(function(){ z.classList.add('on'); });
+    try { $('.vz-x', z).focus({ preventScroll: true }); } catch(x){}
+  }
+  function unzoom(){ if (!win) return; $$('.vt-zoom', win).forEach(function(z){ z.parentNode.removeChild(z); }); }
+  D.addEventListener('keydown', function(e){ if (e.key === 'Escape' && win && $('.vt-zoom', win)){ e.stopPropagation(); unzoom(); } }, true);
+
   /* 의상 · 범위만 바뀔 때 : 다시 그리되 스크롤은 그대로 */
   function refreshPair(){
     var p = S.data.pairs[S.pi]; if (!p) return render();
@@ -325,7 +341,8 @@
     if ((t = e.target.closest('[data-outfit]'))){ S.oi = +t.getAttribute('data-outfit'); if (S.oi < 0) S.mode = 'full'; refreshPair(); return; }
     if ((t = e.target.closest('[data-face]'))){ var fi = +t.getAttribute('data-face'); S.noface[fi] = !S.noface[fi]; refreshPair(); var fb = $('[data-face="' + fi + '"]', win); if (fb) fb.focus(); return; }
     if ((t = e.target.closest('[data-look]'))){ var lv = t.getAttribute('data-look').split(':'); S.look[+lv[0]] = +lv[1]; refreshPair(); return; }
-    if ((t = e.target.closest('[data-zoom]'))){ S.big = !S.big; var h = $('.vd-head', win); if (h) h.classList.toggle('big', S.big); return; }
+    if ((t = e.target.closest('[data-unzoom]'))){ unzoom(); return; }
+    if ((t = e.target.closest('[data-zoom]'))){ zoom(t); return; }
     if ((t = e.target.closest('[data-copy]'))){ copy(t); }
   }
   function onChange(e){
