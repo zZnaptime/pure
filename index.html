@@ -17,7 +17,7 @@
 
 <body id="tt-body-index">
 <script>/* 주소로 창 열기 : ?p=글 · ?c=카테고리 · ?notice=공지 · ?prompt=PROMPT 보관함 (페이지 이동 없이 홈 안에서 창으로 열려요) */
-(function(){var q=new URLSearchParams(location.search),r=q.has('p')?'post':q.has('prompt')?'prompt':q.has('notice')?'notice':(q.has('c')||q.has('records'))?'list':'home';window.SY_ROUTE=r;if(r!=='home'){try{sessionStorage.setItem('sy-booted','1');}catch(e){}}})();</script>
+(function(){var q=new URLSearchParams(location.search),r=q.has('p')?'post':q.has('prompt')?'prompt':q.has('notice')?'notice':(q.has('c')||q.has('records'))?'list':'home';window.SY_ROUTE=r;/* 첫 접속이면 첫 화면부터 로딩 커버로 덮어 두기 (내부가 먼저 보였다 가려지지 않게) */try{var ss=sessionStorage;if(r==='home'&&(!ss.getItem('sy-booted')||ss.getItem('sy-boot-force'))){var de=document.documentElement;de.classList.add('sy-preboot');setTimeout(function(){de.classList.remove('sy-preboot');},9000);}}catch(e){}if(r!=='home'){try{sessionStorage.setItem('sy-booted','1');}catch(e){}}})();</script>
 <script>try{if(!localStorage.getItem('sy-admin'))document.documentElement.classList.add('sy-guest');}catch(e){document.documentElement.classList.add('sy-guest');}</script>
 
 <!-- 아이콘 모음 (svg sprite) -->

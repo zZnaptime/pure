@@ -27,6 +27,8 @@
   function showBoot(){
     var b = $('#syBoot'); if (!b || boot.running) return;
     boot.running = true; b.classList.remove('leave', 'ready', 'inject', 'in'); b.hidden = false; D.documentElement.classList.add('booting');
+    /* 첫 화면부터 덮여 있던 커버(sy-preboot)를 그대로 이어받기 : 다시 페이드인하지 않아요 */
+    if (D.documentElement.classList.contains('sy-preboot')){ b.classList.add('in'); D.documentElement.classList.remove('sy-preboot'); }
     void b.offsetWidth; requestAnimationFrame(function(){ requestAnimationFrame(function(){ b.classList.add('in'); }); });
     var tg = $('.bt-ticks', b);
     if (tg && !tg.childNodes.length){ var h = ''; for (var i = 0; i < 90; i++){ var a = i * 4 * Math.PI / 180, M = i % 5 === 0, r1 = 106, r2 = M ? 99 : 102; h += '<line class="tk' + (M ? ' M' : '') + '" x1="' + (Math.sin(a) * r1).toFixed(2) + '" y1="' + (-Math.cos(a) * r1).toFixed(2) + '" x2="' + (Math.sin(a) * r2).toFixed(2) + '" y2="' + (-Math.cos(a) * r2).toFixed(2) + '"/>'; } tg.innerHTML = h; }
