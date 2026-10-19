@@ -1002,6 +1002,7 @@ window.SY_MAIN = function (SET, POSTS) {
       if (ROUTE === 'post' && SLUG) openPost(SLUG);
       else if (ROUTE === 'list') openList(CAT);
       else if (ROUTE === 'notice') openList('notice');
+      else if (ROUTE === 'prompt' && window.SY_VAULT) window.SY_VAULT.open();   /* 퓨어.kr/prompt → PROMPT 보관함 */
       loadInfoSection($('#info-win'), function(){
         var di = $('#dico-notice'); if (di) di.hidden = false;
         wins.notice._placed = false; di && di.classList.add('has-new');
