@@ -27,6 +27,8 @@
   function normalize(d){
     d = d || {}; d.v = 1;
     d.genres = Array.isArray(d.genres) ? d.genres : [];
+    /* 라벨 : 사진 오른쪽 아래 표시 · 위에 있을수록 중요 (처음엔 MAIN · SUB · DIP) */
+    d.labels = Array.isArray(d.labels) ? d.labels : ['MAIN', 'SUB', 'DIP'];
     d.pairs = Array.isArray(d.pairs) ? d.pairs : [];
     d.pairs.forEach(function(p){
       p.id = p.id || SYV.randId(); p.chars = Array.isArray(p.chars) ? p.chars : []; p.outfits = Array.isArray(p.outfits) ? p.outfits : [];
@@ -168,11 +170,11 @@
     var d = S.data;
     root.innerHTML = '<section class="pm-list">' +
       '<div class="pm-head"><h1>프롬프트 관리 <em>' + d.pairs.length + '</em></h1>' +
-        '<div class="pm-tools"><button type="button" class="ad-btn pri" data-act="add">＋ 페어 추가</button><button type="button" class="ad-btn" data-act="genre">장르 관리</button><button type="button" class="ad-btn" data-act="pw">비밀번호 변경</button><button type="button" class="ad-btn" data-act="lock">잠그기</button></div></div>' +
+        '<div class="pm-tools"><button type="button" class="ad-btn pri" data-act="add">＋ 페어 추가</button><button type="button" class="ad-btn" data-act="genre">장르 관리</button><button type="button" class="ad-btn" data-act="label">라벨 관리</button><button type="button" class="ad-btn" data-act="pw">비밀번호 변경</button><button type="button" class="ad-btn" data-act="lock">잠그기</button></div></div>' +
       warnHTML() +
       (d.pairs.length ? '<div class="pm-grid">' + d.pairs.map(function(p, i){
         return '<article class="pm-card">' +
-          '<div class="pm-ctop">' + (p.genre ? '<span class="pm-genre">' + esc(p.genre) + '</span>' : '<span></span>') +
+          '<div class="pm-ctop"><span class="pm-chips">' + (p.genre ? '<span class="pm-genre">' + esc(p.genre) + '</span>' : '') + (p.label ? '<span class="pm-label" data-rank="' + rankOf(p.label) + '">' + esc(p.label) + '</span>' : '') + '</span>' +
             '<span class="pm-cbtn"><button type="button" data-mv="' + i + ':-1" title="앞으로"' + (i ? '' : ' disabled') + '>←</button><button type="button" data-mv="' + i + ':1" title="뒤로"' + (i < d.pairs.length - 1 ? '' : ' disabled') + '>→</button><button type="button" data-edit="' + i + '" title="고치기">✎</button><button type="button" data-del="' + i + '" title="지우기" class="del">×</button></span></div>' +
           '<button type="button" class="pm-cimg load" data-edit="' + i + '" data-pimg="' + esc(p.img && p.img.id || '') + '" data-ptype="' + esc(p.img && p.img.type || '') + '"></button>' +
           '<div class="pm-cmeta"><small>' + esc(p.sub || '') + '</small><b>' + esc(p.name || '(이름 없음)') + '</b><span>' + p.chars.length + '명 · 의상 ' + p.outfits.length + '벌' + (p.tags.length ? ' · #' + p.tags.map(esc).join(' #') : '') + '</span></div>' +
@@ -180,6 +182,11 @@
       }).join('') + '</div>' : '<p class="ad-empty">아직 페어가 없습니다. <b>＋ 페어 추가</b>로 시작.</p>') +
     '</section>';
     paintImgs();
+  }
+  function rankOf(l){ var i = S.data.labels.indexOf(l); return i < 0 ? 9 : Math.min(i, 3); }
+  function labelOptions(cur){
+    var ls = S.data.labels.slice(); if (cur && ls.indexOf(cur) < 0) ls.push(cur);
+    return '<option value="">(라벨 없음)</option>' + ls.map(function(l){ return '<option' + (l === cur ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('');
   }
   function genreOptions(cur){
     var gs = S.data.genres.slice(); if (cur && gs.indexOf(cur) < 0) gs.push(cur);
@@ -231,6 +238,7 @@
         '<label class="ad-f"><span>부제 <small>· 이름 위 작은 글씨</small></span><input data-f="sub" value="' + esc(p.sub) + '" placeholder="퓨어 × 유시"></label></div>' +
         '<div class="ad-row2"><label class="ad-f"><span>장르 <small>· 장르 관리에서 추가</small></span><select data-f="genre">' + genreOptions(p.genre) + '</select></label>' +
         '<label class="ad-f"><span>태그 <small>· 쉼표로 구분</small></span><input data-f="tags" value="' + esc(p.tags.join(', ')) + '" placeholder="가이드버스, 센티넬"></label></div>' +
+        '<div class="ad-row2"><label class="ad-f"><span>라벨 <small>· 사진 오른쪽 아래 · 라벨 관리에서 추가</small></span><select data-f="label">' + labelOptions(p.label) + '</select></label><span></span></div>' +
         slotHTML('pair', p.img, '대표 사진 (의상을 고르지 않았을 때)') +
       '</div>' +
       '<div class="pm-box"><h2>캐릭터 <small>' + p.chars.length + '명</small></h2>' + chars +
@@ -254,7 +262,7 @@
     else return;
     setDirty(true);
   });
-  root.addEventListener('change', function(e){ if (e.target.getAttribute('data-f') === 'genre'){ S.data.pairs[S.pi].genre = e.target.value; setDirty(true); } });
+  root.addEventListener('change', function(e){ var f = e.target.getAttribute('data-f'); if (f === 'genre' || f === 'label'){ S.data.pairs[S.pi][f] = e.target.value; setDirty(true); } });
   root.addEventListener('submit', function(e){ if (e.target.id === 'pmUnlockF'){ e.preventDefault(); unlock(); } });
   root.addEventListener('click', function(e){
     var t = e.target.closest('button'); if (!t || t.disabled) return;
@@ -267,6 +275,7 @@
       if (a === 'addc'){ p.chars.push({ name: '', looks: [{ name: '', base: '' }] }); p.outfits.forEach(function(o){ o.parts.push({ top: '', bottom: '', shoes: '' }); }); setDirty(true); return renderEdit(true); }
       if (a === 'addo'){ p.outfits.push({ name: '', sub: '', img: null, parts: p.chars.map(function(){ return { top: '', bottom: '', shoes: '' }; }) }); setDirty(true); renderEdit(true); var last = $$('.pm-out', root).pop(); if (last){ last.scrollIntoView({ block: 'center' }); var i = $('input', last); if (i) i.focus(); } return; }
       if (a === 'genre') return genres();
+      if (a === 'label') return labels();
       if (a === 'pw') return changePw();
     }
     if ((v = t.getAttribute('data-edit')) !== null){ S.pi = +v; S.view = 'edit'; return renderEdit(); }
@@ -316,6 +325,12 @@
     A.modal('장르 관리', '<label class="ad-f"><span>한 줄에 하나씩 · 위에서부터 사이트 순서</span><textarea id="pmGen" rows="7" placeholder="ARCH">' + esc(S.data.genres.join('\n')) + '</textarea></label>', function(){
       var g = $('#pmGen').value.split('\n').map(function(x){ return x.trim(); }).filter(function(x, i, a){ return x && a.indexOf(x) === i; });
       S.data.genres = g; setDirty(true); render(); toast('장르를 변경했습니다. 저장을 눌러야 반영됩니다.');
+    });
+  }
+  function labels(){
+    A.modal('라벨 관리', '<label class="ad-f"><span>한 줄에 하나씩 · 위에 있을수록 중요해요 (색이 진하게)</span><textarea id="pmLab" rows="7" placeholder="MAIN">' + esc(S.data.labels.join('\n')) + '</textarea></label>', function(){
+      S.data.labels = $('#pmLab').value.split('\n').map(function(x){ return x.trim(); }).filter(function(x, i, a){ return x && a.indexOf(x) === i; });
+      setDirty(true); render(); toast('라벨을 변경했습니다. 저장을 눌러야 반영됩니다.');
     });
   }
   function changePw(){

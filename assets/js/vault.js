@@ -139,6 +139,7 @@
   }
   function normalize(d){
     d = d || {}; d.pairs = Array.isArray(d.pairs) ? d.pairs : []; d.genres = Array.isArray(d.genres) ? d.genres : [];
+    d.labels = Array.isArray(d.labels) ? d.labels : ['MAIN', 'SUB', 'DIP'];
     d.pairs.forEach(function(p){ p.chars = Array.isArray(p.chars) ? p.chars : []; p.outfits = Array.isArray(p.outfits) ? p.outfits : []; p.tags = Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',').map(function(t){ return t.trim(); }).filter(Boolean); });
     /* 외형 : 캐릭터 한 명에 기본 프롬프트 여러 개 (예전 데이터는 base 하나 → 외형 1개) */
     d.pairs.forEach(function(p){ p.chars.forEach(function(c){ if (!Array.isArray(c.looks) || !c.looks.length) c.looks = [{ name: '', base: c.base || '' }]; }); });
@@ -169,6 +170,8 @@
 
   /* ════════ 프롬프트 조립 ════════ */
   function clean(s){ return String(s || '').trim(); }
+  /* 라벨 : 관리 화면 라벨 목록에서 위에 있을수록 진하게 (0 MAIN · 1 SUB · 2 DIP · 3 그 밖) */
+  function labelHTML(cls, l){ if (!l) return ''; var i = S.data.labels.indexOf(l); return '<span class="' + cls + '" data-rank="' + (i < 0 ? 3 : Math.min(i, 3)) + '">' + esc(l) + '</span>'; }
   /* 표정 제거 : 관리 화면 '표정 프롬프트' 칸에 적은 글(한 줄에 하나)을 기본 프롬프트에서 그대로 찾아 빼요 */
   function stripFace(base, face){
     var out = String(base || '');
@@ -233,7 +236,7 @@
       var p = x[0];
       return '<button type="button" class="vp-card" data-pair="' + x[1] + '">' +
         '<span class="vp-tape" aria-hidden="true"></span>' +
-        '<span class="vp-photo">' + imgBox('vp-img', p.img) + '</span>' +
+        '<span class="vp-photo">' + imgBox('vp-img', p.img) + labelHTML('vp-label', p.label) + '</span>' +
         '<span class="vp-meta"><em>Nº ' + pad(x[1] + 1) + (p.genre ? ' · ' + esc(p.genre) : '') + '</em><b>' + esc(p.name || '이름 없음') + '</b>' + (p.sub ? '<small>' + esc(p.sub) + '</small>' : '') + '</span>' +
       '</button>';
     }).join('');
@@ -280,7 +283,7 @@
       '<div class="vd-top"><button type="button" class="vd-back" data-back>' + I_BACK + 'INDEX</button><span class="vd-path">SUBJECT FILE Nº ' + pad(S.pi + 1) + '</span></div>' +
       '<div class="vd-head' + (S.big ? ' big' : '') + '">' +
         '<div class="vd-id">' +
-          (p.genre ? '<span class="vd-genre">' + esc(p.genre) + '</span>' : '') +
+          (p.genre ? '<span class="vd-genre">' + esc(p.genre) + '</span>' : '') + labelHTML('vd-label', p.label) +
           '<h2 class="vd-name">' + esc(p.name || '') + '</h2>' + (p.sub ? '<p class="vd-sub">' + esc(p.sub) + '</p>' : '') +
           (p.tags.length ? '<div class="vd-tags">' + p.tags.map(function(t){ return '<i>#' + esc(t) + '</i>'; }).join('') + '</div>' : '') +
           '<dl class="vd-facts"><div><dt>SUBJECTS</dt><dd>' + pad(p.chars.length) + '</dd></div><div><dt>OUTFITS</dt><dd>' + pad(p.outfits.length) + '</dd></div><div><dt>WEARING</dt><dd>' + esc(o ? (o.name || '의상 ' + (S.oi + 1)) : 'NONE') + '</dd></div></dl>' +

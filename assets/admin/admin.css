@@ -358,3 +358,9 @@ body[data-view="vPrompt"]{padding-bottom:var(--footH)}
 .pm-fchk b{font-weight:700}
 .pm-fchk .ok{color:#1F9A79}
 .pm-fchk .bad{color:#C98A16}
+/* 프롬프트 관리 : 라벨 (MAIN · SUB · DIP …) */
+.pm-chips{display:flex;gap:4px;min-width:0;flex-wrap:wrap}
+.pm-label{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:5px;font-weight:900;font-size:10px;letter-spacing:.12em;white-space:nowrap;background:#fff;color:var(--ink2);box-shadow:inset 0 0 0 1px var(--line2)}
+.pm-label[data-rank="0"]{background:#6EE7C8;color:#06311F;box-shadow:none}
+.pm-label[data-rank="1"]{background:var(--blue2);color:#fff;box-shadow:none}
+.pm-label[data-rank="2"]{background:var(--sky);color:var(--deep);box-shadow:none}
