@@ -198,7 +198,7 @@
         '<div class="vl-emb"><span>' + I_LOCK + '</span></div>' +
         '<h2 class="vl-t">PROMPT</h2>' +
         '<p class="vl-s">페어 프롬프트 보관함이에요.<br>접근 코드를 입력하면 열려요.</p>' +
-        '<form class="vl-f" id="vlForm" autocomplete="off"><label for="vlPw">ACCESS CODE</label><div class="vl-row"><input id="vlPw" type="password" placeholder="비밀번호" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"><button type="submit" id="vlGo">UNLOCK</button></div></form>' +
+        '<form class="vl-f" id="vlForm" autocomplete="off"><label for="vlPw">ACCESS CODE</label><div class="vl-row"><input id="vlPw" type="password" placeholder="PASSWORD" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"><button type="submit" id="vlGo">UNLOCK</button></div></form>' +
         '<p class="vl-err" id="vlErr" role="alert"></p>' +
       '</div>' +
       '<p class="vt-foot"><span>CLASSIFIED — AUTHORIZED PERSONNEL ONLY</span><span>ARCH MEDICAL CENTER</span></p>' +
@@ -226,7 +226,7 @@
       '<p class="vt-docno"><span>INDEX · PAIR FILES</span><span>' + pad(d.pairs.length) + ' FILES</span></p>' +
       '<div class="vt-bar"><div class="vt-chips">' + [''].concat(gs).map(function(g){ return '<button type="button" data-genre="' + esc(g) + '"' + (g === S.genre ? ' class="on"' : '') + '>' + (g ? esc(g) : 'ALL') + '</button>'; }).join('') + '</div>' +
         '<input type="search" class="vt-q" id="vtQ" placeholder="페어 · 태그 검색" value="' + esc(S.q) + '"></div>' +
-      (cards ? '<div class="vt-grid">' + cards + '</div>' : '<p class="vt-empty">' + (d.pairs.length ? '찾는 페어가 없어요.' : '아직 등록된 페어가 없어요.<br>관리 화면 → 프롬프트 관리에서 추가해 주세요.') + '</p>') +
+      (cards ? '<div class="vt-grid">' + cards + '</div>' : '<p class="vt-empty">' + (d.pairs.length ? '찾는 페어가 없어요.' : '아직 등록된 페어가 없습니다.') + '</p>') +
     '</div>';
   }
   function pairHTML(p){
