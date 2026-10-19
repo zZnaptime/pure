@@ -346,3 +346,9 @@ body[data-view="vPrompt"]{padding-bottom:var(--footH)}
   .pm-ctop{flex-wrap:wrap}
   .pm-cbtn button{width:23px;height:23px;font-size:11px}
 }
+/* 프롬프트 관리 : 캐릭터 외형 (기본 프롬프트 여러 개) */
+.pm-look{padding:12px 12px 0;margin:0 0 10px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.pm-look .pm-row > .ad-btn{height:34px;font-size:12px}
+.ad-btn.pm-addl{width:100%;height:38px;margin:0 0 14px;border:1.5px dashed var(--line2);box-shadow:none;background:transparent;font-size:12.5px;color:var(--ink2)}
+.ad-btn.pm-addl small{font-weight:600;color:var(--ink3)}
+.ad-btn.pm-addl:hover{background:#fff}

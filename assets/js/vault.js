@@ -22,7 +22,7 @@
   var MODES = [['full', '전체'], ['upper', '상반신만'], ['noshoes', '신발 없이']];
 
   /* 메모리에만 두는 상태 */
-  var S = { key: null, data: null, urls: {}, view: 'lock', pi: -1, oi: -1, mode: 'full', genre: '', q: '', fails: 0, until: 0, big: false };
+  var S = { look: {}, key: null, data: null, urls: {}, view: 'lock', pi: -1, oi: -1, mode: 'full', genre: '', q: '', fails: 0, until: 0, big: false };
   var win = null;
 
   /* ════════ Notice 목록 : 잠긴 상자 ════════ */
@@ -115,16 +115,16 @@
   /* ════════ 잠금 · 해제 ════════ */
   function lock(){
     Object.keys(S.urls).forEach(function(k){ try { URL.revokeObjectURL(S.urls[k]); } catch(e){} });
-    S.key = null; S.data = null; S.urls = {}; S.view = 'lock'; S.pi = -1; S.oi = -1; S.mode = 'full'; S.genre = ''; S.q = ''; S.big = false;
+    S.key = null; S.data = null; S.urls = {}; S.view = 'lock'; S.pi = -1; S.oi = -1; S.mode = 'full'; S.genre = ''; S.q = ''; S.big = false; S.look = {};
     syncCards();
     if (win) render();
   }
   function unlock(pw){
     var now = Date.now();
-    if (S.until > now){ return Promise.reject(new Error(Math.ceil((S.until - now) / 1000) + '초 뒤에 다시 시도하십시오.')); }
-    if (!window.SYV) return Promise.reject(new Error('보관함 모듈을 불러오지 못했습니다.'));
+    if (S.until > now){ return Promise.reject(new Error(Math.ceil((S.until - now) / 1000) + '초 뒤에 다시 시도해 주세요.')); }
+    if (!window.SYV) return Promise.reject(new Error('보관함 모듈을 못 불러왔어요.'));
     return fetch('vault/vault.json?t=' + now, { cache: 'no-store' }).then(function(r){
-      if (!r.ok) throw new Error('보관함 파일을 찾지 못했습니다.');
+      if (!r.ok) throw new Error('보관함 파일을 못 찾았어요.');
       return r.json();
     }).then(function(f){ return SYV.open(f, pw); }).then(function(o){
       S.key = o.key; S.data = normalize(o.data); S.fails = 0; S.view = 'list';
@@ -137,6 +137,8 @@
   function normalize(d){
     d = d || {}; d.pairs = Array.isArray(d.pairs) ? d.pairs : []; d.genres = Array.isArray(d.genres) ? d.genres : [];
     d.pairs.forEach(function(p){ p.chars = Array.isArray(p.chars) ? p.chars : []; p.outfits = Array.isArray(p.outfits) ? p.outfits : []; p.tags = Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',').map(function(t){ return t.trim(); }).filter(Boolean); });
+    /* 외형 : 캐릭터 한 명에 기본 프롬프트 여러 개 (예전 데이터는 base 하나 → 외형 1개) */
+    d.pairs.forEach(function(p){ p.chars.forEach(function(c){ if (!Array.isArray(c.looks) || !c.looks.length) c.looks = [{ name: '', base: c.base || '' }]; }); });
     return d;
   }
 
@@ -165,7 +167,7 @@
   /* ════════ 프롬프트 조립 ════════ */
   function clean(s){ return String(s || '').trim(); }
   function promptOf(p, ci){
-    var c = p.chars[ci] || {}, base = clean(c.base);
+    var c = p.chars[ci] || {}, looks = c.looks || [{ base: c.base }], lk = looks[S.look[ci] || 0] || looks[0], base = clean(lk.base);
     var o = S.oi >= 0 ? p.outfits[S.oi] : null;
     if (!o) return base;
     var part = (o.parts || [])[ci] || {};
@@ -191,12 +193,12 @@
   function lockHTML(){
     return '<div class="vt-lock" id="vtLock">' + I_CLIP +
       '<span class="vt-stamp">RESTRICTED</span>' +
-      '<p class="vt-docno"><span>prompt.zip</span><span>Nº PR-' + new Date().getFullYear() + '</span></p>' +
+      '<p class="vt-docno"><span>ARCH CLINIC · ACCESS FORM</span><span>Nº PR-' + new Date().getFullYear() + '</span></p>' +
       '<div class="vl-mid">' +
         '<div class="vl-emb"><span>' + I_LOCK + '</span></div>' +
         '<h2 class="vl-t">PROMPT</h2>' +
-        '<p class="vl-s"><b>프롬프트</b>가 담겨 있습니다.<br>접근 코드를 입력하십시오.</p>' +
-        '<form class="vl-f" id="vlForm" autocomplete="off"><label for="vlPw">ACCESS CODE</label><div class="vl-row"><input id="vlPw" type="password" placeholder="PASSWORD" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"><button type="submit" id="vlGo">UNLOCK</button></div></form>' +
+        '<p class="vl-s">페어 프롬프트 보관함이에요.<br>접근 코드를 입력하면 열려요.</p>' +
+        '<form class="vl-f" id="vlForm" autocomplete="off"><label for="vlPw">ACCESS CODE</label><div class="vl-row"><input id="vlPw" type="password" placeholder="비밀번호" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"><button type="submit" id="vlGo">UNLOCK</button></div></form>' +
         '<p class="vl-err" id="vlErr" role="alert"></p>' +
       '</div>' +
       '<p class="vt-foot"><span>CLASSIFIED — AUTHORIZED PERSONNEL ONLY</span><span>ARCH MEDICAL CENTER</span></p>' +
@@ -223,8 +225,8 @@
     return '<div class="vt-list">' + I_CLIP +
       '<p class="vt-docno"><span>INDEX · PAIR FILES</span><span>' + pad(d.pairs.length) + ' FILES</span></p>' +
       '<div class="vt-bar"><div class="vt-chips">' + [''].concat(gs).map(function(g){ return '<button type="button" data-genre="' + esc(g) + '"' + (g === S.genre ? ' class="on"' : '') + '>' + (g ? esc(g) : 'ALL') + '</button>'; }).join('') + '</div>' +
-        '<input type="search" class="vt-q" id="vtQ" placeholder="키워드 검색" value="' + esc(S.q) + '"></div>' +
-      (cards ? '<div class="vt-grid">' + cards + '</div>' : '<p class="vt-empty">' + (d.pairs.length ? '찾는 자료가 없습니다.' : '아직 등록된 페어가 없습니다.') + '</p>') +
+        '<input type="search" class="vt-q" id="vtQ" placeholder="페어 · 태그 검색" value="' + esc(S.q) + '"></div>' +
+      (cards ? '<div class="vt-grid">' + cards + '</div>' : '<p class="vt-empty">' + (d.pairs.length ? '찾는 페어가 없어요.' : '아직 등록된 페어가 없어요.<br>관리 화면 → 프롬프트 관리에서 추가해 주세요.') + '</p>') +
     '</div>';
   }
   function pairHTML(p){
@@ -241,6 +243,10 @@
     var chars = p.chars.map(function(c, ci){
       return '<section class="vd-ch"><header><em>' + pad(ci + 1) + '</em><b>' + esc(c.name || ('캐릭터 ' + (ci + 1))) + '</b>' +
         '<button type="button" class="vd-copy" data-copy="' + ci + '">' + I_COPY + '<span>COPY</span></button></header>' +
+        ((c.looks || []).length > 1 ? '<div class="vd-looks" role="group" aria-label="외형"><span>LOOK</span>' + c.looks.map(function(l, li){
+          var on = (S.look[ci] || 0) === li;
+          return '<button type="button" data-look="' + ci + ':' + li + '" aria-pressed="' + on + '"' + (on ? ' class="on"' : '') + '>' + esc(l.name || (li ? '외형 ' + (li + 1) : '기본')) + '</button>';
+        }).join('') + '</div>' : '') +
         '<div class="vd-txt" id="vdTxt' + ci + '">' + esc(promptOf(p, ci)) + '</div></section>';
     }).join('');
     return '<div class="vt-detail">' + I_CLIP +
@@ -256,7 +262,7 @@
       '</div>' +
       '<div class="vd-sec"><span>OUTFIT</span><i></i></div>' +
       '<div class="vd-ctrl">' + tabs + mode + '</div>' +
-      '<div class="vd-chars' + (p.chars.length > 1 ? ' two' : '') + '">' + (chars || '<p class="vt-empty">캐릭터 프롬프트가 없습니다.</p>') + '</div>' +
+      '<div class="vd-chars' + (p.chars.length > 1 ? ' two' : '') + '">' + (chars || '<p class="vt-empty">캐릭터 프롬프트가 없어요.</p>') + '</div>' +
     '</div>';
   }
   /* 의상 · 범위만 바뀔 때 : 다시 그리되 스크롤은 그대로 */
@@ -274,9 +280,9 @@
     e.preventDefault();
     var inp = $('#vlPw', win), btn = $('#vlGo', win), err = $('#vlErr', win), pw = inp.value;
     if (!pw){ inp.focus(); return; }
-    btn.disabled = true; inp.disabled = true; err.className = 'vl-busy'; err.textContent = 'VERIFYING CLEARANCE…';
+    btn.disabled = true; inp.disabled = true; err.className = 'vl-busy'; err.textContent = 'DECRYPTING…';
     unlock(pw).then(function(){ render(); }).catch(function(x){
-      inp.value = ''; inp.disabled = false; btn.disabled = false; err.className = 'vl-err'; err.textContent = (x && x.message) || '열지 못했습니다.';
+      inp.value = ''; inp.disabled = false; btn.disabled = false; err.className = 'vl-err'; err.textContent = (x && x.message) || '열지 못했어요.';
       var l = $('#vtLock', win); l.classList.remove('shake'); void l.offsetWidth; l.classList.add('shake'); inp.focus();
     });
   }
@@ -284,9 +290,10 @@
     var t;
     if ((t = e.target.closest('[data-lock]'))){ lock(); return; }
     if ((t = e.target.closest('[data-genre]'))){ S.genre = t.getAttribute('data-genre'); render(); return; }
-    if ((t = e.target.closest('[data-pair]'))){ S.pi = +t.getAttribute('data-pair'); S.oi = -1; S.mode = 'full'; S.big = false; S.view = 'pair'; render(); return; }
+    if ((t = e.target.closest('[data-pair]'))){ S.pi = +t.getAttribute('data-pair'); S.oi = -1; S.mode = 'full'; S.big = false; S.look = {}; S.view = 'pair'; render(); return; }
     if ((t = e.target.closest('[data-back]'))){ S.view = 'list'; S.pi = -1; render(); return; }
     if ((t = e.target.closest('[data-outfit]'))){ S.oi = +t.getAttribute('data-outfit'); if (S.oi < 0) S.mode = 'full'; refreshPair(); return; }
+    if ((t = e.target.closest('[data-look]'))){ var lv = t.getAttribute('data-look').split(':'); S.look[+lv[0]] = +lv[1]; refreshPair(); return; }
     if ((t = e.target.closest('[data-zoom]'))){ S.big = !S.big; var h = $('.vd-head', win); if (h) h.classList.toggle('big', S.big); return; }
     if ((t = e.target.closest('[data-copy]'))){ copy(t); }
   }

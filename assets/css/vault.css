@@ -187,6 +187,12 @@
 .vd-copy:hover{background:var(--blue2)}
 .vd-copy svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .vd-copy.ok{background:var(--mint2);color:#06311F}
+/* 외형 (기본 프롬프트 여러 개) */
+.vd-looks{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:8px 10px;border-bottom:1px dashed var(--line)}
+.vd-looks span{margin-right:4px;font-weight:900;font-size:8.5px;letter-spacing:.2em;color:var(--ink3)}
+.vd-looks button{height:24px;padding:0 10px;border-radius:999px;border:1px solid var(--line2);background:#fff;font-weight:700;font-size:11px;color:var(--ink2);transition:background .15s,color .15s,border-color .15s}
+.vd-looks button:hover{border-color:var(--blue);color:var(--deep)}
+.vd-looks button.on{background:var(--wash);border-color:var(--sky);color:var(--deep);font-weight:800}
 /* 타자기로 친 서류 줄 */
 .vd-txt{white-space:pre-wrap;word-break:break-word;padding:11px 16px 11px 18px;font-family:ui-monospace,'SFMono-Regular','Menlo','Consolas',monospace;font-size:12.5px;line-height:22px;color:#26394B;
   background:linear-gradient(90deg,transparent 9px,rgba(47,164,222,.35) 9px 10px,transparent 10px),repeating-linear-gradient(transparent 0 21px,#EAF1F6 21px 22px) 0 11px;

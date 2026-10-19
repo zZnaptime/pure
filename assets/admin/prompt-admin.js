@@ -32,6 +32,8 @@
       p.id = p.id || SYV.randId(); p.chars = Array.isArray(p.chars) ? p.chars : []; p.outfits = Array.isArray(p.outfits) ? p.outfits : [];
       p.tags = Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',').map(function(t){ return t.trim(); }).filter(Boolean);
       p.outfits.forEach(function(o){ o.parts = Array.isArray(o.parts) ? o.parts : []; while (o.parts.length < p.chars.length) o.parts.push({ top: '', bottom: '', shoes: '' }); });
+      /* 외형 : 기본 프롬프트 여러 개 (예전 데이터는 base 하나 → 외형 1개) */
+      p.chars.forEach(function(c){ if (!Array.isArray(c.looks) || !c.looks.length) c.looks = [{ name: '', base: c.base || '' }]; delete c.base; });
     });
     return d;
   }
@@ -41,6 +43,7 @@
     return out;
   }
   function idSet(d){ var s = {}; refsOf(d).forEach(function(r){ if (r.id.indexOf('new:') !== 0) s[r.id] = 1; }); return s; }
+  function withBase(d){ d.pairs.forEach(function(p){ p.chars.forEach(function(c){ c.base = (c.looks && c.looks[0] && c.looks[0].base) || ''; }); }); return d; }
   function textB64(t){ return SYV.b64(new TextEncoder().encode(t)); }
   function wipe(){
     Object.keys(S.urls).forEach(function(k){ try { URL.revokeObjectURL(S.urls[k]); } catch(e){} });
@@ -125,13 +128,13 @@
     b.disabled = true; b.textContent = '여는 중…'; err.textContent = '';
     /* 혹시 다른 곳에서 바뀌었을 수 있으니 최신 파일로 */
     A.raw(VAULT).then(function(t){ return SYV.open(JSON.parse(t), pw); }).then(function(o){
-      S.key = o.key; S.kdf = o.kdf; S.data = normalize(o.data); S.savedIds = idSet(S.data); S.weak = pw === '0000' || pw.length < 8;
+      S.key = o.key; S.kdf = o.kdf; S.data = normalize(o.data); S.savedIds = idSet(S.data); S.weak = pw === '0000';
       setDirty(false); S.view = 'list'; render();
     }).catch(function(e){ b.disabled = false; b.textContent = '열기'; err.textContent = e.message || '열지 못했어요.'; $('#pmPw').value = ''; $('#pmPw').focus(); });
   }
   function create(){
     var a = $('#pmNew1').value, c = $('#pmNew2').value, err = $('#pmErr');
-    if (a.length < 8){ err.textContent = '비밀번호는 8자 이상으로 해 주세요.'; return; }
+    if (a.length < 4){ err.textContent = '비밀번호는 4자 이상으로 해 주세요.'; return; }
     if (a !== c){ err.textContent = '두 칸이 서로 달라요.'; return; }
     var b = $('#pmCreate'); b.disabled = true;
     var data = { v: 1, genres: [], pairs: [] };
@@ -141,7 +144,7 @@
       .catch(function(e){ S.key = null; b.disabled = false; err.textContent = '만들지 못했어요: ' + (e.message || e); });
   }
   function lock(){
-    if (S.dirty && !confirm('저장하지 않은 내용이 있어요. 버리고 잠글까요?')) return;
+    if (S.dirty && !confirm('저장하지 않은 내용이 있습니다. 버리고 잠글까요?')) return;
     wipe(); enter();
   }
 
@@ -152,7 +155,7 @@
     if (S.view === 'edit' && S.data.pairs[S.pi]) renderEdit(); else { S.view = 'list'; renderList(); }
   }
   function warnHTML(){
-    return S.weak ? '<div class="pm-warn"><b>비밀번호가 약해요.</b> 지금 비밀번호는 쉽게 뚫릴 수 있어요. 실제 프롬프트를 넣기 전에 <button type="button" data-act="pw">비밀번호 변경</button>으로 8자 이상 (추천: 단어 여러 개를 이은 긴 문장) 으로 바꿔 주세요.</div>' : '';
+    return S.weak ? '<div class="pm-warn"><b>비밀번호가 약해요.</b> 지금 비밀번호는 쉽게 뚫릴 수 있어요. 실제 프롬프트를 넣기 전에 <button type="button" data-act="pw">비밀번호 변경</button>으로 바꿔 주세요.</div>' : '';
   }
   function renderList(){
     var d = S.data;
@@ -167,7 +170,7 @@
           '<button type="button" class="pm-cimg load" data-edit="' + i + '" data-pimg="' + esc(p.img && p.img.id || '') + '" data-ptype="' + esc(p.img && p.img.type || '') + '"></button>' +
           '<div class="pm-cmeta"><small>' + esc(p.sub || '') + '</small><b>' + esc(p.name || '(이름 없음)') + '</b><span>' + p.chars.length + '명 · 의상 ' + p.outfits.length + '벌' + (p.tags.length ? ' · #' + p.tags.map(esc).join(' #') : '') + '</span></div>' +
         '</article>';
-      }).join('') + '</div>' : '<p class="ad-empty">아직 페어가 없어요. <b>＋ 페어 추가</b>로 시작해요.</p>') +
+      }).join('') + '</div>' : '<p class="ad-empty">아직 페어가 없습니다. <b>＋ 페어 추가</b>로 시작.</p>') +
     '</section>';
     paintImgs();
   }
@@ -186,7 +189,14 @@
     var chars = p.chars.map(function(c, ci){
       return '<div class="pm-char"><div class="pm-row"><label class="ad-f"><span>캐릭터 ' + (ci + 1) + ' 이름</span><input data-c="' + ci + ':name" value="' + esc(c.name) + '" placeholder="예: 퓨어"></label>' +
         '<button type="button" class="ad-btn pm-x" data-delc="' + ci + '">삭제</button></div>' +
-        '<label class="ad-f"><span>기본 프롬프트 <small>· 의상과 상관없이 늘 들어가는 부분</small></span><textarea rows="4" data-c="' + ci + ':base" placeholder="boy, short hair, black hair, …">' + esc(c.base) + '</textarea></label></div>';
+        c.looks.map(function(l, li){
+          var many = c.looks.length > 1;
+          return '<div class="pm-look">' +
+            '<div class="pm-row"><label class="ad-f"><span>외형 ' + (li + 1) + ' 이름 <small>· ' + (many ? '사이트에서 버튼으로 보여요' : '외형이 하나면 비워 둬도 돼요') + '</small></span><input data-l="' + ci + ':' + li + ':name" value="' + esc(l.name) + '" placeholder="' + (li ? '예: 장발' : '예: 기본') + '"></label>' +
+            (many ? '<button type="button" class="ad-btn pm-x" data-dell="' + ci + ':' + li + '">외형 삭제</button>' : '') + '</div>' +
+            '<label class="ad-f"><span>기본 프롬프트 <small>· 의상과 상관없이 늘 들어가는 부분</small></span><textarea rows="4" data-l="' + ci + ':' + li + ':base" placeholder="boy, short hair, black hair, …">' + esc(l.base) + '</textarea></label></div>';
+        }).join('') +
+        '<button type="button" class="ad-btn pm-addl" data-addl="' + ci + '">＋ 외형 추가 <small>· 같은 캐릭터의 다른 모습 (머리 · 나이 등)</small></button></div>';
     }).join('');
     var outs = p.outfits.map(function(o, oi){
       return '<div class="pm-out">' +
@@ -229,6 +239,7 @@
     var a;
     if ((a = t.getAttribute('data-f'))){ if (a === 'tags') p.tags = t.value.split(',').map(function(x){ return x.trim(); }).filter(Boolean); else p[a] = t.value; }
     else if ((a = t.getAttribute('data-c'))){ a = a.split(':'); p.chars[+a[0]][a[1]] = t.value; }
+    else if ((a = t.getAttribute('data-l'))){ a = a.split(':'); p.chars[+a[0]].looks[+a[1]][a[2]] = t.value; }
     else if ((a = t.getAttribute('data-o'))){ a = a.split(':'); p.outfits[+a[0]][a[1]] = t.value; }
     else if ((a = t.getAttribute('data-p'))){ a = a.split(':'); var o = p.outfits[+a[0]]; o.parts[+a[1]] = o.parts[+a[1]] || {}; o.parts[+a[1]][a[2]] = t.value; }
     else return;
@@ -242,9 +253,9 @@
     if (t.id === 'pmCreate') return create();
     if ((a = t.getAttribute('data-act'))){
       if (a === 'lock') return lock();
-      if (a === 'add'){ d.pairs.push({ id: SYV.randId(), name: '', sub: '', genre: d.genres[0] || '', tags: [], img: null, chars: [{ name: '', base: '' }, { name: '', base: '' }], outfits: [] }); S.pi = d.pairs.length - 1; S.view = 'edit'; setDirty(true); return renderEdit(); }
+      if (a === 'add'){ d.pairs.push({ id: SYV.randId(), name: '', sub: '', genre: d.genres[0] || '', tags: [], img: null, chars: [{ name: '', looks: [{ name: '', base: '' }] }, { name: '', looks: [{ name: '', base: '' }] }], outfits: [] }); S.pi = d.pairs.length - 1; S.view = 'edit'; setDirty(true); return renderEdit(); }
       if (a === 'back'){ S.view = 'list'; S.pi = -1; return renderList(); }
-      if (a === 'addc'){ p.chars.push({ name: '', base: '' }); p.outfits.forEach(function(o){ o.parts.push({ top: '', bottom: '', shoes: '' }); }); setDirty(true); return renderEdit(true); }
+      if (a === 'addc'){ p.chars.push({ name: '', looks: [{ name: '', base: '' }] }); p.outfits.forEach(function(o){ o.parts.push({ top: '', bottom: '', shoes: '' }); }); setDirty(true); return renderEdit(true); }
       if (a === 'addo'){ p.outfits.push({ name: '', sub: '', img: null, parts: p.chars.map(function(){ return { top: '', bottom: '', shoes: '' }; }) }); setDirty(true); renderEdit(true); var last = $$('.pm-out', root).pop(); if (last){ last.scrollIntoView({ block: 'center' }); var i = $('input', last); if (i) i.focus(); } return; }
       if (a === 'genre') return genres();
       if (a === 'pw') return changePw();
@@ -252,14 +263,16 @@
     if ((v = t.getAttribute('data-edit')) !== null){ S.pi = +v; S.view = 'edit'; return renderEdit(); }
     if ((v = t.getAttribute('data-mv')) !== null){ v = v.split(':'); var i = +v[0], j = i + (+v[1]); var x = d.pairs.splice(i, 1)[0]; d.pairs.splice(j, 0, x); setDirty(true); return renderList(); }
     if ((v = t.getAttribute('data-del')) !== null){
-      var q = d.pairs[+v]; if (!confirm('「' + (q.name || '이름 없는 페어') + '」 페어를 지울까요?\n(저장을 눌러야 실제로 지워져요)')) return;
+      var q = d.pairs[+v]; if (!confirm('「' + (q.name || '이름 없는 페어') + '」 페어를 삭제하시겠습니까?\n(저장을 눌러야 실제로 삭제됩니다.)')) return;
       d.pairs.splice(+v, 1); S.view = 'list'; S.pi = -1; setDirty(true); return renderList();
     }
     if ((v = t.getAttribute('data-delc')) !== null){
-      if (!confirm('이 캐릭터와 의상 칸의 이 캐릭터 내용을 지울까요?')) return;
+      if (!confirm('이 캐릭터의 내용을 삭제하시겠습니까?')) return;
       p.chars.splice(+v, 1); p.outfits.forEach(function(o){ o.parts.splice(+v, 1); }); setDirty(true); return renderEdit(true);
     }
-    if ((v = t.getAttribute('data-delo')) !== null){ if (!confirm('이 의상을 지울까요?')) return; p.outfits.splice(+v, 1); setDirty(true); return renderEdit(true); }
+    if ((v = t.getAttribute('data-addl')) !== null){ p.chars[+v].looks.push({ name: '', base: '' }); setDirty(true); renderEdit(true); var lk = $$('.pm-char', root)[+v]; if (lk){ var ins = $$('.pm-look input', lk); if (ins.length) ins[ins.length - 1].focus(); } return; }
+    if ((v = t.getAttribute('data-dell')) !== null){ v = v.split(':'); if (!confirm('이 외형을 삭제하시겠습니까?')) return; p.chars[+v[0]].looks.splice(+v[1], 1); setDirty(true); return renderEdit(true); }
+    if ((v = t.getAttribute('data-delo')) !== null){ if (!confirm('이 의상을 삭제하시겠습니까?')) return; p.outfits.splice(+v, 1); setDirty(true); return renderEdit(true); }
     if ((v = t.getAttribute('data-omv')) !== null){ v = v.split(':'); var oi = +v[0], oj = oi + (+v[1]); var ox = p.outfits.splice(oi, 1)[0]; p.outfits.splice(oj, 0, ox); setDirty(true); return renderEdit(true); }
     if ((v = t.getAttribute('data-pick')) !== null){ S.fileSlot = v; $('#pmFile').click(); return; }
     if ((v = t.getAttribute('data-unimg')) !== null){ if (v === 'pair') p.img = null; else p.outfits[+v.slice(2)].img = null; setDirty(true); return renderEdit(true); }
@@ -279,7 +292,7 @@
           var tp = items[i].types.filter(function(x){ return /^image\//.test(x); })[0];
           if (tp) return items[i].getType(tp).then(function(b){ S.pasteSlot = null; return setSlot(slot, new File([b], 'paste', { type: tp })); });
         }
-        toast('클립보드에 사진이 없어요. 사진을 복사한 뒤 다시 눌러 주세요.', true);
+        toast('클립보드에 사진이 없습니다. 사진을 복사한 뒤 다시 눌러 주세요.', true);
       }).catch(function(){ toast('지금 Ctrl+V (⌘+V) 를 누르면 이 칸에 들어가요.'); });
     } else toast('지금 Ctrl+V (⌘+V) 를 누르면 이 칸에 들어가요.');
   }
@@ -293,16 +306,16 @@
   function genres(){
     A.modal('장르 관리', '<label class="ad-f"><span>한 줄에 하나씩 · 위에서부터 사이트 순서</span><textarea id="pmGen" rows="7" placeholder="ARCH">' + esc(S.data.genres.join('\n')) + '</textarea></label>', function(){
       var g = $('#pmGen').value.split('\n').map(function(x){ return x.trim(); }).filter(function(x, i, a){ return x && a.indexOf(x) === i; });
-      S.data.genres = g; setDirty(true); render(); toast('장르를 바꿨어요. 저장을 눌러야 반영돼요.');
+      S.data.genres = g; setDirty(true); render(); toast('장르를 변경했습니다. 저장을 눌러야 반영됩니다.');
     });
   }
   function changePw(){
     if (S.busy) return;
-    A.modal('보관함 비밀번호 변경', '<p class="pm-mnote">바꾸면 모든 프롬프트와 사진을 새 비밀번호로 다시 잠가서 저장해요. 지금 고친 내용도 같이 저장돼요.<br>8자 이상 · 단어 여러 개를 이은 긴 문장을 추천해요.</p>' +
+    A.modal('보관함 비밀번호 변경', '<p class="pm-mnote">바꾸면 모든 프롬프트와 사진을 새 비밀번호로 다시 잠가서 저장합니다. 지금 고친 내용도 같이 저장됩니다.<br>4자 이상 · 영문과 숫자를 섞으면 더 단단해요.</p>' +
       '<label class="ad-f"><span>새 비밀번호</span><input type="password" id="pmP1" autocomplete="new-password"></label>' +
       '<label class="ad-f"><span>한 번 더</span><input type="password" id="pmP2" autocomplete="new-password"></label>', function(){
       var a = $('#pmP1').value, c = $('#pmP2').value;
-      if (a.length < 8){ toast('비밀번호는 8자 이상으로 해 주세요.', true); return; }
+      if (a.length < 4){ toast('비밀번호는 4자 이상으로 해 주세요.', true); return; }
       if (a !== c){ toast('두 칸이 서로 달라요.', true); return; }
       rekey(a);
     });
@@ -339,7 +352,7 @@
     if (!S.key || S.busy) return;
     if (!S.dirty){ toast('바뀐 내용이 없어요.'); return; }
     startBusy();
-    var data = clone(S.data), key = S.key, kdf = S.kdf, pk;
+    var data = withBase(clone(S.data)), key = S.key, kdf = S.kdf, pk;
     packImages(data, key, false).then(function(r){
       pk = r; var now = idSet(data);
       Object.keys(S.savedIds).forEach(function(id){ if (!now[id]) pk.entries.push({ path: IMG(id), del: true }); });
@@ -349,13 +362,13 @@
       return A.commit(pk.entries, '프롬프트 보관함 갱신 (Syringe 관리)');
     }).then(function(){
       afterSave(data, pk.map); S.dirty = false; endBusy(); render();
-      toast('저장했어요! 1~2분 뒤 사이트에 반영돼요.');
+      toast('저장 완료! 1~2분 뒤 사이트에 반영됩니다.');
     }).catch(function(e){ endBusy(); toast('저장 실패: ' + (e.message || e) + (e.status === 401 ? ' · 토큰을 다시 연결해 주세요.' : ''), true); });
   }
   function rekey(pw){
     if (!S.key || S.busy) return;
-    startBusy(); toast('새 비밀번호로 다시 잠그는 중… 사진이 많으면 조금 걸려요.');
-    var data = clone(S.data), nk, pk, old = Object.keys(S.savedIds);
+    startBusy(); toast('새 비밀번호로 다시 잠그는 중… 사진이 많으면 시간이 소요됩니다.');
+    var data = withBase(clone(S.data)), nk, pk, old = Object.keys(S.savedIds);
     SYV.newKey(pw).then(function(k){ nk = k; return packImages(data, k.key, true); }).then(function(r){
       pk = r; old.forEach(function(id){ pk.entries.push({ path: IMG(id), del: true }); });
       return SYV.seal(data, nk.key, nk.kdf);
@@ -363,9 +376,9 @@
       pk.entries.unshift({ path: VAULT, b64: textB64(JSON.stringify(file) + '\n') });
       return A.commit(pk.entries, '프롬프트 보관함 갱신 (Syringe 관리)');
     }).then(function(){
-      S.key = nk.key; S.kdf = nk.kdf; afterSave(data, pk.map); S.weak = false; S.dirty = false; endBusy(); render();
-      toast('비밀번호를 바꿨어요. 1~2분 뒤 사이트도 새 비밀번호로 열려요.');
-    }).catch(function(e){ endBusy(); toast('비밀번호 변경 실패 (아무것도 안 바뀌었어요): ' + (e.message || e), true); });
+      S.key = nk.key; S.kdf = nk.kdf; afterSave(data, pk.map); S.weak = pw === '0000'; S.dirty = false; endBusy(); render();
+      toast('비밀번호를 변경했습니다. 1~2분 뒤 사이트도 새 비밀번호로 접속 가능합니다.');
+    }).catch(function(e){ endBusy(); toast('비밀번호 변경 실패.: ' + (e.message || e), true); });
   }
   $('#pmSave').addEventListener('click', save);
   D.addEventListener('keydown', function(e){ if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && D.body.getAttribute('data-view') === 'vPrompt'){ e.preventDefault(); save(); } });
