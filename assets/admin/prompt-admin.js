@@ -112,11 +112,11 @@
       '<i class="pm-lk"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></i>' +
       '<h1>프롬프트 보관함</h1>' +
       (S.missing
-        ? '<p>아직 보관함이 없어요. 새 비밀번호를 정하면 만들어져요.</p>' +
+        ? '<p>아직 보관함이 없습니다. 새 비밀번호를 정하면 생성됩니다.</p>' +
           '<label class="ad-f"><span>새 비밀번호</span><input type="password" id="pmNew1" autocomplete="new-password"></label>' +
           '<label class="ad-f"><span>한 번 더</span><input type="password" id="pmNew2" autocomplete="new-password"></label>' +
           '<button type="button" class="ad-btn pri wide" id="pmCreate">보관함 만들기</button>'
-        : '<p>사이트에서 쓰는 보관함 비밀번호를 넣어 주세요.<br><small>깃허브 토큰과는 다른 비밀번호예요.</small></p>' +
+        : '<p>프롬프트 보관함 비밀번호를 입력하십시오.<br><small>*깃허브 토큰과 다른 비밀번호</small></p>' +
           '<form id="pmUnlockF" autocomplete="off"><label class="ad-f"><span>보관함 비밀번호</span><input type="password" id="pmPw" autocomplete="off"></label>' +
           '<button type="submit" class="ad-btn pri wide" id="pmUnlock">열기</button></form>') +
       '<p class="ad-err" id="pmErr"></p></section>';
