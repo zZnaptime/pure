@@ -352,3 +352,9 @@ body[data-view="vPrompt"]{padding-bottom:var(--footH)}
 .ad-btn.pm-addl{width:100%;height:38px;margin:0 0 14px;border:1.5px dashed var(--line2);box-shadow:none;background:transparent;font-size:12.5px;color:var(--ink2)}
 .ad-btn.pm-addl small{font-weight:600;color:var(--ink3)}
 .ad-btn.pm-addl:hover{background:#fff}
+/* 프롬프트 관리 : 표정 프롬프트 (사이트 '표정 제거'용) */
+.pm-face textarea{font-size:12.5px;background:#FBFDFF}
+.pm-fchk{font-style:normal;font-size:11.5px;min-height:1em}
+.pm-fchk b{font-weight:700}
+.pm-fchk .ok{color:#1F9A79}
+.pm-fchk .bad{color:#C98A16}

@@ -44,6 +44,13 @@
   }
   function idSet(d){ var s = {}; refsOf(d).forEach(function(r){ if (r.id.indexOf('new:') !== 0) s[r.id] = 1; }); return s; }
   function withBase(d){ d.pairs.forEach(function(p){ p.chars.forEach(function(c){ c.base = (c.looks && c.looks[0] && c.looks[0].base) || ''; }); }); return d; }
+  /* 표정 프롬프트가 기본 프롬프트 안에 그대로 있는지 (사이트 '표정 제거'는 글자 그대로 찾아서 빼요) */
+  function faceCheck(l){
+    var lines = String(l.face || '').split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+    if (!lines.length) return '';
+    var base = String(l.base || ''), miss = lines.filter(function(f){ return base.indexOf(f) < 0 && base.indexOf(f.replace(/,\s*$/, '')) < 0; });
+    return miss.length ? '<b class="bad">⚠ 기본 프롬프트에서 못 찾은 줄: ' + miss.map(esc).join(' / ') + '</b>' : '<b class="ok">✓ 기본 프롬프트에서 모두 찾았어요</b>';
+  }
   function textB64(t){ return SYV.b64(new TextEncoder().encode(t)); }
   function wipe(){
     Object.keys(S.urls).forEach(function(k){ try { URL.revokeObjectURL(S.urls[k]); } catch(e){} });
@@ -194,7 +201,9 @@
           return '<div class="pm-look">' +
             '<div class="pm-row"><label class="ad-f"><span>외형 ' + (li + 1) + ' 이름 <small>· ' + (many ? '사이트에서 버튼으로 보여요' : '외형이 하나면 비워 둬도 돼요') + '</small></span><input data-l="' + ci + ':' + li + ':name" value="' + esc(l.name) + '" placeholder="' + (li ? '예: 장발' : '예: 기본') + '"></label>' +
             (many ? '<button type="button" class="ad-btn pm-x" data-dell="' + ci + ':' + li + '">외형 삭제</button>' : '') + '</div>' +
-            '<label class="ad-f"><span>기본 프롬프트 <small>· 의상과 상관없이 늘 들어가는 부분</small></span><textarea rows="4" data-l="' + ci + ':' + li + ':base" placeholder="boy, short hair, black hair, …">' + esc(l.base) + '</textarea></label></div>';
+            '<label class="ad-f"><span>기본 프롬프트 <small>· 의상과 상관없이 늘 들어가는 부분 (표정 포함)</small></span><textarea rows="4" data-l="' + ci + ':' + li + ':base" placeholder="boy, short hair, black hair, gentle smile, …">' + esc(l.base) + '</textarea></label>' +
+            '<label class="ad-f pm-face"><span>표정 프롬프트 <small>· 선택 · 위 기본 프롬프트에 적힌 그대로 복사해 넣기 · 떨어져 있으면 한 줄에 하나씩</small></span><textarea rows="2" data-l="' + ci + ':' + li + ':face" placeholder="gentle smile, blushing,">' + esc(l.face || '') + '</textarea>' +
+              '<em class="pm-fchk" id="pmF' + ci + '_' + li + '">' + faceCheck(l) + '</em></label></div>';
         }).join('') +
         '<button type="button" class="ad-btn pm-addl" data-addl="' + ci + '">＋ 외형 추가 <small>· 같은 캐릭터의 다른 모습 (머리 · 나이 등)</small></button></div>';
     }).join('');
@@ -239,7 +248,7 @@
     var a;
     if ((a = t.getAttribute('data-f'))){ if (a === 'tags') p.tags = t.value.split(',').map(function(x){ return x.trim(); }).filter(Boolean); else p[a] = t.value; }
     else if ((a = t.getAttribute('data-c'))){ a = a.split(':'); p.chars[+a[0]][a[1]] = t.value; }
-    else if ((a = t.getAttribute('data-l'))){ a = a.split(':'); p.chars[+a[0]].looks[+a[1]][a[2]] = t.value; }
+    else if ((a = t.getAttribute('data-l'))){ a = a.split(':'); var lk = p.chars[+a[0]].looks[+a[1]]; lk[a[2]] = t.value; var fc = $('#pmF' + a[0] + '_' + a[1]); if (fc) fc.innerHTML = faceCheck(lk); }
     else if ((a = t.getAttribute('data-o'))){ a = a.split(':'); p.outfits[+a[0]][a[1]] = t.value; }
     else if ((a = t.getAttribute('data-p'))){ a = a.split(':'); var o = p.outfits[+a[0]]; o.parts[+a[1]] = o.parts[+a[1]] || {}; o.parts[+a[1]][a[2]] = t.value; }
     else return;

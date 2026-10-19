@@ -18,11 +18,14 @@
   var I_OPEN = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 7.6-1.7"/><path d="M12 15v2.2"/></svg>';
   var I_BACK = '<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>';
   var I_COPY = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+  /* 표정 칩 : ON = 웃는 얼굴 / OFF = -.- 무표정 */
+  var I_FACE_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle class="f" cx="9" cy="10" r="1.2"/><circle class="f" cx="15" cy="10" r="1.2"/><path d="M8.2 14.2a4.6 4.6 0 0 0 7.6 0"/></svg>';
+  var I_FACE_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M7.6 10.4h2.8M13.6 10.4h2.8"/><circle class="f" cx="12" cy="15.4" r=".9"/></svg>';
   var I_CLIP = '<svg class="vt-clip" viewBox="0 0 24 60" aria-hidden="true"><path d="M8 40V10a5 5 0 0 1 10 0v34a7 7 0 0 1-14 0V16"/></svg>';
   var MODES = [['full', '전체'], ['upper', '상반신만'], ['noshoes', '신발 없이']];
 
   /* 메모리에만 두는 상태 */
-  var S = { look: {}, key: null, data: null, urls: {}, view: 'lock', pi: -1, oi: -1, mode: 'full', genre: '', q: '', fails: 0, until: 0, big: false };
+  var S = { look: {}, noface: {}, key: null, data: null, urls: {}, view: 'lock', pi: -1, oi: -1, mode: 'full', genre: '', q: '', fails: 0, until: 0, big: false };
   var win = null;
 
   /* ════════ Notice 목록 : 잠긴 상자 ════════ */
@@ -115,7 +118,7 @@
   /* ════════ 잠금 · 해제 ════════ */
   function lock(){
     Object.keys(S.urls).forEach(function(k){ try { URL.revokeObjectURL(S.urls[k]); } catch(e){} });
-    S.key = null; S.data = null; S.urls = {}; S.view = 'lock'; S.pi = -1; S.oi = -1; S.mode = 'full'; S.genre = ''; S.q = ''; S.big = false; S.look = {};
+    S.key = null; S.data = null; S.urls = {}; S.view = 'lock'; S.pi = -1; S.oi = -1; S.mode = 'full'; S.genre = ''; S.q = ''; S.big = false; S.look = {}; S.noface = {};
     syncCards();
     if (win) render();
   }
@@ -166,8 +169,20 @@
 
   /* ════════ 프롬프트 조립 ════════ */
   function clean(s){ return String(s || '').trim(); }
+  /* 표정 제거 : 관리 화면 '표정 프롬프트' 칸에 적은 글(한 줄에 하나)을 기본 프롬프트에서 그대로 찾아 빼요 */
+  function stripFace(base, face){
+    var out = String(base || '');
+    String(face || '').split('\n').map(clean).filter(Boolean).forEach(function(f){
+      var g = f.replace(/,\s*$/, ''), i = out.indexOf(f);
+      if (i < 0 && g){ i = out.indexOf(g); f = g; }
+      if (i >= 0) out = out.slice(0, i) + out.slice(i + f.length);
+    });
+    return out.replace(/[ \t]*,[ \t]*(,[ \t]*)+/g, ', ').replace(/^[ \t,]+/gm, '').replace(/[ \t]{2,}/g, ' ').replace(/[ \t]+$/gm, '').trim();
+  }
+  function hasFace(lk){ return !!clean(lk && lk.face); }
   function promptOf(p, ci){
     var c = p.chars[ci] || {}, looks = c.looks || [{ base: c.base }], lk = looks[S.look[ci] || 0] || looks[0], base = clean(lk.base);
+    if (S.noface[ci] && hasFace(lk)) base = stripFace(base, lk.face);
     var o = S.oi >= 0 ? p.outfits[S.oi] : null;
     if (!o) return base;
     var part = (o.parts || [])[ci] || {};
@@ -242,11 +257,23 @@
     }).join('') + '</div>' : '';
     var chars = p.chars.map(function(c, ci){
       return '<section class="vd-ch"><header><em>' + pad(ci + 1) + '</em><b>' + esc(c.name || ('캐릭터 ' + (ci + 1))) + '</b>' +
+        (function(){
+          var looks = c.looks || [], cur = looks[S.look[ci] || 0] || looks[0];
+          if (!hasFace(cur)) return '';
+          var off = !!S.noface[ci];
+          return '<button type="button" class="vd-face' + (off ? ' off' : '') + '" data-face="' + ci + '" aria-pressed="' + !off + '" title="' + (off ? '표정 빼고 보는 중 · 누르면 표정 넣기' : '표정 넣고 보는 중 · 누르면 표정 빼기') + '">' + (off ? I_FACE_OFF : I_FACE_ON) + '<span>표정 ' + (off ? 'OFF' : 'ON') + '</span></button>';
+        })() +
         '<button type="button" class="vd-copy" data-copy="' + ci + '">' + I_COPY + '<span>COPY</span></button></header>' +
-        ((c.looks || []).length > 1 ? '<div class="vd-looks" role="group" aria-label="외형"><span>LOOK</span>' + c.looks.map(function(l, li){
-          var on = (S.look[ci] || 0) === li;
-          return '<button type="button" data-look="' + ci + ':' + li + '" aria-pressed="' + on + '"' + (on ? ' class="on"' : '') + '>' + esc(l.name || (li ? '외형 ' + (li + 1) : '기본')) + '</button>';
-        }).join('') + '</div>' : '') +
+        (function(){
+          var looks = c.looks || [], many = looks.length > 1;
+          if (!many) return '';
+          return '<div class="vd-looks">' +
+            (many ? '<span>LOOK</span>' + looks.map(function(l, li){
+              var on = (S.look[ci] || 0) === li;
+              return '<button type="button" data-look="' + ci + ':' + li + '" aria-pressed="' + on + '"' + (on ? ' class="on"' : '') + '>' + esc(l.name || (li ? '외형 ' + (li + 1) : '기본')) + '</button>';
+            }).join('') : '') +
+          '</div>';
+        })() +
         '<div class="vd-txt" id="vdTxt' + ci + '">' + esc(promptOf(p, ci)) + '</div></section>';
     }).join('');
     return '<div class="vt-detail">' + I_CLIP +
@@ -290,14 +317,16 @@
     var t;
     if ((t = e.target.closest('[data-lock]'))){ lock(); return; }
     if ((t = e.target.closest('[data-genre]'))){ S.genre = t.getAttribute('data-genre'); render(); return; }
-    if ((t = e.target.closest('[data-pair]'))){ S.pi = +t.getAttribute('data-pair'); S.oi = -1; S.mode = 'full'; S.big = false; S.look = {}; S.view = 'pair'; render(); return; }
+    if ((t = e.target.closest('[data-pair]'))){ S.pi = +t.getAttribute('data-pair'); S.oi = -1; S.mode = 'full'; S.big = false; S.look = {}; S.noface = {}; S.view = 'pair'; render(); return; }
     if ((t = e.target.closest('[data-back]'))){ S.view = 'list'; S.pi = -1; render(); return; }
     if ((t = e.target.closest('[data-outfit]'))){ S.oi = +t.getAttribute('data-outfit'); if (S.oi < 0) S.mode = 'full'; refreshPair(); return; }
+    if ((t = e.target.closest('[data-face]'))){ var fi = +t.getAttribute('data-face'); S.noface[fi] = !S.noface[fi]; refreshPair(); var fb = $('[data-face="' + fi + '"]', win); if (fb) fb.focus(); return; }
     if ((t = e.target.closest('[data-look]'))){ var lv = t.getAttribute('data-look').split(':'); S.look[+lv[0]] = +lv[1]; refreshPair(); return; }
     if ((t = e.target.closest('[data-zoom]'))){ S.big = !S.big; var h = $('.vd-head', win); if (h) h.classList.toggle('big', S.big); return; }
     if ((t = e.target.closest('[data-copy]'))){ copy(t); }
   }
-  function onChange(e){ if (e.target.name === 'vdMode'){ S.mode = e.target.value; refreshPair(); var r = $('input[name="vdMode"]:checked', win); if (r) r.focus(); } }
+  function onChange(e){
+    if (e.target.name === 'vdMode'){ S.mode = e.target.value; refreshPair(); var r = $('input[name="vdMode"]:checked', win); if (r) r.focus(); } }
   var qT;
   function onInput(e){
     if (e.target.id !== 'vtQ') return;
