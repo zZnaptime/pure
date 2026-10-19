@@ -197,7 +197,7 @@
       '<div class="vl-mid">' +
         '<div class="vl-emb"><span>' + I_LOCK + '</span></div>' +
         '<h2 class="vl-t">PROMPT</h2>' +
-        '<p class="vl-s">페어 프롬프트 보관함이에요.<br>접근 코드를 입력하면 열려요.</p>' +
+        '<p class="vl-s"><b>프롬프트 보관함</b>입니다.<br>접근 코드를 입력하세요.</p>' +
         '<form class="vl-f" id="vlForm" autocomplete="off"><label for="vlPw">ACCESS CODE</label><div class="vl-row"><input id="vlPw" type="password" placeholder="PASSWORD" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"><button type="submit" id="vlGo">UNLOCK</button></div></form>' +
         '<p class="vl-err" id="vlErr" role="alert"></p>' +
       '</div>' +
