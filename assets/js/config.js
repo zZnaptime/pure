@@ -203,6 +203,7 @@
      img 에 이미지 주소를 넣으면 이모티콘 대신 그 이미지가 나와요 (정사각형 추천)
      ══════════════════════════════════════════════════════ */
   window.SY_HUB = [
+    { name: '⤷ PpLELINK', sub: 'LUVLINKS', url: 'https://pure.luvlinks.me/', icon: '💉', img: 'assets/images/pplelinks.png' },
     { name: 'Syringe', sub: 'LUVINFO', url: 'https://syringe.luvinfo.me/', icon: '💉', img: 'assets/images/link-sy.png' },
     { name: 'PpLE VILLAGE', sub: 'LUVLOG · DATA HUB', url: 'https://p.luvlog.me/', icon: '💾', img: 'assets/images/link-p.png' },
     { name: 'Syringe', sub: 'LUVLOG · PURE × UXI', url: 'https://syringe.luvlog.me/', icon: '🤍', img: 'assets/images/link-pu.gif' },

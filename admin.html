@@ -17,6 +17,8 @@
   <nav class="ad-nav" id="adNav" hidden>
     <a href="#list" data-nav="list">글 목록</a>
     <a href="#new" data-nav="new" class="ad-new">＋ 새 글</a>
+    <i class="ad-nav-sep" aria-hidden="true"></i>
+    <a href="#prompts" data-nav="prompts" class="ad-pm">프롬프트<span class="ad-hm"> 관리</span></a>
   </nav>
   <span class="ad-sp"></span>
   <a class="ad-ghost" id="adSite" href="./" target="_blank" rel="noopener" hidden>사이트 보기 ↗</a>
@@ -195,6 +197,17 @@
   </div>
 </main>
 
+<!-- ════════ 프롬프트 관리 (assets/admin/prompt-admin.js) ════════ -->
+<main class="ad-view" id="vPrompt" hidden>
+  <div class="pm" id="pmRoot"></div>
+  <footer class="ad-foot pm-foot" id="pmFoot" hidden>
+    <span class="ad-state" id="pmState"></span>
+    <span class="ad-sp"></span>
+    <button type="button" class="ad-btn pri" id="pmSave">저장</button>
+  </footer>
+  <input type="file" id="pmFile" accept="image/*" hidden>
+</main>
+
 <!-- 입력창 (링크 · HTML 블록 등) -->
 <div class="ad-modal" id="md" hidden>
   <div class="md-in">
@@ -214,5 +227,7 @@
 
 <script src="assets/admin/js-yaml.min.js"></script>
 <script src="assets/admin/admin.js"></script>
+<script src="assets/js/vault-crypto.js"></script>
+<script src="assets/admin/prompt-admin.js"></script>
 </body>
 </html>

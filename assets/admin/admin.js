@@ -33,6 +33,12 @@
   }
   function R(){ return '/repos/' + encodeURIComponent(CFG.owner) + '/' + encodeURIComponent(CFG.repo); }
   function raw(path){ return gh(R() + '/contents/' + enc(path) + '?ref=' + encodeURIComponent(CFG.branch), { raw: true, headers: { 'Accept': 'application/vnd.github.raw+json' } }); }
+  /* 바이너리 그대로 받기 (보관함 사진 암호문) */
+  function rawBin(path){
+    return fetch('https://api.github.com' + R() + '/contents/' + enc(path) + '?ref=' + encodeURIComponent(CFG.branch), { cache: 'no-store',
+      headers: { 'Authorization': 'Bearer ' + CFG.token, 'Accept': 'application/vnd.github.raw+json', 'X-GitHub-Api-Version': '2022-11-28' } })
+      .then(function(r){ return r.ok ? r.arrayBuffer() : Promise.reject({ status: r.status, message: '파일을 못 불러왔어요 (' + r.status + ')' }); });
+  }
   function list(path){ return gh(R() + '/contents/' + enc(path) + '?ref=' + encodeURIComponent(CFG.branch)).catch(function(e){ if (e.status === 404) return []; throw e; }); }
 
   function u8b64(u8){ var s = '', C = 0x8000; for (var i = 0; i < u8.length; i += C) s += String.fromCharCode.apply(null, u8.subarray(i, i + C)); return btoa(s); }
@@ -71,7 +77,7 @@
 
   /* ════════ 화면 전환 ════════ */
   function show(v){
-    ['vLock', 'vLogin', 'vList', 'vEdit'].forEach(function(id){ $('#' + id).hidden = id !== v; });
+    ['vLock', 'vLogin', 'vList', 'vEdit', 'vPrompt'].forEach(function(id){ $('#' + id).hidden = id !== v; });
     var guest = v === 'vLogin' || v === 'vLock';
     $('#adNav').hidden = guest; $('#adLogout').hidden = guest; $('#adSite').hidden = guest;
     D.body.setAttribute('data-view', v);
@@ -83,12 +89,14 @@
       return;
     }
     var h = location.hash || '#list';
-    if (h === '#new'){ openEditor(null); }
+    if (h === '#prompts'){ show('vPrompt'); lastHash = h; if (window.SY_PROMPT) window.SY_PROMPT.enter(); }
+    else if (h === '#new'){ openEditor(null); }
     else if (h.indexOf('#edit/') === 0){ openEditor(decodeURIComponent(h.slice(6))); }
     else { loadList(); }
   }
   window.addEventListener('hashchange', function(){
     if (D.body.getAttribute('data-view') === 'vEdit' && dirty && !confirm('저장하지 않은 내용이 있어요. 나갈까요?')){ history.replaceState(null, '', lastHash); return; }
+    if (D.body.getAttribute('data-view') === 'vPrompt' && location.hash !== '#prompts' && window.SY_PROMPT && window.SY_PROMPT.dirty() && !confirm('프롬프트 관리에 저장하지 않은 내용이 있어요. 나갈까요?')){ history.replaceState(null, '', lastHash); return; }
     route();
   });
   var lastHash = location.hash;
@@ -666,6 +674,9 @@
 
   /* 상단 메뉴 */
   $('#adNav').addEventListener('click', function(e){ var a = e.target.closest('a'); if (a && a.getAttribute('href') === location.hash){ e.preventDefault(); route(); } });
+
+  /* 프롬프트 관리 (assets/admin/prompt-admin.js) 가 같이 쓰는 도구 */
+  window.SY_ADMIN = { gh: gh, raw: raw, rawBin: rawBin, commit: commit, toast: toast, modal: modal, esc: esc };
 
   route();
 })();

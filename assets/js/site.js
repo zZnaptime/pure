@@ -394,6 +394,7 @@ window.SY_MAIN = function (SET, POSTS) {
     else openWin(id);
   }
   window.syOpen = openWin;
+  window.syRegWin = regWin;   /* PROMPT 보관함 창 (assets/js/vault.js) 이 창 관리자에 들어올 때 */
 
   function renderTabs(){
     var box = $('#tkTabs'); if (!box) return;
@@ -438,8 +439,8 @@ window.SY_MAIN = function (SET, POSTS) {
   function placeWin(id){
     var w = wins[id]; if (!w) return;
     if (applySaved(id)) return;
-    var isPost = id.indexOf('post-') === 0;
-    var d = DEF[id] || (isPost ? [0, Math.min(680, window.innerWidth - 60)] : id === 'list' ? [0, Math.min(660, window.innerWidth - 60)] : [0, 320]);
+    var isPost = id.indexOf('post-') === 0 || id === 'vault';
+    var d = DEF[id] || (id === 'vault' ? [0, Math.min(940, window.innerWidth - 60)] : isPost ? [0, Math.min(680, window.innerWidth - 60)] : id === 'list' ? [0, Math.min(660, window.innerWidth - 60)] : [0, 320]);
     w.style.width = d[1] + 'px';
     if (isPost || id === 'list') w.style.height = Math.min(isPost ? 760 : 620, window.innerHeight - barH() - taskH() - 40) + 'px';
         if (id === 'chat') w.style.height = Math.min(650, window.innerHeight - barH() - taskH() - 30) + 'px';
@@ -578,6 +579,7 @@ window.SY_MAIN = function (SET, POSTS) {
       if (notice) initNoticeCards(); else initCards();
       numberCards($('.card-grid', body));
     }
+    if (notice && window.SY_VAULT) window.SY_VAULT.mount(body);   /* 공지 맨 앞 PROMPT 잠금 박스 */
     $$('#catList li a').forEach(function(a){ a.classList.toggle('cur', !notice && a.getAttribute('data-list') === key); });
     var wb = $('.wbody', w); if (wb) wb.scrollTop = 0;
     openWin('list'); renderTabs();
