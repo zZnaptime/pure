@@ -326,7 +326,7 @@
     e.preventDefault();
     var inp = $('#vlPw', win), btn = $('#vlGo', win), err = $('#vlErr', win), pw = inp.value;
     if (!pw){ inp.focus(); return; }
-    btn.disabled = true; inp.disabled = true; err.className = 'vl-busy'; err.textContent = 'DECRYPTING…';
+    btn.disabled = true; inp.disabled = true; err.className = 'vl-busy'; err.textContent = 'VERIFYING CLEARANCE…';
     unlock(pw).then(function(){ render(); }).catch(function(x){
       inp.value = ''; inp.disabled = false; btn.disabled = false; err.className = 'vl-err'; err.textContent = (x && x.message) || '열지 못했어요.';
       var l = $('#vtLock', win); l.classList.remove('shake'); void l.offsetWidth; l.classList.add('shake'); inp.focus();
