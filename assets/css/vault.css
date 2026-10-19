@@ -203,7 +203,7 @@
 .vd-face.off{background:#fff;border-color:var(--line2);color:var(--ink3)}
 .vd-face.off:hover{color:var(--ink2);border-color:var(--ink3)}
 /* 타자기로 친 서류 줄 */
-.vd-txt{white-space:pre-wrap;word-break:break-word;padding:11px 16px 11px 18px;font-family:ui-monospace,'SFMono-Regular','Menlo','Consolas',monospace;font-size:12.5px;line-height:22px;color:#26394B;
+.vd-txt{white-space:pre-wrap;word-break:break-word;padding:11px 16px 11px 18px;font-family:var(--font);font-size:13px;letter-spacing:-.005em;line-height:22px;color:#26394B;
   background:linear-gradient(90deg,transparent 9px,rgba(47,164,222,.35) 9px 10px,transparent 10px),repeating-linear-gradient(transparent 0 21px,#EAF1F6 21px 22px) 0 11px;
   user-select:text;-webkit-user-select:text;min-height:88px}
 
