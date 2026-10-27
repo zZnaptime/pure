@@ -24,6 +24,10 @@ content:
         label: 제목
         type: string
         required: true
+      - name: url
+        label: 글 주소
+        description: "영어 소문자 · 숫자 · - 만 (예: banner → 도메인/banner). 비워두면 발행할 때 번호가 자동으로 붙어요."
+        type: string
       - name: date
         label: 날짜
         type: date
@@ -103,6 +107,14 @@ content:
       - { name: title, label: 사이트 이름, type: string }
       - { name: blogger, label: 운영자 이름, type: string }
       - { name: heroSub, label: 타이틀 옆 문구, type: string }
+      - name: ogImage
+        label: 링크 미리보기 카드 이미지
+        description: 트위터 · 카톡 · 디스코드에 링크를 붙였을 때 뜨는 카드. 가로 1200 × 세로 630 png / jpg 추천 (gif 는 안 나올 수 있어요). 비우면 기본 카드.
+        type: image
+      - name: ogDescription
+        label: 링크 미리보기 카드 설명
+        description: 카드에 제목 아래 뜨는 한 줄. 비우면 '타이틀 옆 문구'를 써요.
+        type: string
       - name: sinceDate
         label: D+ 기준일
         type: date

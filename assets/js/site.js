@@ -632,7 +632,7 @@ window.SY_MAIN = function (SET, POSTS) {
   window.syOpenPost = openPost; window.syOpenList = openList;
   D.addEventListener('click', function(e){
     var c = e.target.closest('[data-copy-post]');
-    if (c){ e.preventDefault(); e.stopPropagation(); copyText(location.origin + location.pathname + '?p=' + encodeURIComponent(c.getAttribute('data-copy-post'))); return; }
+    if (c){ e.preventDefault(); e.stopPropagation(); copyText(shareUrl(c.getAttribute('data-copy-post'))); return; }
     if (e.target.closest('.card-link-btn')) return;
     var a = e.target.closest('[data-post]');
     if (a){ e.preventDefault(); openPost(a.getAttribute('data-post')); return; }
@@ -908,7 +908,19 @@ window.SY_MAIN = function (SET, POSTS) {
 
   /* ════════ 글 데이터 (posts/posts.json) ════════ */
   function esc(t){ var d = D.createElement('div'); d.textContent = t == null ? '' : String(t); return d.innerHTML; }
-  function postBySlug(s){ for (var i = 0; i < POSTS.length; i++) if (POSTS[i].slug === s) return POSTS[i]; return null; }
+  /* 글 찾기 : 주소(slug) → 파일 이름 → 예전 주소 순서로 (예전 링크 ?p=2026-10-14-200000 도 계속 열려요) */
+  function postBySlug(s){
+    s = String(s == null ? '' : s).replace(/^\/+|\/+$/g, ''); var l = s.toLowerCase(), i;
+    for (i = 0; i < POSTS.length; i++) if (POSTS[i].slug === s || POSTS[i].slug === l) return POSTS[i];
+    for (i = 0; i < POSTS.length; i++) if (POSTS[i].file === s || (POSTS[i].aliases || []).indexOf(l) >= 0 || (POSTS[i].aliases || []).indexOf(s) >= 0) return POSTS[i];
+    return null;
+  }
+  /* 공유용 짧은 주소 : 도메인/banner (내 컴퓨터 미리보기에선 ?p= 방식) */
+  function shareUrl(slug){
+    var base = location.origin + location.pathname.replace(/[^\/]*$/, '');
+    if (/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) || location.protocol === 'file:') return base + '?p=' + encodeURIComponent(slug);
+    return base + encodeURIComponent(slug);
+  }
   function postUrl(p){ return './?p=' + encodeURIComponent(p.slug); }
   /* 카드 제목 : 관리자 화면의 상태/금액/부제목 칸을 [OPEN][PRICE:][SUB:] 태그로 바꿔서 기존 카드 정리 코드가 그대로 처리 */
   function tagTitle(p){

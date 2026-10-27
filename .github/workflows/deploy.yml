@@ -32,13 +32,13 @@ jobs:
       - name: 글 목록 만들기
         run: |
           pip install markdown pyyaml
-          python tools/build_posts.py
+          python tools/build_posts.py --pages
 
-      - name: 글 목록 저장소에도 저장 (내 컴퓨터 미리보기용)
+      - name: 글 목록 · 새로 붙은 글 번호 저장소에도 저장
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add posts/posts.json
+          git add posts/
           git diff --cached --quiet || (git commit -m "글 목록 갱신 [skip ci]" && (git push || (git pull --rebase origin main && git push)))
 
       - uses: actions/configure-pages@v5

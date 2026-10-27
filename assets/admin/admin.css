@@ -364,3 +364,11 @@ body[data-view="vPrompt"]{padding-bottom:var(--footH)}
 .pm-label[data-rank="0"]{background:#6EE7C8;color:#06311F;box-shadow:none}
 .pm-label[data-rank="1"]{background:var(--blue2);color:#fff;box-shadow:none}
 .pm-label[data-rank="2"]{background:var(--sky);color:var(--deep);box-shadow:none}
+/* 발행 : 글 주소 */
+.dw-url{display:flex;align-items:center;border:1px solid var(--line2);border-radius:10px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s;cursor:text}
+.dw-url:focus-within{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(30,143,214,.12)}
+.dw-url em{flex:none;font-style:normal;font-weight:600;font-size:13px;color:var(--ink3);padding:0 2px 0 12px;max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ad-f .dw-url input{flex:1;min-width:0;border:0 !important;box-shadow:none !important;padding:10px 12px 10px 0;font-weight:700}
+.dw-urlmsg{display:block;min-height:1em;font-weight:600;font-size:11.5px;color:var(--blue2)}
+.dw-urlmsg.bad{color:var(--red)}
+.r-tag.url{background:var(--soft);color:var(--ink3);font-weight:700}

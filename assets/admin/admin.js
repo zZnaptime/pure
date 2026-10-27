@@ -141,15 +141,27 @@
     POSTS.forEach(function(p){ if (p.category && c.indexOf(p.category) < 0) c.push(p.category); });
     return c;
   }
+  /* ════════ 글 주소 ════════ */
+  var URLS = {}, ROOTNAMES = null;   /* URLS : 파일 이름 → { url, aliases } (posts.json 기준) */
+  var RESERVED = ['index', '404', 'admin', 'assets', 'posts', 'profiles', 'tools', 'vault', 'prompt', 'api', 'p', 'c', 'notice', 'records', 'readme', 'cname', 'settings', 'jsconfig', 'favicon', 'robots', 'sitemap', 'github'];
+  function normUrl(v){ return String(v == null ? '' : v).trim().toLowerCase().replace(/[\s_]+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-{2,}/g, '-').replace(/^-+|-+$/g, ''); }
+  function setUrls(arr){ URLS = {}; (arr || []).forEach(function(p){ var f = p.file || p.slug; URLS[f] = { url: p.file ? p.slug : '', aliases: p.aliases || [] }; }); }
+  function loadRootNames(){ if (ROOTNAMES) return Promise.resolve(); return list('').then(function(fs){ ROOTNAMES = (fs || []).map(function(f){ return f.name.toLowerCase().replace(/\.[^.]+$/, ''); }); }).catch(function(){ ROOTNAMES = []; }); }
+  function isReserved(u){ return RESERVED.indexOf(u) >= 0 || (ROOTNAMES || []).indexOf(u) >= 0; }
+  function urlOwner(u, self){ for (var f in URLS){ if (f === self) continue; var x = URLS[f]; if (x.url === u || f === u || (x.aliases || []).indexOf(u) >= 0) return f; } return null; }
+  function nextNum(){ var mx = 0; Object.keys(URLS).forEach(function(f){ [URLS[f].url].concat(URLS[f].aliases || []).forEach(function(u){ if (/^\d+$/.test(u || '')) mx = Math.max(mx, +u); }); }); var n = mx + 1; while (urlOwner(String(n)) || isReserved(String(n))) n++; return n; }
+  function urlCheck(u, self){ if (!u) return ''; if (isReserved(u)) return '「' + u + '」 는 사이트가 쓰는 이름이라 못 써요.'; var o = urlOwner(u, self); if (o) return '다른 글이 이미 쓰는 주소예요.'; return ''; }
+  function shortLink(u){ return location.origin + location.pathname.replace(/[^\/]*$/, '') + u; }
+
   function loadList(){
     show('vList'); lastHash = location.hash;
     var rows = $('#lsRows'); rows.innerHTML = '<li class="ad-empty">불러오는 중…</li>';
     Promise.all([list('posts'), raw('posts/posts.json').then(JSON.parse).catch(function(){ return []; }), loadSettings()]).then(function(r){
       var files = (r[0] || []).filter(function(f){ return /\.md$/.test(f.name); }), built = {};
-      (r[1] || []).forEach(function(p){ built[p.slug] = p; });
+      (r[1] || []).forEach(function(p){ built[p.file || p.slug] = p; }); setUrls(r[1]);
       POSTS = files.map(function(f){
         var slug = f.name.replace(/\.md$/, ''), b = built[slug];
-        return b ? { slug: slug, title: b.title, date: b.date, category: b.category, notice: b.notice, song: !!b.song, draft: false } : { slug: slug, title: null, date: slug.slice(0, 10), pending: true };
+        return b ? { slug: slug, url: b.file ? b.slug : '', title: b.title, date: b.date, category: b.category, notice: b.notice, song: !!b.song, draft: false } : { slug: slug, title: null, date: slug.slice(0, 10), pending: true };
       });
       renderList();
       /* 아직 목록에 없는 글 (임시저장 · 방금 올린 글) 은 파일을 직접 읽어서 제목 채우기 */
@@ -157,7 +169,7 @@
       return todo.reduce(function(pr, p){
         return pr.then(function(){
           return raw('posts/' + p.slug + '.md').then(function(t){
-            var x = parseMd(t).meta; p.title = x.title || '(제목 없음)'; p.date = dateStr(x.date) || p.date; p.category = x.notice ? '' : (x.category || ''); p.notice = !!x.notice; p.draft = !!x.draft; p.song = !!x.song; p.pending = false; p.fresh = !x.draft;
+            var x = parseMd(t).meta; p.title = x.title || '(제목 없음)'; p.date = dateStr(x.date) || p.date; p.category = x.notice ? '' : (x.category || ''); p.notice = !!x.notice; p.draft = !!x.draft; p.song = !!x.song; p.url = normUrl(x.url); p.pending = false; p.fresh = !x.draft;
           }).catch(function(){ p.title = p.slug; p.pending = false; });
         });
       }, Promise.resolve()).then(renderList);
@@ -181,9 +193,9 @@
       return '<li><a class="r-main" href="#edit/' + encodeURIComponent(p.slug) + '">' +
         '<span class="r-cat">' + esc(p.notice ? 'NOTICE' : (p.category || '미분류')) + '</span>' +
         '<b>' + (p.title == null ? '<em class="r-load">불러오는 중…</em>' : esc(p.title)) + '</b>' +
-        (p.song ? '<i class="r-tag song">♪</i>' : '') + (p.draft ? '<i class="r-tag draft">임시저장</i>' : '') + (p.fresh ? '<i class="r-tag fresh">반영 중</i>' : '') +
+        (p.url ? '<i class="r-tag url">/' + esc(p.url) + '</i>' : '') + (p.song ? '<i class="r-tag song">♪</i>' : '') + (p.draft ? '<i class="r-tag draft">임시저장</i>' : '') + (p.fresh ? '<i class="r-tag fresh">반영 중</i>' : '') +
         '<time>' + esc(String(p.date || '').slice(0, 10)) + '</time></a>' +
-        '<span class="r-act"><a href="./?p=' + encodeURIComponent(p.slug) + '" target="_blank" rel="noopener" title="사이트에서 보기">보기</a><button type="button" data-del="' + esc(p.slug) + '">삭제</button></span></li>';
+        '<span class="r-act"><a href="./?p=' + encodeURIComponent(p.url || p.slug) + '" target="_blank" rel="noopener" title="사이트에서 보기">보기</a><button type="button" data-del="' + esc(p.slug) + '">삭제</button></span></li>';
     }).join('') : '<li class="ad-empty">' + (POSTS.length ? '찾는 글이 없어요.' : '아직 글이 없어요. 오른쪽 위 ＋ 새 글!') + '</li>';
   }
   $('#lsQ').addEventListener('input', renderList);
@@ -235,7 +247,7 @@
     cur = { slug: slug, path: slug ? 'posts/' + slug + '.md' : null, meta: {} };
     ED.innerHTML = '<p><br></p>'; TITLE.value = ''; autoGrow(); musicFrom({}); $('#edState').textContent = slug ? '불러오는 중…' : '';
     var cats = function(){ CAT.innerHTML = '<option value="">카테고리</option>' + categories().map(function(c){ return '<option>' + esc(c) + '</option>'; }).join(''); };
-    var ready = (SETTINGS.categories ? Promise.resolve() : loadSettings()).then(cats);
+    var ready = Promise.all([(SETTINGS.categories ? Promise.resolve() : loadSettings()), loadRootNames(), raw('posts/posts.json').then(JSON.parse).then(setUrls).catch(function(){})]).then(cats);
     if (!slug){
       ready.then(function(){
         var bk = backup.get('new');
@@ -245,7 +257,9 @@
       return;
     }
     Promise.all([ready, raw(cur.path), raw('posts/posts.json').then(JSON.parse).catch(function(){ return []; })]).then(function(r){
-      var md = parseMd(r[1]), built = (r[2] || []).filter(function(p){ return p.slug === slug; })[0];
+      var md = parseMd(r[1]), built = (r[2] || []).filter(function(p){ return (p.file || p.slug) === slug; })[0];
+      /* 파일에 주소가 아직 안 적혀 있어도 (배포가 방금 번호를 붙인 경우) 지금 쓰는 주소를 이어받기 */
+      if (!md.meta.url && built && built.file) md.meta.url = built.slug;
       var html = md.meta.format === 'html' ? md.body : (built && built.html) || mdToHtml(md.body);
       cur.meta = md.meta;
       var bk = backup.get(slug);
@@ -553,11 +567,23 @@
   function openDrawer(){
     var m = cur.meta || {};
     if (!dwInit){ var d = dateStr(m.date) || nowDate(); $('#dwDate').value = d.replace(' ', 'T');
+    $('#dwUrl').value = m.url || ''; $('#dwBase').textContent = location.host + '/'; urlHint();
     $('#dwNotice').checked = !!m.notice; $('#dwSum').value = m.summary || ''; $('#dwSub').value = m.sub || '';
     $('#dwStatus').value = m.status ? String(m.status).toUpperCase() : ''; $('#dwPrice').value = m.price != null ? m.price : ''; }
     if (thumbSel === null || thumbSel === undefined) thumbSel = m.thumbnail || '';
     dwInit = true; paintThumbs(); $('#dw').hidden = false;
   }
+  function urlHint(){
+    var el = $('#dwUrl'), u = normUrl(el.value), msg = $('#dwUrlMsg'), err = urlCheck(u, cur && cur.slug);
+    el.placeholder = (cur && cur.meta && cur.meta.url) ? '' : '비우면 ' + nextNum() + ' (자동 번호)';
+    msg.className = 'dw-urlmsg' + (err ? ' bad' : '');
+    msg.textContent = err || ((u || (cur && cur.meta && cur.meta.url)) ? '공유 주소 : ' + location.host + '/' + (u || cur.meta.url) : '');
+  }
+  $('#dwUrl').addEventListener('input', function(){
+    var v = this.value, n = v.toLowerCase().replace(/[\s_]+/g, '-').replace(/[^a-z0-9-]/g, '');
+    if (n !== v){ var pos = this.selectionStart - (v.length - n.length); this.value = n; try { this.setSelectionRange(pos, pos); } catch(e){} }
+    urlHint(); touch();
+  });
   function paintThumbs(){
     var seen = {}, opts = [];
     $$('img', ED).forEach(function(im){ var v = im.getAttribute('data-up') ? 'up:' + im.getAttribute('data-up') : (im.getAttribute('src') || ''); if (v && !seen[v]){ seen[v] = 1; opts.push(v); } });
@@ -589,6 +615,7 @@
       var dv = $('#dwDate').value; if (dv) m.date = dv.replace('T', ' ').slice(0, 16);
       m.notice = $('#dwNotice').checked; m.summary = $('#dwSum').value.trim(); m.sub = $('#dwSub').value.trim();
       m.status = $('#dwStatus').value; m.price = $('#dwPrice').value.replace(/[^0-9]/g, '');
+      m.url = normUrl($('#dwUrl').value);
     }
     if (thumbSel !== null && thumbSel !== undefined) m.thumbnail = thumbSel;
     m.song = mu.song; m.songCover = mu.cover; m.songTitle = $('#muTitle').value.trim(); m.artist = $('#muArtist').value.trim(); m.album = $('#muAlbum').value.trim(); m.lyrics = $('#muLyrics').value.replace(/\s+$/, '');
@@ -597,12 +624,12 @@
     m.format = 'html';
     return m;
   }
-  var ORDER = ['title', 'date', 'category', 'notice', 'thumbnail', 'summary', 'sub', 'status', 'price', 'center', 'song', 'songTitle', 'songCover', 'artist', 'album', 'songNoDl', 'lyrics', 'draft', 'format'];
+  var ORDER = ['title', 'url', 'date', 'category', 'notice', 'thumbnail', 'summary', 'sub', 'status', 'price', 'center', 'song', 'songTitle', 'songCover', 'artist', 'album', 'songNoDl', 'lyrics', 'aliases', 'draft', 'format'];
   function yamlOf(m){
     var keys = ORDER.concat(Object.keys(m).filter(function(k){ return ORDER.indexOf(k) < 0 && k !== 'body'; }));
     return keys.map(function(k){
       var v = m[k];
-      if (v === undefined || v === null || v === '' || (v === false && k !== 'draft')) return null;
+      if (v === undefined || v === null || v === '' || (v === false && k !== 'draft') || (Array.isArray(v) && !v.length)) return null;
       if (k === 'date') v = dateStr(v);
       if (typeof v === 'boolean') return k + ': ' + v;
       if (typeof v === 'number') return k + ': ' + v;
@@ -623,8 +650,18 @@
     if (mode === 'html') setMode('wys');
     var title = TITLE.value.trim();
     if (!title){ toast('제목을 써 주세요.', true); TITLE.focus(); return; }
-    busy = true; $$('#edDraft, #edPub, #dwGo').forEach(function(b){ b.disabled = true; }); $('#edState').textContent = '저장 중…'; $('#edState').className = 'ad-state busy';
     var meta = collectMeta(); meta.draft = !!asDraft;
+    /* 주소 : 쓴 게 있으면 확인, 비어 있으면 발행할 때 다음 번호 */
+    var selfFile = cur.slug || '', prevUrl = normUrl((cur.meta && cur.meta.url) || (URLS[selfFile] && URLS[selfFile].url) || '');
+    meta.url = normUrl(meta.url);
+    var uerr = urlCheck(meta.url, selfFile);
+    if (uerr){ toast(uerr, true); if ($('#dw').hidden) openDrawer(); $('#dwUrl').focus(); return; }
+    if (!meta.url && prevUrl) meta.url = prevUrl;
+    if (!meta.url && !asDraft) meta.url = String(nextNum());
+    var al = (meta.aliases || []).map(normUrl).filter(Boolean);
+    if (prevUrl && prevUrl !== meta.url && al.indexOf(prevUrl) < 0) al.push(prevUrl);   /* 예전 주소도 계속 열리게 */
+    meta.aliases = al.filter(function(a){ return a !== meta.url; });
+    busy = true; $$('#edDraft, #edPub, #dwGo').forEach(function(b){ b.disabled = true; }); $('#edState').textContent = '저장 중…'; $('#edState').className = 'ad-state busy';
     var wrap = D.createElement('div'); wrap.innerHTML = ED.innerHTML;
     $$('img.sel', wrap).forEach(function(x){ x.classList.remove('sel'); if (!x.className) x.removeAttribute('class'); });
     $$('[contenteditable]', wrap).forEach(function(x){ x.removeAttribute('contenteditable'); });
@@ -662,10 +699,12 @@
       if (thumbSel && thumbSel.indexOf('up:') === 0 && pend[thumbSel.slice(3)]) thumbSel = pend[thumbSel.slice(3)].path;
       musicPaint();
       var wasNew = !cur.path; cur.path = path; cur.slug = path.replace(/^posts\/|\.md$/g, ''); cur.meta = meta;
+      if (meta.url) URLS[cur.slug] = { url: meta.url, aliases: meta.aliases || [] };
+      if (!$('#dw').hidden || dwInit) urlHint();
       backup.del('new'); backup.del(cur.slug);
       if (wasNew){ history.replaceState(null, '', '#edit/' + encodeURIComponent(cur.slug)); lastHash = location.hash; }
       setDirty(false); $('#dw').hidden = true;
-      toast(asDraft ? '임시저장했어요. (홈엔 안 보여요)' : '저장했어요! 1~2분 뒤 사이트에 반영돼요.');
+      toast(asDraft ? '임시저장했어요. (홈엔 안 보여요)' : '저장했어요! 1~2분 뒤 ' + location.host + '/' + meta.url + ' 에 반영돼요.');
     }).catch(function(e){
       $('#edState').textContent = '저장 실패'; $('#edState').className = 'ad-state dirty';
       toast('저장 실패: ' + (e.message || e) + (e.status === 401 ? ' · 토큰을 다시 연결해 주세요.' : e.status === 413 || e.status === 422 ? ' · 파일이 너무 클 수 있어요.' : ''), true);
