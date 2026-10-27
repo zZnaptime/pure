@@ -1,0 +1,43 @@
+/* ══ 2026 할로윈 상자 카드 : Records → etc 폴더 맨 앞 (assets/js/halloween.js 가 붙여요) ══ */
+.hw-card{font:inherit;text-align:left;min-height:100%}
+.hw-card{--o:#FF7A1A;--o2:#FFB04A}
+.hw-card:hover{border-color:#F5C8A2}
+.hw-scene{position:relative;flex:1;display:grid;place-items:center;min-height:250px;border-radius:9px;overflow:hidden;
+  background:
+    radial-gradient(60% 50% at 50% 58%,rgba(255,122,26,.32),transparent 70%),
+    radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.2px) 0 0/9px 9px,
+    linear-gradient(180deg,#16110F 0%,#0B0809 100%)}
+.hw-moon{position:absolute;right:16px;top:14px;width:34px;height:34px;border-radius:50%;background:#FFE3B8;box-shadow:0 0 24px 4px rgba(255,190,110,.35)}
+.hw-moon::after{content:"";position:absolute;left:9px;top:-3px;width:34px;height:34px;border-radius:50%;background:#110C0D}
+.hw-svg{position:relative;display:block;width:min(94%,270px);height:auto;overflow:visible;transition:transform .45s cubic-bezier(.2,.9,.2,1)}
+.hw-shadow{fill:rgba(0,0,0,.55);transition:opacity .45s,transform .45s;transform-box:fill-box;transform-origin:center}
+.hw-tape text{font-family:Pretendard,sans-serif;font-weight:900;font-size:10.5px;letter-spacing:2.6px;fill:#1A0E08}
+.hw-lid{transform-box:fill-box;transform-origin:15% 100%;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.hw-candy{transform-box:fill-box;transform-origin:center;transition:transform .55s cubic-bezier(.3,1.6,.5,1),opacity .3s;opacity:0}
+.hw-sleep,.hw-wake{transition:opacity .35s}
+.hw-wake{opacity:0}
+.hw-z{font-family:Pretendard,sans-serif;font-weight:900;font-size:11px;fill:#FFE3B8;opacity:.85;animation:hwZ 2.8s ease-in-out infinite}
+.hw-z.z2{font-size:8px;animation-delay:1.4s}
+@keyframes hwZ{0%,100%{opacity:0;transform:translateY(4px)}40%,60%{opacity:.9;transform:none}}
+.hw-bat{position:absolute;width:30px;height:15px;opacity:.7;animation:hwBat 9s ease-in-out infinite}
+.hw-bat svg{width:100%;height:100%;fill:#2A1E1C}
+.hw-bat.b2{animation-duration:12s;animation-delay:-4s;transform:scale(.7)}
+@keyframes hwBat{0%{left:-10%;top:30%}50%{top:18%}100%{left:110%;top:26%}}
+/* 마우스를 올리면 : 뚜껑이 열리고 사탕이 톡톡 튀어나와요 · 눈이 은은하게 밝아져요 */
+.hw-card:hover .hw-svg{transform:translateY(-4px)}
+.hw-card:hover .hw-shadow{opacity:.6;transform:scale(.92)}
+.hw-card:hover .hw-lid{transform:rotate(-16deg) translateY(-6px)}
+.hw-card:hover .hw-candy{opacity:1}
+.hw-card:hover .c1{transform:translate(-14px,-30px) rotate(-25deg)}
+.hw-card:hover .c2{transform:translate(4px,-40px) rotate(18deg);transition-delay:.06s}
+.hw-card:hover .c3{transform:translate(20px,-28px) rotate(40deg);transition-delay:.12s}
+.hw-card:hover .hw-sleep{opacity:0}
+.hw-card:hover .hw-wake{opacity:1}
+.hw-eye{filter:drop-shadow(0 0 3px #FFC23A) drop-shadow(0 0 7px rgba(255,176,40,.85))}
+.hw-card:hover .hw-eye{animation:hwGlow 2.6s ease-in-out infinite}
+@keyframes hwGlow{0%,100%{filter:drop-shadow(0 0 3px #FFC23A) drop-shadow(0 0 7px rgba(255,176,40,.85))}50%{filter:drop-shadow(0 0 5px #FFD34A) drop-shadow(0 0 14px rgba(255,176,40,1))}}
+
+.hw-batsv .w{transform-box:view-box;transform-origin:30px 14px;animation:hwFlap 1.1s ease-in-out infinite}
+@keyframes hwFlap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.55)}}
+.layout-list .hw-card .hw-scene{min-height:120px}
+.layout-list .hw-card .hw-svg{width:min(46%,170px)}
