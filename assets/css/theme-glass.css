@@ -1,0 +1,276 @@
+/* ══════════════════════════════════════════════════════════════
+   SYRINGE — 컬러 테마 「GLASS」  · theme-glass.css
+   blue × white × black · glass  (민트 포인트 없음)
+   ──────────────────────────────────────────────────────────────
+   · 다른 css 들 맨 뒤에 불러와서 색만 덮어써요 (배치 · 동작은 그대로)
+   · 이 파일을 빼면 예전 민트 색으로 바로 돌아가요
+   · ARCH of Legends · 할로윈처럼 테마가 따로 있는 곳은 건드리지 않아요
+══════════════════════════════════════════════════════════════ */
+
+:root{
+  --bg:#EEEFF2; --card:#FFFFFF; --soft:#F4F5F7; --wash:#EAF5FC;
+  --blue:#2FA4DE; --blue2:#1C86C2; --deep:#0E0F12; --mint:#2FA4DE; --mint2:#1C86C2; --sky:#BFE1F4;
+  --ink:#0E0F12; --ink2:#5F656E; --ink3:#9AA0A8;
+  --line:#E4E6EA; --line2:#D3D6DC;
+  --sh1:0 1px 2px rgba(14,15,18,.04),0 8px 22px -12px rgba(14,15,18,.16);
+  --sh2:0 2px 4px rgba(14,15,18,.05),0 22px 44px -20px rgba(14,15,18,.28);
+  --point:#0E0F12; --new:#2FA4DE;
+  /* 유리 */
+  --gl:rgba(255,255,255,.56); --gl2:rgba(255,255,255,.74);
+  --gl-ring:inset 0 0 0 1px rgba(255,255,255,.92);
+  --gl-sh:0 26px 50px -32px rgba(14,15,18,.4);
+  --gl-blur:blur(20px) saturate(1.5);
+  /* 파란 면 위에서 쓰는 강조색 (민트 자리) */
+  --on-blue:#0E0F12;
+}
+
+/* ── 테마가 따로 있는 곳은 예전 색 그대로 ── */
+.app-aol,.aol,.ap-aol,.hw-link,[class*="halloween"]{
+  --bg:#F4F7FA; --soft:#F6F9FB; --wash:#EDF5FA; --blue:#2FA4DE; --blue2:#1E8FD6; --deep:#0D5A96; --mint:#6EE7C8; --mint2:#3FD0AC; --sky:#CDE9F7;
+  --ink:#122B42; --ink2:#5B7185; --ink3:#97A8B6; --line:#E4ECF2; --line2:#D5E2EB;
+}
+
+::selection{background:var(--blue);color:#fff}
+
+/* ══════════════ 바탕 : 점 모눈 + 파란 빛 ══════════════ */
+.sy-bg{
+  background:
+    radial-gradient(38% 34% at 92% 6%,rgba(47,164,222,.20),transparent 70%),
+    radial-gradient(34% 30% at 6% 96%,rgba(47,164,222,.13),transparent 70%),
+    radial-gradient(30% 26% at 46% 60%,rgba(14,15,18,.035),transparent 70%),
+    radial-gradient(circle,rgba(14,15,18,.10) 1px,transparent 1.4px) 0 0/22px 22px,
+    var(--bg);
+}
+/* 네 귀퉁이 재단 표시 */
+.sy-bg::after{content:"";position:absolute;inset:12px;opacity:.38;
+  background:
+    linear-gradient(#0E0F12,#0E0F12) 0 7px/14px 1px no-repeat,linear-gradient(#0E0F12,#0E0F12) 7px 0/1px 14px no-repeat,
+    linear-gradient(#0E0F12,#0E0F12) 100% 7px/14px 1px no-repeat,linear-gradient(#0E0F12,#0E0F12) calc(100% - 7px) 0/1px 14px no-repeat,
+    linear-gradient(#0E0F12,#0E0F12) 0 calc(100% - 7px)/14px 1px no-repeat,linear-gradient(#0E0F12,#0E0F12) 7px 100%/1px 14px no-repeat,
+    linear-gradient(#0E0F12,#0E0F12) 100% calc(100% - 7px)/14px 1px no-repeat,linear-gradient(#0E0F12,#0E0F12) calc(100% - 7px) 100%/1px 14px no-repeat}
+body::after{background:linear-gradient(to top,var(--bg) 0%,var(--bg) 58%,rgba(238,239,242,0) 100%)}
+@media (min-width:861px) and (min-height:600px){
+  #tt-body-index::after{background:linear-gradient(to top,rgba(238,239,242,.9) 0%,rgba(238,239,242,.45) 40%,rgba(238,239,242,0) 100%)}
+}
+.live-dot{background:var(--blue);box-shadow:0 0 0 3px rgba(47,164,222,.22)}
+@keyframes liveBlink{50%{box-shadow:0 0 0 6px rgba(47,164,222,0)}}
+
+/* ══════════════ 위 바 ══════════════ */
+.sy-bar{background:rgba(255,255,255,.55);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);border-bottom:0;box-shadow:inset 0 -1px 0 rgba(14,15,18,.07),0 10px 30px -24px rgba(14,15,18,.35)}
+.sy-logo{background:var(--deep)}
+.sy-logo small{color:#8FDCFB}
+.sy-logo svg [stroke="#6EE7C8"],.bt-logo svg [stroke="#6EE7C8"],.st-logo svg [stroke="#6EE7C8"]{stroke:#2FA4DE}
+.sy-logo svg [fill="#6EE7C8"],.bt-logo svg [fill="#6EE7C8"],.st-logo svg [fill="#6EE7C8"]{fill:#fff}
+.sy-menu a:hover,.sy-menu button:hover{background:rgba(14,15,18,.06);color:var(--ink)}
+.sy-status{background:var(--gl2);border:0;box-shadow:inset 0 0 0 1px rgba(14,15,18,.08)}
+.sq:hover{background:var(--blue)}
+
+/* ══════════════ 아래 독 ══════════════ */
+.sy-task{background:rgba(255,255,255,.55);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);border:0;box-shadow:var(--gl-ring),0 16px 36px -22px rgba(14,15,18,.45)}
+.tk-start{background:var(--blue)}
+.tk-start:hover{background:var(--blue2)}
+.tk-tab:hover{background:rgba(14,15,18,.05)}
+.tk-tab.on{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(14,15,18,.07)}
+.np-txt small{color:#8FDCFB}
+.is-playing .np-eq i{background:#fff}
+.np-btn:hover{background:#E4E6EA;color:var(--ink)}
+.tk-tray .sq{background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(14,15,18,.07)}
+.tk-tray .sq:hover{background:var(--deep);color:#fff}
+
+/* ══════════════ 창 : 유리 ══════════════ */
+/* :where() = 점수 0 → 플레이어처럼 자기 색이 있는 창은 그 색이 그대로 이겨요 */
+:where(.win,.doc){background:rgba(255,255,255,.8);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);border-color:transparent;box-shadow:var(--gl-ring),var(--sh1)}
+:where(.win.focus){border-color:transparent;box-shadow:var(--gl-ring),inset 0 0 0 1px rgba(14,15,18,.06),var(--sh2)}
+:where(.wbar){background:transparent;border-bottom-color:rgba(14,15,18,.07)}
+.win.focus .wno,.doc .wno{background:var(--deep)}
+:where(.wno){background:rgba(14,15,18,.06);color:var(--ink2)}
+:where(.wbtns button,.wbtns a){background:rgba(14,15,18,.05)}
+.wbtns .wmin:hover{background:rgba(14,15,18,.1);color:var(--ink)}
+.wfoot{border-top-color:rgba(14,15,18,.07)}
+.wfoot .stripes i{background:var(--line2)}
+.wfoot .stripes i:nth-child(2){background:var(--ink)}
+.dd-band{background:rgba(14,15,18,.04)}
+.dd-front{background:repeating-linear-gradient(-45deg,#F3F4F6 0 6px,#ECEDF0 6px 12px);box-shadow:0 8px 22px -12px rgba(14,15,18,.3)}
+.dd-prog{background:linear-gradient(90deg,#D6EEFA,var(--blue))}
+/* D-DAY 등록증 : 머리띠 · 상태칩은 블루 바탕 + 흰 글씨 */
+.app-dday .wbar{background:linear-gradient(120deg,#3DB3E8,var(--blue) 45%,var(--blue2))}
+.app-dday .wbtns button{background:rgba(255,255,255,.18)}
+.app-dday .wbtns button:hover{background:#fff;color:var(--blue2)}
+.dd-chip{background:var(--blue);color:#fff}
+.dd-chip::before{background:#fff}
+
+/* ══════════════ 바탕화면 아이콘 ══════════════ */
+.dico .ic{background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.95),0 0 0 1px rgba(14,15,18,.07),0 10px 18px -12px rgba(14,15,18,.4);color:var(--ink)}
+.dico:hover .ic,.dico.on .ic{color:var(--blue2)}
+.dico.on .ic::after{background:var(--blue)}
+.ap-prof .ic{background:rgba(255,255,255,.72);color:var(--ink)}
+.ap-dday .ic,.ap-memo .ic{background:rgba(255,255,255,.72)}
+.ap-dday .ic{color:var(--blue)}
+.ap-chat .ic{background:var(--blue);box-shadow:0 10px 18px -12px rgba(28,134,194,.8)}
+.ap-radar .ic{background:var(--deep);box-shadow:0 10px 18px -12px rgba(14,15,18,.8)}
+.ap-player .ic{background:linear-gradient(160deg,#3A3E45,#0E0F12);box-shadow:0 10px 18px -12px rgba(14,15,18,.8)}
+.ap-web .ic{background:linear-gradient(160deg,#4BB6E8,#1C86C2) !important;border:0 !important}
+.ap-hub .ic{background:rgba(255,255,255,.72) !important;color:var(--blue2) !important}
+.ap-kit .ic{color:var(--blue2)}
+
+/* ══════════════ 홈 : 포스터 ══════════════ */
+.hp-notch{background:var(--bg)}
+.hp-notch::before,.hp-notch::after{background:radial-gradient(circle at 0 100%,transparent calc(var(--R) - .5px),var(--bg) var(--R))}
+.hp-chip{background:#fff;color:var(--ink);box-shadow:0 0 0 1px rgba(14,15,18,.06),0 8px 18px -14px rgba(14,15,18,.5)}
+.hp-chip .live-dot{background:var(--blue)}
+.hp-chip.g{background:transparent;color:var(--ink2);box-shadow:inset 0 0 0 1px rgba(14,15,18,.14)}
+.hp-dial .arc{stroke:#fff;filter:none}
+.hp-dial .orb circle{fill:var(--on-blue)}
+.hp-dc em{background:var(--on-blue);color:#fff}
+.hp-eye .m{color:var(--on-blue)}
+.hp-t .cap,.boot .ix-cap{background:linear-gradient(#fff 0 50%,var(--on-blue) 50%);box-shadow:inset 0 0 0 .03em #fff}
+.hp-t .cap::after,.boot .ix-cap::after{background:radial-gradient(circle,rgba(255,255,255,.32) 1.1px,transparent 1.5px) 0 0/5px 5px}
+.hp-pair b i{color:var(--on-blue);font-weight:400}
+.hp-pair span{background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
+/* 앱 패널 = 유리 */
+.hp-apps{background:var(--gl);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);box-shadow:var(--gl-ring),var(--gl-sh)}
+.hp-tab{background:var(--gl);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);color:var(--ink);box-shadow:none}
+.hp-tab::before{background:radial-gradient(circle at 0 0,transparent 11.5px,var(--gl) 12px)}
+.hp-tab::after{background:radial-gradient(circle at 100% 0,transparent 11.5px,var(--gl) 12px)}
+.hp-tab b{background:var(--deep);color:#fff}
+.hp-ribbon{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(14,15,18,.08)}
+
+/* 도면 + 표제란 */
+.hp-bp .ln{stroke:#0E0F12;stroke-width:1.2}
+.hp-bp .fl{fill:rgba(47,164,222,.16);stroke:#2FA4DE}
+.hp-bp .th{stroke:#0E0F12;opacity:.45}
+.hp-bp .dm{stroke:#A3A8B0}
+.hp-bp .ar{fill:#A3A8B0}
+.hp-bp .dot{fill:#fff;stroke:#0E0F12}
+.hp-bp text{fill:#0E0F12}
+.hp-bp text.s{fill:#8B919A}
+.hp-tblock{background:var(--gl2);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);box-shadow:var(--gl-ring),var(--gl-sh)}
+.tb-hd{background:var(--deep)}
+.tb-hd .ico{color:var(--blue)}
+#sy-home .hp-tblock .hero-stat div{border-top-color:rgba(14,15,18,.08)}
+#sy-home .hp-tblock .hero-stat div:nth-child(odd){border-right-color:rgba(14,15,18,.08)}
+
+/* ══════════════ 접속 화면 ══════════════ */
+.boot{--ixbg:#EEEFF2}
+.boot .bt-hl{background:radial-gradient(circle at var(--hx,72%) var(--hy,48%),rgba(255,255,255,.95),rgba(143,220,251,.35) 22%,transparent 46%)}
+.boot .bt-chip{background:#fff;color:var(--ink);box-shadow:0 0 0 1px rgba(14,15,18,.06),0 8px 18px -14px rgba(14,15,18,.5)}
+.boot .bt-chip .live-dot{background:var(--blue);box-shadow:0 0 0 3px rgba(47,164,222,.2)}
+.boot .bt-chip.ghost{color:var(--ink2);box-shadow:inset 0 0 0 1px rgba(14,15,18,.14)}
+.boot .bt-logo small{color:var(--on-blue)}
+.boot .bt-nav span:first-child::after{background:var(--on-blue)}
+.boot .bt-eye span:last-child{color:var(--on-blue)}
+.boot .bt-pair b i{color:var(--on-blue);font-weight:400}
+.boot .bt-pair-tag{background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+.boot .bt-track{background:rgba(14,15,18,.14)}
+.boot .bt-track i{background:#fff;box-shadow:0 0 12px rgba(255,255,255,.7)}
+.boot .bt-ring .bt-arc{stroke:#fff;filter:drop-shadow(0 0 4px rgba(255,255,255,.6))}
+.boot .bt-orb2 circle{fill:var(--on-blue)}
+.boot .bt-lab.l1 b,.boot .bt-ecg-h b{color:#fff;background:var(--on-blue)}
+.boot .bt-ecg .fg{filter:drop-shadow(0 0 4px rgba(255,255,255,.8))}
+.boot .bt-pulse{border-color:#fff}
+.boot.inject .bt-ring .bt-arc{stroke:var(--on-blue)}
+.boot .bt-ribbon{background:rgba(255,255,255,.92);color:var(--blue2)}
+/* 주사기 · 알약 */
+#ixLiqG stop:nth-child(1){stop-color:#FFFFFF}
+#ixLiqG stop:nth-child(2){stop-color:#CDEBFA}
+#ixLiqG stop:nth-child(3){stop-color:#8FD3F3}
+#ixPl rect:first-child{fill:#0E0F12}
+#ixPl rect:nth-child(2),#ixPl rect:nth-child(3){fill:#3A3E45}
+.bt-pill.bp1 path:nth-of-type(2){fill:#0E0F12}
+.bt-pill.bp1 path:nth-of-type(3){opacity:.3}
+.bt-pill.bp2 circle:first-child{fill:#0E0F12;opacity:.22}
+/* 로딩 ✦ */
+.boot .bt-dots .st-b svg{fill:rgba(14,15,18,.1);stroke:rgba(255,255,255,.6)}
+.boot .bt-dots .st-f svg{fill:#fff}
+.boot .bt-dots i.on .st-f svg{fill:#fff;filter:drop-shadow(0 0 5px rgba(255,255,255,.95))}
+/* ENTER */
+.boot .bt-state{color:var(--ink2)}
+.boot .bt-state b{color:var(--ink)}
+.boot .bt-state b::before{background:var(--line2)}
+.boot.ready .bt-state b::before{background:var(--blue);box-shadow:0 0 6px var(--blue)}
+.boot .bt-enter{background:rgba(14,15,18,.06);color:#A3A8B0}
+.boot.ready .bt-enter{background:var(--blue);color:#fff;box-shadow:0 18px 30px -18px rgba(28,134,194,.95)}
+.boot.ready .bt-go{background:#fff;color:var(--blue2)}
+.boot.inject .bt-enter{background:var(--deep);color:#fff}
+.boot.inject .bt-go{background:#fff;color:var(--ink)}
+@keyframes btRingIn{0%{box-shadow:inset 0 0 0 0 rgba(255,255,255,.7)}60%,100%{box-shadow:inset 0 0 0 6px rgba(255,255,255,0)}}
+
+
+/* 색 아이콘은 흰 글리프 · AoL 아이콘은 원래 색 */
+.dico.ap-chat .ic,.dico.ap-radar .ic,.dico.ap-player .ic,.dico.ap-web .ic{color:#fff !important}
+.dico.ap-aol .ic{background:linear-gradient(150deg,#14304A,#081726);box-shadow:0 0 0 1px #0E2236,0 10px 18px -12px rgba(8,23,38,.8);color:#E9CE8A}
+.dico.ap-aol:hover .ic,.dico.ap-aol.on .ic{color:#F6E2AC}
+
+/* ══════════════ 사이트 곳곳 : 민트 → 블루 ══════════════ */
+/* 형광펜 · 레이더 · 표시등 */
+.memo p mark{background:linear-gradient(transparent 55%,rgba(47,164,222,.32) 55%)}
+.radar .sweep{background:conic-gradient(from 0deg,transparent 72%,rgba(47,164,222,.5) 100%)}
+.protected-form-desc::before,.bn.mine::after{box-shadow:0 0 0 3px rgba(47,164,222,.25)}
+.tr-log li.ok span{color:var(--blue2)}
+.bn::after,.kit-led i{background:var(--blue);box-shadow:0 0 0 3px rgba(47,164,222,.18)}
+.band{color:#fff}
+.band em{border-left-color:rgba(255,255,255,.35)}
+.cat-new,.commission-badge.open,.lab-out .tg.ok{color:#fff}
+#ds-toast{color:var(--ink);box-shadow:0 0 0 1px rgba(14,15,18,.07),0 14px 30px -12px rgba(14,15,18,.35)}
+#ds-toast .ts-ic{color:#fff}
+.card-protected-overlay{background:linear-gradient(160deg,#F3F4F6,#E4E6EA)}
+.pv-sheet i{background:#E4E6EA}
+.pv-tape{box-shadow:0 4px 10px -4px rgba(14,15,18,.4)}
+.pv-lock{box-shadow:0 0 0 4px rgba(14,15,18,.1)}
+.app-link .wbody{background:radial-gradient(circle,rgba(14,15,18,.08) 1px,transparent 1.4px) 0 0/18px 18px,#F6F7F9}
+.links .divider::after{background:#F6F7F9}
+.bn::before{background:linear-gradient(90deg,#F3F4F6,#fff)}
+/* 플레이어 창 : 곡(자켓) 색은 그대로, 민트 강조만 하늘색으로 */
+.app-player{--mint:#BFE6F8;--mint2:#8FD3F3}
+.app-player .pl-ctrl .pl-main:hover{color:var(--ink)}
+/* 인터넷 OTT : 남색 → 블랙 */
+.fv-ott,.app-web[data-site="ott"] .wbody{background:#0E0F12}
+/* 프로필 기기 (어두운 화면일 때 강조) */
+.app-prof{--dv-bg:linear-gradient(170deg,#F7F8FA,#E9EBEE);--dv-line:#DCDFE4}
+.app-prof:has(.pf-dev[data-theme="dark"]){--dv-acc:#8FD3F3}
+.pf-led i{background:var(--blue);box-shadow:0 0 6px var(--blue)}
+.pf-led i:nth-child(2){background:#fff;box-shadow:0 0 6px #fff}
+.pf-boot i{background:linear-gradient(transparent,rgba(47,164,222,.35),transparent)}
+/* 음악 글 플레이어 */
+.sg-dot,[class*="sg-"]{--mint:#2FA4DE;--mint2:#1C86C2}
+
+/* ══════════════ 프롬프트 보관함 ══════════════ */
+.vault-card:hover .vb-pin circle,.vault-card.open .vb-pin circle{fill:#2FA4DE}
+.vb-tape path[fill="#6EE7C8"]{fill:#2FA4DE}
+.app-vault.unlocked .vt-ic,.vd-copy.ok{color:#fff}
+.vp-tape,.vd-photo::before{background:rgba(47,164,222,.5);box-shadow:0 1px 2px rgba(14,15,18,.12)}
+.vp-label[data-rank="0"],.vd-label[data-rank="0"]{background:var(--blue);color:#fff;box-shadow:0 3px 8px -4px rgba(28,134,194,.6)}
+
+/* 썸네일 없는 글 : 알약 (흰 + 검정) */
+.card-thumb-placeholder::before{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20120%2060%27%3E%3Cdefs%3E%3Cpattern%20id%3D%27d%27%20width%3D%275%27%20height%3D%275%27%20patternUnits%3D%27userSpaceOnUse%27%3E%3Ccircle%20cx%3D%272.5%27%20cy%3D%272.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Cg%20transform%3D%27rotate%28-28%2060%2030%29%27%3E%3Cpath%20d%3D%27M36%2012H60V48H36A18%2018%200%200%201%2036%2012Z%27%20fill%3D%27%23fff%27%20stroke%3D%27%23D3D6DC%27%20stroke-width%3D%271.5%27%2F%3E%3Cpath%20d%3D%27M60%2012H84A18%2018%200%200%201%2084%2048H60Z%27%20fill%3D%27%230E0F12%27%2F%3E%3Cpath%20d%3D%27M60%2012H84A18%2018%200%200%201%2084%2048H60Z%27%20fill%3D%27url%28%23d%29%27%20opacity%3D%27.35%27%2F%3E%3Crect%20x%3D%2728%27%20y%3D%2719%27%20width%3D%2726%27%20height%3D%275%27%20rx%3D%272.5%27%20fill%3D%27%23EEEFF2%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E")}
+
+/* 십자 로고 심볼 (<use href="#i-cross">) 의 민트 링 */
+#i-cross [stroke="#6EE7C8"]{stroke:#2FA4DE}
+#i-cross [fill="#6EE7C8"]{fill:currentColor}
+
+/* ══════════════ 파란 면 위 포인트 : 검정 → 흰색 / 알약은 블루 ══════════════ */
+/* 글자 포인트는 흰색 */
+.hp-eye .m,.boot .bt-eye span:last-child,.boot .bt-logo small{color:#fff}
+.hp-pair b i,.boot .bt-pair b i{color:#fff;opacity:.85}
+.boot .bt-nav span:first-child::after{background:#fff}
+/* 칩은 흰 바탕 + 블루 글씨 (NEXT D+200 · D+194 · VITAL) */
+.hp-dc em,.boot .bt-lab.l1 b,.boot .bt-ecg-h b{background:#fff;color:var(--blue2);box-shadow:0 4px 10px -6px rgba(14,15,18,.35)}
+/* 링 위 점 */
+.hp-dial .orb circle,.boot .bt-orb2 circle{fill:#fff}
+.boot.inject .bt-ring .bt-arc{stroke:#fff}
+/* 타이틀 알약 : 위 흰색 · 아래 진한 블루 */
+.hp-t .cap,.boot .ix-cap{background:linear-gradient(#fff 0 50%,var(--blue) 50%);box-shadow:inset 0 0 0 .03em #fff}
+.hp-t .cap::after,.boot .ix-cap::after{background:radial-gradient(circle,rgba(255,255,255,.55) 1.1px,transparent 1.5px) 0 0/5px 5px}
+/* 접속 화면 떠 있는 알약도 같은 블루 */
+.bt-pill.bp1 path:nth-of-type(2){fill:#2FA4DE}
+.bt-pill.bp1 path:nth-of-type(3){opacity:.5}
+/* 주사기 밀대 끝도 블루 */
+#ixPl rect:first-child{fill:#1470B6}
+#ixPl rect:nth-child(2),#ixPl rect:nth-child(3){fill:#4A9AD4}
+/* Records 아이콘은 예전 노란 폴더 그대로 */
+.dico.ap-cat .ic,.dico.ap-cat:hover .ic,.dico.ap-cat.on .ic{color:#E2A23A}
+/* 게이지 · 스코프 링 : SKY #8FDCFB */
+.hp-dial .arc,.boot .bt-ring .bt-arc{stroke:#8FDCFB;filter:drop-shadow(0 0 5px rgba(143,220,251,.9))}
+.hp-dial .orb circle,.boot .bt-orb2 circle{fill:#8FDCFB}
+.boot.inject .bt-ring .bt-arc{stroke:#fff}

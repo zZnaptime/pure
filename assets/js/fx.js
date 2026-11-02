@@ -15,7 +15,7 @@ let W=0,H=0;
 function size(){ const D=Math.min(window.devicePixelRatio||1,2); W=innerWidth; H=innerHeight; cv.width=W*D; cv.height=H*D; ctx.setTransform(D,0,0,D,0,0); }
 size(); addEventListener('resize',size);
 
-const MINT='#6EE7C8', BLUE='#2FA4DE', SKY='#A9DCF5', EDGE='#1E8FD6', PALE='#F2FFFA';
+const BLUE='#2FA4DE', SKY='#8FDCFB', EDGE='#1C86C2', PALE='#FFFFFF';  // GLASS 테마 : 블루 + 스카이
 const fx=[]; let raf=0, last=0;
 const out=k=>1-Math.pow(1-k,3);
 const back=k=>{ const c=2.2; return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2); };
@@ -40,7 +40,7 @@ function draw(f){
   ctx.beginPath(); ctx.arc(0,0,Math.max(0,(6+30*out(k))*s),0,Math.PI*2);
   ctx.lineWidth=Math.max(.01,2*s*(1-k)); ctx.strokeStyle=SKY; ctx.stroke();
 
-  // 빛줄기 8개 (긴 것 민트 / 짧은 것 블루)
+  // 빛줄기 8개 (긴 것 블루 / 짧은 것 스카이)
   ctx.globalAlpha=1;
   for(let i=0;i<8;i++){
     const long=i%2===0, a=f.rot+i*Math.PI/4;
@@ -50,7 +50,7 @@ function draw(f){
     const mid=tail+(head-tail)*.35, ww=w*(1-k*.6);
     ctx.save(); ctx.rotate(a);
     ctx.beginPath(); ctx.moveTo(tail,0); ctx.lineTo(mid,-ww); ctx.lineTo(head,0); ctx.lineTo(mid,ww); ctx.closePath();
-    ctx.fillStyle=long?MINT:BLUE; ctx.fill();
+    ctx.fillStyle=long?BLUE:SKY; ctx.fill();
     ctx.restore();
   }
 
@@ -62,12 +62,12 @@ function draw(f){
     star(R,R*.2); ctx.lineJoin='round'; ctx.lineWidth=Math.max(1.2,R*.16); ctx.strokeStyle=EDGE; ctx.stroke();
     ctx.fillStyle=PALE; ctx.fill(); ctx.restore();
   }
-  // 작은 반짝이 2개
-  f.side.forEach(o=>{
+  // 작은 반짝이 2개 (하나는 블루 · 하나는 스카이)
+  f.side.forEach((o,i)=>{
     const kk=Math.max(0,(f.t-o.delay)/(f.life-o.delay)); if(kk<=0||kk>=1) return;
     const ss=kk<.4?back(kk/.4):1-out((kk-.4)/.6), r=o.r*Math.max(0,ss); if(r<.3) return;
     ctx.save(); ctx.translate(Math.cos(o.a)*o.d,Math.sin(o.a)*o.d);
-    star(r,r*.18); ctx.fillStyle=MINT; ctx.fill(); ctx.restore();
+    star(r,r*.18); ctx.fillStyle=i?SKY:BLUE; ctx.fill(); ctx.restore();
   });
   ctx.restore();
 }
