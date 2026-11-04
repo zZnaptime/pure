@@ -581,6 +581,7 @@ window.SY_MAIN = function (SET, POSTS) {
     }
     if (notice && window.SY_VAULT) window.SY_VAULT.mount(body);   /* 공지 맨 앞 PROMPT 잠금 박스 */
     if (window.SY_HW) window.SY_HW.mount(body, key);   /* etc 폴더 맨 앞 할로윈 상자 */
+    if (window.SY_TOOLS) window.SY_TOOLS.mount(body, key);   /* ! 폴더 맨 앞 윳! 툴 카드 */
     $$('#catList li a').forEach(function(a){ a.classList.toggle('cur', !notice && a.getAttribute('data-list') === key); });
     var wb = $('.wbody', w); if (wb) wb.scrollTop = 0;
     openWin('list'); renderTabs();
