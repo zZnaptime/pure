@@ -528,6 +528,103 @@
       .stage-wrap::after { display: none; }
       .view-toolbar { left: 50%; right: auto; transform: translateX(-50%); top: 12px; }
     }
+
+    /* ── 작업 복원 안내 (윳! 채팅 발췌기와 같은 모달) ── */
+    /* 커스텀 복원 모달 스타일 & 둥실둥실 주사기 */
+    #restore-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(5px);
+      z-index: 999999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: modalFadeIn 0.25s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .restore-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 30px 24px 24px;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(81, 170, 225, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: cardPopUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardPopUp {
+      from { transform: scale(0.9) translateY(10px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    @keyframes modalSyringeFloat {
+      0% { transform: translateY(0) rotate(-14deg); }
+      50% { transform: translateY(-4px) rotate(-10deg); }
+      100% { transform: translateY(2px) rotate(-16deg); }
+    }
+
+    .modal-syringe-wrap {
+      width: 110px;
+      height: 110px;
+      background: linear-gradient(135deg, #f0f7fc 0%, #e0effa 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 22px rgba(81, 170, 225, 0.25);
+      border: 3px solid #ffffff;
+    }
+
+    .modal-syringe-svg {
+      width: 90px;
+      height: 90px;
+      margin-top: 8px;
+      animation: modalSyringeFloat 3.2s ease-in-out infinite alternate;
+      filter: drop-shadow(0 5px 10px rgba(81, 170, 225, 0.45));
+    }
+      
+    /* ── 모달 공통 ── */
+    #restore-modal { background: rgba(14, 15, 18, 0.35) !important; }
+    .restore-card {
+      background: linear-gradient(170deg, #ffffff 55%, #f2f9fe) !important;
+      border-radius: 26px !important;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.95), 0 0 0 1px rgba(14, 15, 18, 0.08), 0 40px 80px -40px rgba(14, 15, 18, 0.55) !important;
+    }
+    .modal-syringe-wrap {
+      background: radial-gradient(circle at 40% 35%, #ffffff, #e6f3fb 70%) !important;
+      border: 0 !important;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.95), 0 0 0 6px rgba(47, 164, 222, 0.1), 0 12px 26px -10px rgba(47, 164, 222, 0.4) !important;
+      overflow: visible;
+    }
+    .modal-syringe-svg { overflow: visible; }
+    #btn-restore-cancel {
+      background: #fff !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      box-shadow: inset 0 0 0 1px rgba(14, 15, 18, 0.14);
+      color: var(--rx-k) !important;
+    }
+    #btn-restore-confirm {
+      background: var(--rx-k) !important;
+      border-radius: 999px !important;
+      box-shadow: 0 10px 20px -12px rgba(14, 15, 18, 0.7) !important;
+    }
+    #btn-restore-confirm:hover { background: var(--rx-p) !important; }
+
   </style>
 </head>
 <body>
@@ -1065,6 +1162,128 @@
       </div>
     </div>
   </main>
+
+  <div id="restore-modal">
+    <div class="restore-card">
+      <div class="modal-syringe-wrap">
+        <svg class="modal-syringe-svg" viewBox="0 0 120 460" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sb-modalGlass" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"></stop>
+            <stop offset="45%" stop-color="#eaf6fd" stop-opacity="0.7"></stop>
+            <stop offset="100%" stop-color="#cfe9f9" stop-opacity="0.85"></stop>
+          </linearGradient>
+          <linearGradient id="sb-modalFluid" x1="0" y1="110" x2="0" y2="255" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a9dcf8"></stop>
+            <stop offset="55%" stop-color="#6cc0ee"></stop>
+            <stop offset="100%" stop-color="#2FA4DE"></stop>
+          </linearGradient>
+          <linearGradient id="sb-modalNeedle" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ffffff"></stop>
+            <stop offset="50%" stop-color="#9fb4c3"></stop>
+            <stop offset="100%" stop-color="#5f7a8d"></stop>
+          </linearGradient>
+          <pattern id="sb-sbModalHalftone" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="3" cy="3" r="1.3" fill="#ffffff" opacity="0.55"></circle>
+          </pattern>
+          <clipPath id="sb-modalClip">
+            <rect x="38.5" y="87" width="43" height="166" rx="4"></rect>
+          </clipPath>
+        </defs>
+
+        <!-- 바늘 (끝에 반짝임) -->
+        <rect x="57.8" y="4" width="4.4" height="58" rx="2.2" fill="url(#sb-modalNeedle)"></rect>
+        <path d="M57.8 8 L60 -2 L62.2 8 Z" fill="#9fb4c3"></path>
+        <circle cx="60" cy="-1" r="3.2" fill="#ffffff">
+          <animate attributeName="r" values="1.5;4.2;1.5" dur="2.60s" repeatCount="indefinite"></animate>
+          <animate attributeName="opacity" values="0.2;1;0.2" dur="2.60s" repeatCount="indefinite"></animate>
+        </circle>
+
+        <!-- 허브 -->
+        <rect x="47" y="58" width="26" height="18" rx="5" fill="url(#sb-modalGlass)" stroke="#51aae1" stroke-width="2.6"></rect>
+        <rect x="51" y="62" width="4" height="10" rx="2" fill="#ffffff" opacity="0.9"></rect>
+        <rect x="32" y="74" width="56" height="12" rx="6" fill="#85c8f2" stroke="#3d98cf" stroke-width="2.6"></rect>
+        <rect x="38" y="76.5" width="22" height="3" rx="1.5" fill="#ffffff" opacity="0.7"></rect>
+
+        <!-- 유리 실린더 -->
+        <rect x="36" y="85" width="48" height="267" rx="9" fill="url(#sb-modalGlass)" stroke="#51aae1" stroke-width="3"></rect>
+
+        <!-- 출렁이는 약액 -->
+        <g clip-path="url(#sb-modalClip)">
+          <g>
+            <path d="M-4.5 120 q10.75 -7 21.5 0 t21.5 0 t21.5 0 t21.5 0 t21.5 0 t21.5 0 V262 H-4.5 Z" fill="url(#sb-modalFluid)"></path>
+            <path d="M-4.5 120 q10.75 -7 21.5 0 t21.5 0 t21.5 0 t21.5 0 t21.5 0 t21.5 0 V262 H-4.5 Z" fill="url(#sb-sbModalHalftone)"></path>
+            <path d="M-4.5 120 q10.75 -7 21.5 0 t21.5 0 t21.5 0 t21.5 0 t21.5 0 t21.5 0" stroke="#ffffff" stroke-width="2.4" stroke-opacity="0.85"></path>
+            <animateTransform attributeName="transform" type="translate" values="0 0; -21.5 2.5; -43 0" dur="3.20s" repeatCount="indefinite"></animateTransform>
+          </g>
+
+          <!-- 뽀글뽀글 기포 -->
+          <circle cx="50" cy="245" r="4.2" fill="#ffffff">
+            <animate attributeName="cy" from="245" to="118" dur="2.40s" repeatCount="indefinite"></animate>
+            <animate attributeName="cx" values="50;46;53;50" dur="2.40s" repeatCount="indefinite"></animate>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.15;0.85;1" dur="2.40s" repeatCount="indefinite"></animate>
+          </circle>
+          <circle cx="67" cy="245" r="5.4" fill="#ffffff">
+            <animate attributeName="cy" from="245" to="118" dur="3.00s" begin="0.5s" repeatCount="indefinite"></animate>
+            <animate attributeName="cx" values="67;71;63;67" dur="3.00s" begin="0.5s" repeatCount="indefinite"></animate>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.15;0.85;1" dur="3.00s" begin="0.5s" repeatCount="indefinite"></animate>
+          </circle>
+          <circle cx="58" cy="245" r="3" fill="#eff6ff">
+            <animate attributeName="cy" from="245" to="118" dur="2.00s" begin="0.2s" repeatCount="indefinite"></animate>
+            <animate attributeName="cx" values="58;55;60;58" dur="2.00s" begin="0.2s" repeatCount="indefinite"></animate>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.15;0.85;1" dur="2.00s" begin="0.2s" repeatCount="indefinite"></animate>
+          </circle>
+        </g>
+
+        <!-- 눈금 -->
+        <g stroke="#3d98cf" stroke-linecap="round" opacity="0.75">
+          <line x1="70" y1="110" x2="80" y2="110" stroke-width="2.4"></line>
+          <line x1="74" y1="128" x2="80" y2="128" stroke-width="1.8"></line>
+          <line x1="70" y1="146" x2="80" y2="146" stroke-width="2.4"></line>
+          <line x1="74" y1="164" x2="80" y2="164" stroke-width="1.8"></line>
+          <line x1="70" y1="182" x2="80" y2="182" stroke-width="2.4"></line>
+          <line x1="74" y1="200" x2="80" y2="200" stroke-width="1.8"></line>
+          <line x1="70" y1="218" x2="80" y2="218" stroke-width="2.4"></line>
+          <line x1="74" y1="236" x2="80" y2="236" stroke-width="1.8"></line>
+        </g>
+
+        <!-- 유리 하이라이트 -->
+        <rect x="41.5" y="94" width="5" height="244" rx="2.5" fill="#ffffff" opacity="0.85"></rect>
+        <rect x="49" y="96" width="2" height="90" rx="1" fill="#ffffff" opacity="0.6"></rect>
+
+        <!-- 고무 마개 -->
+        <rect x="38.5" y="252" width="43" height="12" rx="3" fill="#2a6f99"></rect>
+        <rect x="38.5" y="255" width="43" height="2" fill="#ffffff" opacity="0.25"></rect>
+        <rect x="38.5" y="260" width="43" height="2" fill="#ffffff" opacity="0.25"></rect>
+
+        <!-- 손잡이 날개 -->
+        <rect x="22" y="346" width="76" height="12" rx="6" fill="#ffffff" stroke="#51aae1" stroke-width="2.8"></rect>
+        <rect x="28" y="349" width="30" height="3" rx="1.5" fill="#85c8f2"></rect>
+
+        <!-- 밀대 + 엄지 받침 -->
+        <rect x="54" y="264" width="12" height="122" rx="3" fill="url(#sb-modalGlass)" stroke="#51aae1" stroke-width="2.6"></rect>
+        <rect x="57" y="270" width="2.6" height="108" rx="1.3" fill="#ffffff" opacity="0.9"></rect>
+        <rect x="30" y="386" width="60" height="16" rx="8" fill="#ffffff" stroke="#51aae1" stroke-width="2.8"></rect>
+        <rect x="36" y="390" width="48" height="7" rx="3.5" fill="url(#sb-modalFluid)"></rect>
+
+        <!-- 곁에서 반짝이는 ✦ -->
+        <path d="M100 118 C101.3 126 104 128.7 112 130 C104 131.3 101.3 134 100 142 C98.7 134 96 131.3 88 130 C96 128.7 98.7 126 100 118 Z" fill="#2FA4DE">
+          <animateTransform attributeName="transform" type="rotate" values="0 100 130; 45 100 130; 0 100 130" dur="3.00s" repeatCount="indefinite"></animateTransform>
+          <animate attributeName="opacity" values="0.25;1;0.25" dur="3.00s" repeatCount="indefinite"></animate>
+        </path>
+        <path d="M14 214 C14.8 219 16.6 220.8 21.6 221.6 C16.6 222.4 14.8 224.2 14 229.2 C13.2 224.2 11.4 222.4 6.4 221.6 C11.4 220.8 13.2 219 14 214 Z" fill="#85c8f2">
+          <animate attributeName="opacity" values="1;0.2;1" dur="2.40s" repeatCount="indefinite"></animate>
+        </path>
+      </svg>
+      </div>
+      <div style="font-size:18px; font-weight:800; color:#1e293b; letter-spacing:-0.02em;">작업 복원 안내</div>
+      <div style="font-size:13px; font-weight:500; color:#64748b; line-height:1.6; margin-top:10px;">이전에 편집하던 내용이 남아있습니다.<br>작업을 이어서 진행하시겠습니까?</div>
+      <div style="display:flex; gap:8px; width:100%; margin-top:20px;">
+        <button type="button" id="btn-restore-cancel" style="flex:1; padding:11px 0; border:1.5px solid #e2e8f0; background:#f8fafc; border-radius:10px; font-weight:700; font-size:13px; color:#64748b; cursor:pointer; transition:all 0.15s ease;">처음부터</button>
+        <button type="button" id="btn-restore-confirm" style="flex:1; padding:11px 0; border:none; background:linear-gradient(135deg, #64b5e8 0%, #3d98cf 100%); border-radius:10px; font-weight:800; font-size:13px; color:#fff; cursor:pointer; box-shadow:0 3px 10px rgba(61, 152, 207, 0.3); transition:all 0.15s ease;">불러오기</button>
+      </div>
+    </div>
+  </div>
 
 <button type="button" class="love-fab" id="love-fab" aria-label="하트 보내기">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -2799,6 +3018,7 @@
     else if (kind === 'open') { pause(); seek(openT()); }
   }
   function changed(key, focus = true) {
+    scheduleAutosave();
     if (COVER_KEYS.has(key) || key === 'sticks') markDirty();
     cuesDirty = true;
     if (['ttl', 'ttlSub', 'giant', 'fxOn', 'noteOn', 'mode'].includes(key)) refreshUI();
@@ -3012,7 +3232,7 @@
   function loadImage(file) {
     return new Promise((res, rej) => {
       const url = URL.createObjectURL(file); const im = new Image();
-      im.onload = () => res({ img: im, url }); im.onerror = rej; im.src = url;
+      im.onload = () => res({ img: im, url, blob: file }); im.onerror = rej; im.src = url;
     });
   }
   function hasAlpha(im) {
@@ -3029,14 +3249,14 @@
   }
   async function setCover(file) {
     const { img, url } = await loadImage(file);
-    IB().cover = img; IB().coverUrl = url;
+    IB().cover = img; IB().coverUrl = url; IB().coverBlob = file;
     if (hasAlpha(img)) { S.shape = 'none'; S.outline = 'none'; IB().coverHint = '투명 PNG로 인식되어 프레임 없이 올렸습니다. 필요하면 프레임을 골라 자를 수 있습니다.'; }
     else { if (S.shape === 'none') S.shape = 'heart'; if (S.outline === 'none') S.outline = 'white'; IB().coverHint = '배경 있는 사진으로 인식되어 프레임에 넣었습니다. 아래에서 모양과 위치를 조정할 수 있습니다.'; }
     S.imgZoom = 100; S.imgX = 50; S.imgY = 50;
     refreshUI(); changed('shape');
   }
   async function setBg(file) {
-    IMG.bg = (await loadImage(file)).img;
+    IMG.bg = (await loadImage(file)).img; IMG.bgBlob = file;
     S.bgMode = 'image'; S.bgX = 0; S.bgY = 0; S.bgZoom = 100; hintOn = true;
     refreshUI(); changed('bgMode', false);
   }
@@ -3047,21 +3267,22 @@
   $('in-cover').onchange = e => { const f = e.target.files[0]; if (f) setCover(f); e.target.value = ''; };
   dropTarget($('drop-cover'), f => setCover(f[0]));
   $('btn-cover-clear').onclick = () => {
-    IB().cover = null; IB().coverUrl = null; IB().coverHint = '';
+    IB().cover = null; IB().coverUrl = null; IB().coverHint = ''; IB().coverBlob = null;
     if (S.shape === 'none') S.shape = 'heart';
     refreshUI(); changed('shape');
   };
   $('in-png').onchange = e => { addPngs([...e.target.files]); e.target.value = ''; };
   dropTarget($('drop-bg'), f => setBg(f[0]));
   $('in-bg').onchange = e => { const f = e.target.files[0]; if (f) setBg(f); e.target.value = ''; };
-  $('btn-bg-clear').onclick = () => { IMG.bg = null; refreshUI(); changed('bg', false); };
+  $('btn-bg-clear').onclick = () => { IMG.bg = null; IMG.bgBlob = null; refreshUI(); changed('bg', false); };
   $('btn-bg-center').onclick = () => { S.bgX = 0; S.bgY = 0; S.bgZoom = 100; refreshUI(); changed('bgZoom', false); };
   $('stage-wrap').addEventListener('dragover', e => e.preventDefault());
   $('stage-wrap').addEventListener('drop', e => { e.preventDefault(); const f = [...e.dataTransfer.files].find(f => f.type.startsWith('image/')); if (f) setBg(f); });
 
   $('btn-reset').onclick = () => {
     if (!confirm('모든 설정을 처음 상태로 되돌릴까요?')) return;
-    G = DEF_G(); BX = [DEF_BOX(0), DEF_BOX(1)]; ACT = 0; IMG.bg = null; IMG.box = [newIB(), newIB()];
+    G = DEF_G(); BX = [DEF_BOX(0), DEF_BOX(1)]; ACT = 0; IMG.bg = null; IMG.bgBlob = null; IMG.box = [newIB(), newIB()];
+    scheduleAutosave();
     { const p = sparkPalette(); S.spark1 = p[0]; S.spark2 = p[1]; S.spark3 = p[2]; }
     renderPngGrid(); refreshUI(); markDirty(true); cuesDirty = true; setupCanvas(); seek(0);
   };
@@ -3263,6 +3484,63 @@
   bindAll(); renderPngGrid();
   { const p = sparkPalette(); S.spark1 = p[0]; S.spark2 = p[1]; S.spark3 = p[2]; }
   refreshUI(); setupCanvas();
+
+  /* ================= 작업 자동저장 · 복원 =================
+     · 설정값 → localStorage / 이미지 → IndexedDB (원본 그대로, 용량 넉넉)
+     · 새로고침하면 "이어서 할까요?" 안내가 떠요 */
+  const AS_KEY = 'yut_sweetstick_state_v1', AS_DB = 'YutSweetstickAutosave';
+  let asReady = false, asTimer = null, asDBP = null, asTouched = false;   // asTouched : 사용자가 직접 뭔가 바꿨을 때만 저장
+  function asDB() {
+    if (!asDBP) asDBP = new Promise((res, rej) => {
+      const q = indexedDB.open(AS_DB, 1);
+      q.onupgradeneeded = e => { const db = e.target.result; if (!db.objectStoreNames.contains('images')) db.createObjectStore('images'); };
+      q.onsuccess = () => res(q.result); q.onerror = () => { asDBP = null; rej(q.error); };
+    });
+    return asDBP;
+  }
+  async function asPutImages(v) { const db = await asDB(); await new Promise((res, rej) => { const t = db.transaction('images', 'readwrite'); t.objectStore('images').put(v, 'current'); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+  async function asGetImages() { try { const db = await asDB(); return await new Promise(res => { const q = db.transaction('images', 'readonly').objectStore('images').get('current'); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); }); } catch (e) { return null; } }
+  async function asClear() { try { localStorage.removeItem(AS_KEY); } catch (e) {} try { const db = await asDB(); db.transaction('images', 'readwrite').objectStore('images').delete('current'); } catch (e) {} }
+  function saveAutosave() {
+    if (!asReady || !asTouched) return;
+    try { localStorage.setItem(AS_KEY, JSON.stringify({ G, BX, ACT, coverHint: IMG.box.map(b => b.coverHint || ''), at: Date.now() })); } catch (e) { console.warn('작업 저장 실패', e); }
+    asPutImages({ bg: IMG.bgBlob || null, box: IMG.box.map(b => ({ cover: b.coverBlob || null, pngs: (b.pngs || []).map(p => p.blob).filter(Boolean) })) }).catch(e => console.warn('이미지 저장 실패', e));
+  }
+  function scheduleAutosave() { if (!asReady) return; clearTimeout(asTimer); asTimer = setTimeout(saveAutosave, 400); }
+  // 슬라이더·글자 입력·버튼처럼 changed() 를 안 거치는 조작도 저장되게
+  ['input', 'change', 'click'].forEach(ev => document.addEventListener(ev, e => { if (e.target.closest && e.target.closest('.editor, .stage-wrap')) { asTouched = true; scheduleAutosave(); } }, true));
+  ['drop'].forEach(ev => document.addEventListener(ev, () => { asTouched = true; scheduleAutosave(); }, true));
+  window.addEventListener('pagehide', () => { if (asReady && asTimer) { clearTimeout(asTimer); saveAutosave(); } });
+  async function restoreAutosave() {
+    let saved; try { saved = JSON.parse(localStorage.getItem(AS_KEY) || 'null'); } catch (e) { saved = null; }
+    if (!saved) return;
+    pause();
+    G = Object.assign(DEF_G(), saved.G || {});
+    BX = [0, 1].map(i => { const d = DEF_BOX(i), b = Object.assign(d, (saved.BX || [])[i] || {}); if (!Array.isArray(b.sticks) || !b.sticks.length) b.sticks = d.sticks; return b; });
+    ACT = saved.ACT === 1 ? 1 : 0;
+    IMG.bg = null; IMG.bgBlob = null; IMG.box = [newIB(), newIB()];
+    asTouched = true;   // 복원한 작업은 계속 이어서 저장
+    const imgs = await asGetImages();
+    if (imgs) {
+      if (imgs.bg) { try { const r = await loadImage(imgs.bg); IMG.bg = r.img; IMG.bgBlob = imgs.bg; } catch (e) {} }
+      for (let i = 0; i < 2; i++) {
+        const src = (imgs.box || [])[i]; if (!src) continue; const ib = IMG.box[i];
+        if (src.cover) { try { const r = await loadImage(src.cover); ib.cover = r.img; ib.coverUrl = r.url; ib.coverBlob = src.cover; ib.coverHint = (saved.coverHint || [])[i] || ''; } catch (e) {} }
+        for (const bl of (src.pngs || [])) { try { ib.pngs.push(await loadImage(bl)); } catch (e) {} }
+      }
+    }
+    renderPngGrid(); refreshUI(); markDirty(true); cuesDirty = true; setupCanvas(); seek(0); needDraw = true;
+    setTimeout(() => { layoutStage(); play(); }, 60);
+  }
+  (function askRestore() {
+    let has = false; try { has = !!localStorage.getItem(AS_KEY); } catch (e) {}
+    const modal = $('restore-modal');
+    if (!has || !modal) { asReady = true; return; }
+    modal.style.display = 'flex';
+    $('btn-restore-confirm').onclick = async () => { modal.style.display = 'none'; try { await restoreAutosave(); } catch (e) { console.warn(e); } asReady = true; saveAutosave(); };
+    $('btn-restore-cancel').onclick = async () => { modal.style.display = 'none'; await asClear(); asReady = true; };
+  })();
+
   window.__pepero = { setT: v => { TRANSP = v; }, render: renderFrame, renderSfx, buildCues, seek: t => seek(t), TL, get S() { return S; }, pause, refreshUI, changed };
   if (document.fonts) {
     document.fonts.load(`900 40px Pretendard`).finally(() => { markDirty(true); needDraw = true; });
