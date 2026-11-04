@@ -201,7 +201,7 @@
     .range-row .rlabel { width: 54px; text-align: left; font-size: 12px; color: var(--rx-k); font-weight: 700; flex-shrink: 0; opacity: 0.75; }
     .range-row input[type="range"] {
       flex: 1; min-width: 0; height: 22px; -webkit-appearance: none; appearance: none;
-      background: transparent; border: 0; outline: 0; touch-action: pan-y; cursor: pointer;
+      background: transparent; border: 0; outline: 0; touch-action: pan-y; cursor: pointer; -webkit-tap-highlight-color: transparent;
     }
     .range-row input[type="range"]::-webkit-slider-runnable-track {
       height: 5px; border-radius: 999px;
@@ -210,8 +210,10 @@
     .range-row input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none; width: 22px; height: 22px; margin-top: -8.5px; border: 0;
       background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' fill='%23ffffff' stroke='%232FA4DE' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+      background-color: transparent !important; border-radius: 0; box-shadow: none !important; outline: 0 !important;
       filter: drop-shadow(0 2px 4px rgba(47, 164, 222, 0.3)); transition: transform 0.15s ease;
     }
+    .range-row input[type="range"]::-webkit-slider-thumb:active { box-shadow: none !important; outline: 0 !important; border: 0 !important; background-color: transparent !important; }
     .range-row input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .range-row input[type="range"]::-moz-range-track { height: 5px; border-radius: 999px; background: #E4E6EA; }
     .range-row input[type="range"]::-moz-range-progress { height: 5px; border-radius: 999px; background: #2FA4DE; }
@@ -2643,11 +2645,20 @@
       if (!AC) return null;
       sfxAC = new AC(); sfxOut = makeSfxOut(sfxAC, sfxAC.destination);
     }
-    if (sfxAC.state === 'suspended') sfxAC.resume().catch(() => {});
+    if (sfxAC.state !== 'running') sfxAC.resume().catch(() => {});   // 아이폰은 'interrupted' 상태도 있어서 running 이 아니면 다시 켜기
     return sfxAC;
   }
-  // 브라우저 정책상 한 번 누르거나 키를 쳐야 소리가 켜짐
-  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.addEventListener(ev, () => { if (G.sfx) ensureAC(); }, { passive: true }));
+  // 아이폰 : 무음 스위치가 켜져 있어도 효과음이 들리게 (사파리 16.4+)
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  // 아이폰은 첫 터치 때 '빈 소리'를 한 번 재생해야 소리가 풀려요
+  let sfxUnlocked = false;
+  function unlockAC() {
+    const ac = ensureAC(); if (!ac || sfxUnlocked) return;
+    try { const b = ac.createBuffer(1, 1, ac.sampleRate), src = ac.createBufferSource(); src.buffer = b; src.connect(ac.destination); src.start(0); sfxUnlocked = true; } catch (e) {}
+  }
+  // 브라우저 정책상 한 번 누르거나 키를 쳐야 소리가 켜짐 (아이폰은 touchend · click 에서만 풀려요)
+  ['pointerdown', 'keydown', 'touchstart', 'touchend', 'click'].forEach(ev => window.addEventListener(ev, () => { if (G.sfx) unlockAC(); }, { passive: true }));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && sfxAC && sfxAC.state !== 'running') sfxAC.resume().catch(() => {}); });
   function sfxStop() {
     if (sfxBus && sfxAC) { const b = sfxBus; b.gain.setTargetAtTime(0, sfxAC.currentTime, 0.03); setTimeout(() => { try { b.disconnect(); } catch (e) {} }, 500); }
     sfxBus = null;
@@ -3118,6 +3129,7 @@
   async function exportMP4() {
     if (exporting) return;
     const [w, h] = dims(+S.mp4Res);
+    if (G.sfx) unlockAC();   // 버튼을 누른 그 순간에 소리를 켜 둬야 아이폰에서 녹음돼요
     lockUI(true); pause();
     try {
       if (!window.VideoEncoder || !window.VideoFrame) { await exportRecorder(w, h); return; }
@@ -3133,7 +3145,11 @@
       catch (e) { await exportRecorder(w, h); return; }
       const { Muxer, ArrayBufferTarget } = lib;
       let audio = null;
-      if (G.sfx) { setProgress(0, '효과음 만드는 중…'); audio = await encodeSfxAAC(TL().total); }
+      if (G.sfx) {
+        setProgress(0, '효과음 만드는 중…'); audio = await encodeSfxAAC(TL().total);
+        // 효과음 인코더가 없는 브라우저(아이폰 사파리 등) → 화면을 녹화하면서 소리를 같이 담는 방식으로
+        if (!audio && window.MediaRecorder && MediaRecorder.isTypeSupported('video/mp4')) { await exportRecorder(w, h); return; }
+      }
       const muxer = new Muxer({
         target: new ArrayBufferTarget(), video: { codec: 'avc', width: w, height: h },
         ...(audio ? { audio: { codec: audio.codec, sampleRate: audio.sampleRate, numberOfChannels: audio.numberOfChannels } } : {}),
@@ -3173,6 +3189,7 @@
     const stream = cv.captureStream(30);
     if (G.sfx) {
       const ac = ensureAC();
+      if (ac && ac.state !== 'running') { try { await ac.resume(); } catch (e) {} }
       if (ac && ac.createMediaStreamDestination) {
         const dest = ac.createMediaStreamDestination();
         const o = makeSfxOut(ac, dest), A = { ac, out: o.input, r: rng(1234) }, t0 = ac.currentTime + 0.05;
