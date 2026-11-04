@@ -1457,12 +1457,13 @@
     do { c.font = `${weight} ${s}px ${FONT}`; if (c.measureText(text).width <= maxW) break; s -= 2; } while (s > 12);
     return s;
   }
-  function spaced(c, text, x, y, sp) {
-    if ('letterSpacing' in c) { c.letterSpacing = sp + 'px'; c.fillText(text, x + sp / 2, y); c.letterSpacing = '0px'; return; }
+  function spaced(c, text, x, y, sp, stroke) {   // stroke = true 면 같은 자간으로 테두리만 그려요
+    const put = (t, px, py) => stroke ? c.strokeText(t, px, py) : c.fillText(t, px, py);
+    if ('letterSpacing' in c) { c.letterSpacing = sp + 'px'; put(text, x + sp / 2, y); c.letterSpacing = '0px'; return; }
     const chars = [...text]; const ws = chars.map(ch => c.measureText(ch).width);
     const total = ws.reduce((a, b) => a + b, 0) + sp * (chars.length - 1);
     let px = x - total / 2; const al = c.textAlign; c.textAlign = 'left';
-    chars.forEach((ch, i) => { c.fillText(ch, px, y); px += ws[i] + sp; }); c.textAlign = al;
+    chars.forEach((ch, i) => { put(ch, px, y); px += ws[i] + sp; }); c.textAlign = al;
   }
   function drawBand(c, w, h, withText) {
     const y0 = h - 60;
@@ -1487,18 +1488,20 @@
     const ink = inkOn(S.boxColor);
     const top = S.textPos === 'top';
     const y1 = top ? 160 : (S.shape === 'full' ? 470 : 486), y2 = y1 + 46;
-    const onPhoto = S.shape === 'full' && IB().cover;
     c.save(); c.textAlign = 'center'; c.textBaseline = 'middle';
     const fs = fitFont(c, S.frontText, 76, FW - 70, 900);
     c.font = `900 ${fs}px ${FONT}`;
-    c.lineJoin = 'round';
-    if (onPhoto) { c.lineWidth = 10; c.strokeStyle = S.boxColor; c.strokeText(S.frontText, FW / 2, y1); }
+    c.lineJoin = 'round'; c.miterLimit = 2;
+    /* 메인 컬러 테두리 : 사진·모양과 상관없이 항상 · 아래 그림자 글씨까지 감싸게 두 번 */
+    c.lineWidth = 12; c.strokeStyle = S.boxColor;
+    c.strokeText(S.frontText, FW / 2, y1); c.strokeText(S.frontText, FW / 2, y1 + 5);
     c.fillStyle = lum(S.boxColor) > 0.45 ? shade(S.boxColor, -0.18) : shade(S.boxColor, -0.35);
     c.fillText(S.frontText, FW / 2, y1 + 5);
     c.fillStyle = ink; c.fillText(S.frontText, FW / 2, y1);
     c.font = `700 ${fitFont(c, S.subText, 22, FW - 100, 700)}px ${FONT}`;
+    c.lineWidth = 8; c.strokeStyle = S.boxColor;
+    spaced(c, S.subText, FW / 2, y2, 4, true);   // 부제도 글씨와 같은 자간으로 테두리
     c.globalAlpha = 0.92;
-    if (onPhoto) { c.lineWidth = 7; c.strokeStyle = S.boxColor; c.strokeText(S.subText, FW / 2, y2); }
     spaced(c, S.subText, FW / 2, y2, 4);
     c.restore();
   }
