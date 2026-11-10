@@ -821,7 +821,7 @@
           <button data-v="stamp">도장</button>
           <button data-v="warn">경고문</button>
         </div>
-        <input type="text" data-text="badgeText" maxlength="10" placeholder="배지 글씨 (키워드, 맛 등)">
+        <input type="text" data-text="badgeText" maxlength="15" placeholder="배지 글씨 (키워드, 맛 등)">
         <input type="text" data-text="warnText" data-show="badge:warn" maxlength="30" placeholder="경고문 아래 문구">
       </div>
       <div class="toggle-grid">
@@ -841,7 +841,7 @@
           </div>
         </div>
         <div class="text-pair">
-          <input type="text" data-text="frontText" maxlength="14" placeholder="큰 글씨">
+          <input type="text" data-text="frontText" maxlength="15" placeholder="큰 글씨">
           <input type="text" data-text="subText" maxlength="20" placeholder="작은 글씨">
         </div>
         <input type="text" data-text="bandText" maxlength="22" placeholder="아래 띠 글씨">
@@ -1021,7 +1021,7 @@
       <div class="panel-divider"></div>
       <div class="field-group">
         <span class="label-sub">크게 깔리는 글씨 <span class="hint">· 배경에 은은하게 노출됩니다</span></span>
-        <input type="text" data-text="giant" maxlength="10" placeholder="예: D+200">
+        <input type="text" data-text="giant" maxlength="14" placeholder="예: D+200">
         <div class="range-row" data-hide="giant:"><span class="rlabel">투명도</span><input type="range" data-range="giantAlpha" min="5" max="60"><span class="rval" data-suffix="%"></span></div>
       </div>
       <div class="panel-divider"></div>
@@ -1766,8 +1766,27 @@
       c.setLineDash([5, 5]); c.lineWidth = 2.5; c.strokeStyle = rgba(ink, 0.6);
       c.beginPath(); circ(c, 0, 0, 42); c.stroke(); c.setLineDash([]);
     }
-    c.fillStyle = ink; c.font = `900 ${fitFont(c, S.badgeText, 26, 78, 900)}px ${FONT}`;
-    c.fillText(S.badgeText, 0, S.badge === 'heart' ? -2 : 1);
+    c.fillStyle = ink;
+    {
+      const bt = S.badgeText, chars = [...bt];
+      const maxW = S.badge === 'stamp' ? 74 : S.badge === 'heart' ? 84 : 88;   // 배지 모양별 글씨 폭
+      const yMid = S.badge === 'heart' ? -6 : 1;
+      const one = fitFont(c, bt, 26, maxW, 900);
+      if (one >= 17 || chars.length <= 4) {
+        // 한 줄로도 충분히 크게 보이면 그대로
+        c.font = `900 ${one}px ${FONT}`; c.fillText(bt, 0, yMid);
+      } else {
+        // 길면 두 줄로: 띄어쓰기가 있으면 가운데에 가까운 띄어쓰기에서, 없으면 글자 반으로
+        let cut = Math.ceil(chars.length / 2), best = Infinity;
+        chars.forEach((ch, i) => { if (ch === ' ' && Math.abs(i - chars.length / 2) < best) { best = Math.abs(i - chars.length / 2); cut = i; } });
+        const l1 = chars.slice(0, cut).join('').trim(), l2 = chars.slice(cut).join('').trim();
+        const fs = Math.min(fitFont(c, l1, 22, maxW, 900), fitFont(c, l2, 22, maxW, 900));
+        c.font = `900 ${fs}px ${FONT}`;
+        const lh = fs * 1.08;
+        c.fillText(l1, 0, yMid - lh / 2);
+        c.fillText(l2, 0, yMid + lh / 2);
+      }
+    }
     c.restore();
   }
   function drawGloss(c, w, h) {
