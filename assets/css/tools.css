@@ -99,3 +99,15 @@
 .tl-mt::before{content:"";width:6px;height:6px;border-radius:50%;background:#2FA4DE}
 .tl-card.is-maint .tl-art{filter:grayscale(.55);opacity:.72;transition:filter .3s,opacity .3s}
 .tl-card.is-maint:hover .tl-art{filter:none;opacity:1}
+
+/* ── TOOL 05 · 윳! 페어샷 메이커 : 평소엔 떨어진 폴라로이드 두 장 → 마우스 올리면 모여서 테이프로 붙고 하트가 톡 ── */
+/* 두 장의 폴라로이드 → 마우스 올리면 가운데로 모여 테이프로 붙고 하트가 톡 */
+.psA-l,.psA-r,.psA-tape,.psA-hrt{transform-box:fill-box;transition:transform .6s cubic-bezier(.3,1.4,.5,1),opacity .3s}
+.psA-l{transform:translateX(-10px)}.psA-r{transform:translateX(10px)}
+.psA-tape{transform-origin:center;transform:translateY(-8px) scale(.6);opacity:0}
+.psA-hrt{transform-origin:center;transform:scale(0)}
+.tl-card:hover .psA-l{transform:translateX(2px) rotate(2deg)}
+.tl-card:hover .psA-r{transform:translateX(-2px) rotate(-2deg)}
+.tl-card:hover .psA-tape{transform:none;opacity:1;transition-delay:.18s}
+.tl-card:hover .psA-hrt{transform:scale(1);transition-delay:.3s}
+.psA-sp{opacity:.45;transition:opacity .4s}.tl-card:hover .psA-sp{opacity:1}
