@@ -73,15 +73,29 @@
 .sb-hr{transform-origin:center}
 .tl-card.sb-card:hover .sb-hr{transform:scale(1.12);transition-delay:.2s}
 
-/* ── 점검 안내 팝업 (공개 기간이 끝난 툴을 눌렀을 때) ── */
-.tl-notice{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(14,15,18,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+/* ── 점검 안내 팝업 (점검 중인 툴 · data-maint 버튼을 눌렀을 때) ── */
+.tl-notice{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(14,15,18,.28);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif}
 .tl-notice.on{display:flex}
-.tl-nbox{width:min(340px,100%);padding:26px 24px 20px;border-radius:22px;text-align:center;background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px #fff,0 30px 60px -30px rgba(14,15,18,.5);animation:tlNIn .4s cubic-bezier(.22,1,.36,1)}
+.tl-nbox{position:relative;width:min(360px,100%);padding:34px 24px 20px;border-radius:30px;text-align:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(246,247,249,.94));box-shadow:inset 0 0 0 1px #fff,0 2px 4px rgba(14,15,18,.04),0 34px 70px -30px rgba(14,15,18,.55);animation:tlNIn .4s cubic-bezier(.22,1,.36,1)}
 @keyframes tlNIn{from{opacity:0;transform:translateY(12px) scale(.97)}}
-.tl-nic{width:46px;height:46px;margin:0 auto 12px;border-radius:50%;background:#EAF5FC;display:grid;place-items:center}
-.tl-nic svg{width:20px;height:20px;fill:none;stroke:#1C86C2;stroke-width:1.9;stroke-linejoin:round}
-.tl-nbox small{display:block;font-weight:800;font-size:9.5px;letter-spacing:.22em;color:#2FA4DE}
-.tl-nbox b{display:block;margin-top:6px;font-weight:900;font-size:18px;letter-spacing:-.04em;color:#0E0F12}
-.tl-nbox p{margin:10px 0 18px;font-weight:600;font-size:13px;line-height:1.6;color:#5F656E;word-break:keep-all}
-.tl-nbox button{width:100%;height:42px;border:0;border-radius:999px;background:#0E0F12;color:#fff;font:inherit;font-weight:800;font-size:13px;cursor:pointer;transition:background .2s}
-.tl-nbox button:hover{background:#2FA4DE}
+.tl-nbadge{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 13px 0 11px;border-radius:999px;background:#0E0F12;color:#fff;font-weight:900;font-size:10px;letter-spacing:.06em;white-space:nowrap;box-shadow:0 0 0 3px rgba(255,255,255,.9)}
+.tl-nbadge i{width:7px;height:7px;border-radius:50%;background:#2FA4DE;box-shadow:0 0 0 3px rgba(47,164,222,.25);animation:tlNBl 1.6s ease-in-out infinite}
+@keyframes tlNBl{50%{box-shadow:0 0 0 5px rgba(47,164,222,0)}}
+.tl-nic{width:52px;height:52px;margin:0 auto 12px;border-radius:15px;background:#0E0F12;display:grid;place-items:center;box-shadow:4px 4px 0 #D5D8DD}
+.tl-nic svg{width:24px;height:24px;fill:none;stroke:#2FA4DE;stroke-width:1.9;stroke-linejoin:round}
+.tl-nno{display:block;font-weight:800;font-size:10.5px;letter-spacing:.02em;color:#9AA0A8}
+.tl-nno[hidden]{display:none}
+.tl-nname{display:block;margin-top:3px;font-weight:900;font-size:13.5px;letter-spacing:-.03em;color:#0E0F12}
+.tl-nbox hr{margin:16px 2px 18px;border:0;border-top:1.5px dashed #D3D6DC}
+.tl-nbox strong{display:block;font-weight:900;font-size:19px;letter-spacing:-.04em;color:#0E0F12}
+.tl-nbox p{margin:8px 0 22px;font-weight:600;font-size:12.5px;line-height:1.7;color:#5F656E;word-break:keep-all}
+.tl-nbox button{width:100%;height:48px;border:0;border-radius:999px;background:#2FA4DE;color:#fff;font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:0 14px 26px -14px rgba(28,134,194,.95);transition:background .2s,transform .2s}
+.tl-nbox button:hover{background:#1C86C2}
+.tl-nbox button:active{transform:scale(.98)}
+.tl-nbox button:focus-visible{outline:2px solid #0E0F12;outline-offset:3px}
+/* 점검 중인 카드 : 화살표 자리에 '점검 중' 표시 + 살짝 흐리게 */
+.tl-mt{height:22px;padding:0 9px;border-radius:999px;background:#fff;color:#5F656E;display:inline-flex;align-items:center;gap:5px;font-weight:800;font-size:10px;box-shadow:inset 0 0 0 1px #E4E6EA}
+.tl-mt::before{content:"";width:6px;height:6px;border-radius:50%;background:#2FA4DE}
+.tl-card.is-maint .tl-art{filter:grayscale(.55);opacity:.72;transition:filter .3s,opacity .3s}
+.tl-card.is-maint:hover .tl-art{filter:none;opacity:1}

@@ -164,6 +164,19 @@
 .vd-sec{display:flex;align-items:center;gap:10px;margin:26px 0 12px}
 .vd-sec span{font-weight:900;font-size:9.5px;letter-spacing:.24em;color:var(--ink)}
 .vd-sec i{flex:1;height:0;border-top:1px dashed var(--line2)}
+/* 의상 카테고리 탭 (BASE · 제복 · 사복 · AU …) */
+.vd-cats{display:flex;align-items:flex-end;gap:2px;margin-bottom:12px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.vd-cats::-webkit-scrollbar{display:none}
+.vd-cats button{position:relative;flex:none;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 13px;font-weight:800;font-size:13px;color:var(--ink3);white-space:nowrap;transition:color .15s}
+.vd-cats button i{font-style:normal;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--soft);display:inline-grid;place-items:center;font-weight:800;font-size:10px;color:var(--ink3);transition:background .15s,color .15s}
+.vd-cats button:hover{color:var(--ink)}
+.vd-cats button.on{color:var(--ink)}
+.vd-cats button.on::after{content:"";position:absolute;left:9px;right:9px;bottom:-1px;height:2.5px;border-radius:2px;background:var(--ink);animation:vdFade .2s ease}
+.vd-cats button.on i{background:var(--blue);color:#fff}
+.vd-cats .vd-base{height:28px;margin:0 6px 5px 0;padding:0 12px;border-radius:8px;border:1px dashed var(--line2);font-size:10.5px;letter-spacing:.1em;color:var(--ink2)}
+.vd-cats .vd-base.on{background:var(--ink);border:1px solid var(--ink);color:#fff}
+.vd-cats .vd-base.on::after{display:none}
+.vd-cats button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;border-radius:8px}
 .vd-ctrl{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;margin-bottom:18px}
 .vd-tabs{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
 .vd-tabs button{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:10px;border:1px solid var(--line2);background:#fff;font-weight:800;font-size:12px;color:var(--ink);transition:background .15s,border-color .15s,color .15s}
@@ -172,6 +185,12 @@
 .vd-tabs button:hover{border-color:var(--blue);color:var(--deep)}
 .vd-tabs button.on{background:var(--ink);border-color:var(--ink);border-style:solid;color:#fff}
 .vd-tabs button.on small{color:#9DB3C4}
+.vd-tabs button{border-radius:999px;font-weight:700}
+.vd-tabs button.on{font-weight:800}
+.vd-tabs:empty{display:none}
+/* LOOK 이 자동으로 바뀌는 의상 표시 */
+.vd-lk{width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 2px rgba(47,164,222,.2)}
+.vd-tabs button.on .vd-lk{background:#8FDCFB;box-shadow:none}
 .vd-mode{display:flex;gap:2px;padding:3px;border-radius:11px;background:var(--soft);border:1px solid var(--line);animation:vdFade .25s ease}
 .vd-mode label{position:relative;display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:8px;font-weight:700;font-size:11.5px;color:var(--ink3);cursor:url('../images/cursor-h.cur'),pointer;white-space:nowrap;transition:background .15s,color .15s}
 .vd-mode input{position:absolute;opacity:0;pointer-events:none}
@@ -193,6 +212,9 @@
 .vd-looks button{height:24px;padding:0 10px;border-radius:999px;border:1px solid var(--line2);background:#fff;font-weight:700;font-size:11px;color:var(--ink2);transition:background .15s,color .15s,border-color .15s}
 .vd-looks button:hover{border-color:var(--blue);color:var(--deep)}
 .vd-looks button.on{background:var(--wash);border-color:var(--sky);color:var(--deep);font-weight:800}
+.vd-looks button.auto{display:inline-flex;align-items:center;gap:5px;padding-right:4px;border-color:var(--blue);animation:vdLk .5s ease}
+.vd-looks button.auto em{font-style:normal;height:16px;padding:0 6px;border-radius:999px;background:var(--blue);color:#fff;display:inline-flex;align-items:center;font-weight:800;font-size:9px;letter-spacing:.02em}
+@keyframes vdLk{0%{box-shadow:0 0 0 0 rgba(47,164,222,.5)}100%{box-shadow:0 0 0 7px rgba(47,164,222,0)}}
 /* 표정 ON / OFF 칩 (COPY 옆) */
 .vd-face{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 11px 0 7px;border-radius:999px;flex:none;border:1px solid var(--sky);background:var(--wash);color:var(--deep);
   font-weight:800;font-size:10px;letter-spacing:.08em;white-space:nowrap;transition:background .2s,border-color .2s,color .2s}
@@ -223,16 +245,15 @@
   .vd-name{font-size:22px}
   .vd-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
   .vd-facts div:last-child{grid-column:1/-1;border-left:0;padding-left:0;border-top:1px dashed var(--line2)}
-  .vd-ctrl{flex-direction:column;align-items:stretch}
-  .vd-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px}
-  .vd-tabs::-webkit-scrollbar{display:none}
-  .vd-tabs button{flex:none}
+  .vd-ctrl{flex-direction:column;align-items:stretch;flex-wrap:nowrap}   /* wrap 이면 세로줄 폭이 탭 길이만큼 늘어나서 창을 뚫고 나가요 */
+  .vd-tabs{min-width:0}
+  .vd-cats{margin-left:-16px;margin-right:-16px;padding:0 16px}
   .vd-mode label{flex:1;justify-content:center;padding:0 6px}
   .vt-foot span:last-child{display:none}
 }
 @media not all and (min-width:861px) and (min-height:600px){
   .sy-float .app-vault{height:calc(100dvh - var(--barH) - var(--taskH) - 20px);max-height:calc(100dvh - var(--barH) - var(--taskH) - 20px);box-shadow:none;background:transparent}
-  .app-vault .wbody{padding:22px 8px 10px}
+  .app-vault .wbody{padding:22px 8px 10px;overflow-x:hidden}
   .vt-ctl{padding:8px 8px 0 14px}
 }/* 라벨 (MAIN · SUB · DIP …) : 목록 사진 오른쪽 아래 · 상세는 장르 옆 */
 .vp-label,.vd-label{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:4px;font-weight:900;font-size:9px;letter-spacing:.16em;white-space:nowrap;

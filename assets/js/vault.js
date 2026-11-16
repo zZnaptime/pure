@@ -25,7 +25,7 @@
   var MODES = [['full', '전체'], ['upper', '상반신만'], ['noshoes', '신발 없이']];
 
   /* 메모리에만 두는 상태 */
-  var S = { look: {}, noface: {}, key: null, data: null, urls: {}, view: 'lock', pi: -1, oi: -1, mode: 'full', genre: '', q: '', fails: 0, until: 0, big: false };
+  var S = { look: {}, noface: {}, auto: {}, last: {}, key: null, data: null, urls: {}, view: 'lock', pi: -1, oi: -1, mode: 'full', genre: '', q: '', fails: 0, until: 0, big: false };
   var win = null;
 
   /* ════════ Notice 목록 : 잠긴 상자 ════════ */
@@ -118,7 +118,7 @@
   /* ════════ 잠금 · 해제 ════════ */
   function lock(){
     Object.keys(S.urls).forEach(function(k){ try { URL.revokeObjectURL(S.urls[k]); } catch(e){} });
-    S.key = null; S.data = null; S.urls = {}; S.view = 'lock'; S.pi = -1; S.oi = -1; S.mode = 'full'; S.genre = ''; S.q = ''; S.big = false; S.look = {}; S.noface = {};
+    S.key = null; S.data = null; S.urls = {}; S.view = 'lock'; S.pi = -1; S.oi = -1; S.mode = 'full'; S.genre = ''; S.q = ''; S.big = false; S.look = {}; S.noface = {}; S.auto = {}; S.last = {};
     syncCards();
     if (win) render();
   }
@@ -181,6 +181,29 @@
       if (i >= 0) out = out.slice(0, i) + out.slice(i + f.length);
     });
     return out.replace(/[ \t]*,[ \t]*(,[ \t]*)+/g, ', ').replace(/^[ \t,]+/gm, '').replace(/[ \t]{2,}/g, ' ').replace(/[ \t]+$/gm, '').trim();
+  }
+  /* 의상 카테고리 묶기 */
+  function catOf(o){ return String(o.name || '').trim() || '기타'; }
+  function outfitCats(p){
+    var out = [], at = {};
+    p.outfits.forEach(function(o, i){ var k = catOf(o); if (!(k in at)){ at[k] = out.length; out.push({ name: k, list: [] }); } out[at[k]].list.push(i); });
+    return out;
+  }
+  /* 의상별 LOOK 자동 전환 : o.look = [캐릭터마다 외형 번호 · -1 = 그대로] */
+  function autoLookOf(p, o, ci){
+    var v = o && Array.isArray(o.look) ? o.look[ci] : -1, n = ((p.chars[ci] || {}).looks || []).length;
+    return (typeof v === 'number' && v >= 0 && v < n && n > 1) ? v : -1;
+  }
+  function hasAutoLook(p, o){ return p.chars.some(function(c, ci){ return autoLookOf(p, o, ci) >= 0; }); }
+  function pickOutfit(p, oi){
+    S.oi = oi; if (oi < 0) S.mode = 'full';
+    var o = oi >= 0 ? p.outfits[oi] : null;
+    if (o) S.last[catOf(o)] = oi;
+    p.chars.forEach(function(c, ci){
+      var v = autoLookOf(p, o, ci);
+      if (v >= 0){ S.look[ci] = v; S.auto[ci] = true; }
+      else if (S.auto[ci]){ S.look[ci] = 0; S.auto[ci] = false; }   /* 자동으로 바꿨던 건 원래대로 · 직접 고른 건 그대로 */
+    });
   }
   function hasFace(lk){ return !!clean(lk && lk.face); }
   function promptOf(p, ci){
@@ -251,11 +274,22 @@
   function pairHTML(p){
     var o = S.oi >= 0 ? p.outfits[S.oi] : null;
     var img = (o && o.img && o.img.id) ? o.img : p.img;
-    var tabs = '<div class="vd-tabs" role="tablist" aria-label="의상">' +
-      '<button type="button" role="tab" data-outfit="-1" aria-selected="' + (S.oi < 0) + '"' + (S.oi < 0 ? ' class="on"' : '') + '>BASE<small>기본</small></button>' +
-      p.outfits.map(function(x, i){
-        return '<button type="button" role="tab" data-outfit="' + i + '" aria-selected="' + (i === S.oi) + '"' + (i === S.oi ? ' class="on"' : '') + '>' + esc(x.name || ('의상 ' + (i + 1))) + (x.sub ? '<small>' + esc(x.sub) + '</small>' : '') + '</button>';
+    /* 의상 정리 : 의상 이름 = 카테고리 탭 (제복 · 사복 · AU …) · 작은 설명 = 탭 안 버튼 */
+    var cats = outfitCats(p), curCat = o ? catOf(o) : '';
+    var tabs = '<div class="vd-cats" role="tablist" aria-label="의상 종류">' +
+      '<button type="button" role="tab" class="vd-base' + (S.oi < 0 ? ' on' : '') + '" data-outfit="-1" aria-selected="' + (S.oi < 0) + '">BASE</button>' +
+      cats.map(function(g){
+        var on = g.name === curCat;
+        return '<button type="button" role="tab" data-cat="' + esc(g.name) + '" aria-selected="' + on + '"' + (on ? ' class="on"' : '') + '>' + esc(g.name) + '<i>' + g.list.length + '</i></button>';
       }).join('') + '</div>';
+    var subs = '';
+    if (o){
+      var grp = cats.filter(function(g){ return g.name === curCat; })[0];
+      subs = '<div class="vd-tabs" role="group" aria-label="' + esc(curCat) + ' 의상">' + grp.list.map(function(i){
+        var x = p.outfits[i], on = i === S.oi;
+        return '<button type="button" data-outfit="' + i + '" aria-pressed="' + on + '"' + (on ? ' class="on"' : '') + '>' + esc(x.sub || x.name || ('의상 ' + (i + 1))) + (hasAutoLook(p, x) ? '<i class="vd-lk" title="이 의상은 LOOK 이 자동으로 바뀌어요"></i>' : '') + '</button>';
+      }).join('') + '</div>';
+    }
     var mode = o ? '<div class="vd-mode" role="radiogroup" aria-label="범위">' + MODES.map(function(m){
       return '<label><input type="radio" name="vdMode" value="' + m[0] + '"' + (S.mode === m[0] ? ' checked' : '') + '><span>' + m[1] + '</span></label>';
     }).join('') + '</div>' : '';
@@ -273,8 +307,8 @@
           if (!many) return '';
           return '<div class="vd-looks">' +
             (many ? '<span>LOOK</span>' + looks.map(function(l, li){
-              var on = (S.look[ci] || 0) === li;
-              return '<button type="button" data-look="' + ci + ':' + li + '" aria-pressed="' + on + '"' + (on ? ' class="on"' : '') + '>' + esc(l.name || (li ? '외형 ' + (li + 1) : '기본')) + '</button>';
+              var on = (S.look[ci] || 0) === li, au = on && S.auto[ci];
+              return '<button type="button" data-look="' + ci + ':' + li + '" aria-pressed="' + on + '" class="' + (on ? 'on' : '') + (au ? ' auto' : '') + '"' + (au ? ' title="이 의상에 맞춘 LOOK 이에요"' : '') + '>' + esc(l.name || (li ? '외형 ' + (li + 1) : '기본')) + (au ? '<em>의상 맞춤</em>' : '') + '</button>';
             }).join('') : '') +
           '</div>';
         })() +
@@ -287,12 +321,12 @@
           (p.genre ? '<span class="vd-genre">' + esc(p.genre) + '</span>' : '') + labelHTML('vd-label', p.label) +
           '<h2 class="vd-name">' + esc(p.name || '') + '</h2>' + (p.sub ? '<p class="vd-sub">' + esc(p.sub) + '</p>' : '') +
           (p.tags.length ? '<div class="vd-tags">' + p.tags.map(function(t){ return '<i>#' + esc(t) + '</i>'; }).join('') + '</div>' : '') +
-          '<dl class="vd-facts"><div><dt>SUBJECTS</dt><dd>' + pad(p.chars.length) + '</dd></div><div><dt>OUTFITS</dt><dd>' + pad(p.outfits.length) + '</dd></div><div><dt>WEARING</dt><dd>' + esc(o ? (o.name || '의상 ' + (S.oi + 1)) : 'NONE') + '</dd></div></dl>' +
+          '<dl class="vd-facts"><div><dt>SUBJECTS</dt><dd>' + pad(p.chars.length) + '</dd></div><div><dt>OUTFITS</dt><dd>' + pad(p.outfits.length) + '</dd></div><div><dt>WEARING</dt><dd>' + esc(o ? (o.name || '의상 ' + (S.oi + 1)) + (o.sub ? ' · ' + o.sub : '') : 'NONE') + '</dd></div></dl>' +
         '</div>' +
         '<button type="button" class="vd-photo" data-zoom title="사진 크게 보기">' + imgBox('vd-img', img) + '<span class="vd-cap">' + esc(o ? (o.name || '') + (o.sub ? ' · ' + o.sub : '') : 'BASE') + '</span></button>' +
       '</div>' +
       '<div class="vd-sec"><span>OUTFIT</span><i></i></div>' +
-      '<div class="vd-ctrl">' + tabs + mode + '</div>' +
+      tabs + '<div class="vd-ctrl">' + subs + mode + '</div>' +
       '<div class="vd-chars' + (p.chars.length > 1 ? ' two' : '') + '">' + (chars || '<p class="vt-empty">캐릭터 프롬프트가 없어요.</p>') + '</div>' +
     '</div>';
   }
@@ -336,11 +370,16 @@
     var t;
     if ((t = e.target.closest('[data-lock]'))){ lock(); return; }
     if ((t = e.target.closest('[data-genre]'))){ S.genre = t.getAttribute('data-genre'); render(); return; }
-    if ((t = e.target.closest('[data-pair]'))){ S.pi = +t.getAttribute('data-pair'); S.oi = -1; S.mode = 'full'; S.big = false; S.look = {}; S.noface = {}; S.view = 'pair'; render(); return; }
+    if ((t = e.target.closest('[data-pair]'))){ S.pi = +t.getAttribute('data-pair'); S.oi = -1; S.mode = 'full'; S.big = false; S.look = {}; S.noface = {}; S.auto = {}; S.last = {}; S.view = 'pair'; render(); return; }
     if ((t = e.target.closest('[data-back]'))){ S.view = 'list'; S.pi = -1; render(); return; }
-    if ((t = e.target.closest('[data-outfit]'))){ S.oi = +t.getAttribute('data-outfit'); if (S.oi < 0) S.mode = 'full'; refreshPair(); return; }
+    if ((t = e.target.closest('[data-outfit]'))){ pickOutfit(S.data.pairs[S.pi], +t.getAttribute('data-outfit')); refreshPair(); return; }
+    if ((t = e.target.closest('[data-cat]'))){
+      var cp = S.data.pairs[S.pi], cn = t.getAttribute('data-cat'), cg = outfitCats(cp).filter(function(g){ return g.name === cn; })[0];
+      if (cg){ var lo = S.last[cn]; pickOutfit(cp, (lo != null && cg.list.indexOf(lo) >= 0) ? lo : cg.list[0]); refreshPair(); var cb = $('[data-cat="' + (window.CSS && CSS.escape ? CSS.escape(cn) : cn) + '"]', win); if (cb) cb.focus(); }
+      return;
+    }
     if ((t = e.target.closest('[data-face]'))){ var fi = +t.getAttribute('data-face'); S.noface[fi] = !S.noface[fi]; refreshPair(); var fb = $('[data-face="' + fi + '"]', win); if (fb) fb.focus(); return; }
-    if ((t = e.target.closest('[data-look]'))){ var lv = t.getAttribute('data-look').split(':'); S.look[+lv[0]] = +lv[1]; refreshPair(); return; }
+    if ((t = e.target.closest('[data-look]'))){ var lv = t.getAttribute('data-look').split(':'); S.look[+lv[0]] = +lv[1]; S.auto[+lv[0]] = false; refreshPair(); return; }
     if ((t = e.target.closest('[data-unzoom]'))){ unzoom(); return; }
     if ((t = e.target.closest('[data-zoom]'))){ zoom(t); return; }
     if ((t = e.target.closest('[data-copy]'))){ copy(t); }

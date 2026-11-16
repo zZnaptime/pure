@@ -33,7 +33,7 @@
     d.pairs.forEach(function(p){
       p.id = p.id || SYV.randId(); p.chars = Array.isArray(p.chars) ? p.chars : []; p.outfits = Array.isArray(p.outfits) ? p.outfits : [];
       p.tags = Array.isArray(p.tags) ? p.tags : String(p.tags || '').split(',').map(function(t){ return t.trim(); }).filter(Boolean);
-      p.outfits.forEach(function(o){ o.parts = Array.isArray(o.parts) ? o.parts : []; while (o.parts.length < p.chars.length) o.parts.push({ top: '', bottom: '', shoes: '' }); });
+      p.outfits.forEach(function(o){ o.parts = Array.isArray(o.parts) ? o.parts : []; while (o.parts.length < p.chars.length) o.parts.push({ top: '', bottom: '', shoes: '' }); o.look = Array.isArray(o.look) ? o.look : []; while (o.look.length < p.chars.length) o.look.push(-1); });
       /* 외형 : 기본 프롬프트 여러 개 (예전 데이터는 base 하나 → 외형 1개) */
       p.chars.forEach(function(c){ if (!Array.isArray(c.looks) || !c.looks.length) c.looks = [{ name: '', base: c.base || '' }]; delete c.base; });
     });
@@ -198,6 +198,7 @@
       '<div class="pm-sbtn"><button type="button" class="ad-btn" data-pick="' + slot + '">파일 선택</button><button type="button" class="ad-btn" data-paste="' + slot + '">붙여넣기</button>' + (ref && ref.id ? '<button type="button" class="ad-btn" data-unimg="' + slot + '">빼기</button>' : '') +
       '<small>' + esc(label) + ' · 끌어다 놓아도 돼요</small></div></div>';
   }
+  function catList(p){ var seen = {}, out = ['제복', '사복', 'AU']; p.outfits.forEach(function(o){ var n = String(o.name || '').trim(); if (n) out.unshift(n); }); return out.filter(function(n){ if (seen[n]) return false; seen[n] = 1; return true; }); }
   function renderEdit(keepScroll){
     var y = window.pageYOffset, p = S.data.pairs[S.pi];
     var chars = p.chars.map(function(c, ci){
@@ -216,12 +217,15 @@
     }).join('');
     var outs = p.outfits.map(function(o, oi){
       return '<div class="pm-out">' +
-        '<div class="pm-row"><label class="ad-f"><span>의상 이름</span><input data-o="' + oi + ':name" value="' + esc(o.name) + '" placeholder="예: 사복"></label>' +
-          '<label class="ad-f"><span>작은 설명</span><input data-o="' + oi + ':sub" value="' + esc(o.sub) + '" placeholder="예: 캐주얼"></label>' +
+        '<div class="pm-row"><label class="ad-f"><span>카테고리 <small>· 같은 이름끼리 탭으로 묶여요</small></span><input data-o="' + oi + ':name" value="' + esc(o.name) + '" placeholder="예: 사복" list="pmCats" autocomplete="off"></label>' +
+          '<label class="ad-f"><span>의상 이름 <small>· 탭 안 버튼</small></span><input data-o="' + oi + ':sub" value="' + esc(o.sub) + '" placeholder="예: 캐주얼"></label>' +
           '<span class="pm-obtn"><button type="button" class="ad-btn" data-omv="' + oi + ':-1" title="위로"' + (oi ? '' : ' disabled') + '>↑</button><button type="button" class="ad-btn" data-omv="' + oi + ':1" title="아래로"' + (oi < p.outfits.length - 1 ? '' : ' disabled') + '>↓</button><button type="button" class="ad-btn pm-x" data-delo="' + oi + '">삭제</button></span></div>' +
         p.chars.map(function(c, ci){
           var pt = o.parts[ci] || {};
-          return '<p class="pm-who">' + esc(c.name || ('캐릭터 ' + (ci + 1))) + ' 의상</p>' +
+          return '<p class="pm-who">' + esc(c.name || ('캐릭터 ' + (ci + 1))) + ' 의상' +
+            (c.looks.length > 1 ? '<label class="pm-olook" title="사이트에서 이 의상을 고르면 LOOK 이 이걸로 바뀌어요"><span>LOOK 자동 전환</span><select data-ol="' + oi + ':' + ci + '"><option value="-1">바꾸지 않음</option>' +
+              c.looks.map(function(l, li){ return '<option value="' + li + '"' + ((o.look || [])[ci] === li ? ' selected' : '') + '>' + esc(l.name || (li ? '외형 ' + (li + 1) : '기본')) + '</option>'; }).join('') + '</select></label>' : '') +
+            '</p>' +
             [['top', '상의'], ['bottom', '하의'], ['shoes', '신발']].map(function(k){
               return '<label class="pm-part"><span>' + k[1] + '</span><input data-p="' + oi + ':' + ci + ':' + k[0] + '" value="' + esc(pt[k[0]]) + '"></label>';
             }).join('');
@@ -243,7 +247,8 @@
       '</div>' +
       '<div class="pm-box"><h2>캐릭터 <small>' + p.chars.length + '명</small></h2>' + chars +
         '<button type="button" class="ad-btn pm-add" data-act="addc">＋ 캐릭터 추가</button></div>' +
-      '<div class="pm-box"><h2>의상 <small>' + p.outfits.length + '벌 · 사이트에서 전체 / 상반신만(상의) / 신발 없이(상의+하의)로 골라요</small></h2>' + outs +
+      '<div class="pm-box"><h2>의상 <small>' + p.outfits.length + '벌 · 카테고리별 탭으로 묶여요 · 사이트에서 전체 / 상반신만(상의) / 신발 없이(상의+하의)로 골라요</small></h2>' + outs +
+        '<datalist id="pmCats">' + catList(p).map(function(n){ return '<option value="' + esc(n) + '">'; }).join('') + '</datalist>' +
         '<button type="button" class="ad-btn pm-add" data-act="addo">＋ 의상 추가</button></div>' +
     '</section>';
     paintImgs();
@@ -262,6 +267,7 @@
     else return;
     setDirty(true);
   });
+  root.addEventListener('change', function(e){ var ol = e.target.getAttribute('data-ol'); if (ol){ ol = ol.split(':'); var oo = S.data.pairs[S.pi].outfits[+ol[0]]; oo.look = oo.look || []; oo.look[+ol[1]] = +e.target.value; setDirty(true); return; } });
   root.addEventListener('change', function(e){ var f = e.target.getAttribute('data-f'); if (f === 'genre' || f === 'label'){ S.data.pairs[S.pi][f] = e.target.value; setDirty(true); } });
   root.addEventListener('submit', function(e){ if (e.target.id === 'pmUnlockF'){ e.preventDefault(); unlock(); } });
   root.addEventListener('click', function(e){
@@ -272,8 +278,8 @@
       if (a === 'lock') return lock();
       if (a === 'add'){ d.pairs.push({ id: SYV.randId(), name: '', sub: '', genre: d.genres[0] || '', tags: [], img: null, chars: [{ name: '', looks: [{ name: '', base: '' }] }, { name: '', looks: [{ name: '', base: '' }] }], outfits: [] }); S.pi = d.pairs.length - 1; S.view = 'edit'; setDirty(true); return renderEdit(); }
       if (a === 'back'){ S.view = 'list'; S.pi = -1; return renderList(); }
-      if (a === 'addc'){ p.chars.push({ name: '', looks: [{ name: '', base: '' }] }); p.outfits.forEach(function(o){ o.parts.push({ top: '', bottom: '', shoes: '' }); }); setDirty(true); return renderEdit(true); }
-      if (a === 'addo'){ p.outfits.push({ name: '', sub: '', img: null, parts: p.chars.map(function(){ return { top: '', bottom: '', shoes: '' }; }) }); setDirty(true); renderEdit(true); var last = $$('.pm-out', root).pop(); if (last){ last.scrollIntoView({ block: 'center' }); var i = $('input', last); if (i) i.focus(); } return; }
+      if (a === 'addc'){ p.chars.push({ name: '', looks: [{ name: '', base: '' }] }); p.outfits.forEach(function(o){ o.parts.push({ top: '', bottom: '', shoes: '' }); (o.look = o.look || []).push(-1); }); setDirty(true); return renderEdit(true); }
+      if (a === 'addo'){ p.outfits.push({ name: '', sub: '', img: null, parts: p.chars.map(function(){ return { top: '', bottom: '', shoes: '' }; }), look: p.chars.map(function(){ return -1; }) }); setDirty(true); renderEdit(true); var last = $$('.pm-out', root).pop(); if (last){ last.scrollIntoView({ block: 'center' }); var i = $('input', last); if (i) i.focus(); } return; }
       if (a === 'genre') return genres();
       if (a === 'label') return labels();
       if (a === 'pw') return changePw();
@@ -286,10 +292,12 @@
     }
     if ((v = t.getAttribute('data-delc')) !== null){
       if (!confirm('이 캐릭터의 내용을 삭제하시겠습니까?')) return;
-      p.chars.splice(+v, 1); p.outfits.forEach(function(o){ o.parts.splice(+v, 1); }); setDirty(true); return renderEdit(true);
+      p.chars.splice(+v, 1); p.outfits.forEach(function(o){ o.parts.splice(+v, 1); if (o.look) o.look.splice(+v, 1); }); setDirty(true); return renderEdit(true);
     }
     if ((v = t.getAttribute('data-addl')) !== null){ p.chars[+v].looks.push({ name: '', base: '' }); setDirty(true); renderEdit(true); var lk = $$('.pm-char', root)[+v]; if (lk){ var ins = $$('.pm-look input', lk); if (ins.length) ins[ins.length - 1].focus(); } return; }
-    if ((v = t.getAttribute('data-dell')) !== null){ v = v.split(':'); if (!confirm('이 외형을 삭제하시겠습니까?')) return; p.chars[+v[0]].looks.splice(+v[1], 1); setDirty(true); return renderEdit(true); }
+    if ((v = t.getAttribute('data-dell')) !== null){ v = v.split(':'); if (!confirm('이 외형을 삭제하시겠습니까?')) return; p.chars[+v[0]].looks.splice(+v[1], 1);
+      p.outfits.forEach(function(o){ var lk = o.look || [], c0 = +v[0], d0 = +v[1]; if (lk[c0] === d0) lk[c0] = -1; else if (lk[c0] > d0) lk[c0]--; });   /* 지운 외형을 가리키던 의상은 '바꾸지 않음' 으로 */
+      setDirty(true); return renderEdit(true); }
     if ((v = t.getAttribute('data-delo')) !== null){ if (!confirm('이 의상을 삭제하시겠습니까?')) return; p.outfits.splice(+v, 1); setDirty(true); return renderEdit(true); }
     if ((v = t.getAttribute('data-omv')) !== null){ v = v.split(':'); var oi = +v[0], oj = oi + (+v[1]); var ox = p.outfits.splice(oi, 1)[0]; p.outfits.splice(oj, 0, ox); setDirty(true); return renderEdit(true); }
     if ((v = t.getAttribute('data-pick')) !== null){ S.fileSlot = v; $('#pmFile').click(); return; }
