@@ -195,9 +195,10 @@
   /* LP 위치 : 저장한 자리 (화면 비율) · 처음엔 오른쪽 아래 쪽 */
   function pos(x, y){
     var w = lp.offsetWidth || 130, h = lp.offsetHeight || 130, top = 64, bot = 84;
-    x = Math.max(8, Math.min(innerWidth - Math.min(w, 140) - 8, x)); y = Math.max(top, Math.min(innerHeight - h - bot, y));
+    /* 컨트롤이 늘 LP 오른쪽에 펼쳐지도록, 펼친 너비만큼은 오른쪽 끝에서 띄워 둬요 (방향이 뒤집히지 않게) */
+    var pan = lp.querySelector('.bl-pan'), full = 96 + ((pan && pan.offsetWidth) || 230);
+    x = Math.max(8, Math.min(innerWidth - full - 12, x)); y = Math.max(top, Math.min(innerHeight - h - bot, y));
     lp.style.left = x + 'px'; lp.style.top = y + 'px';
-    lp.classList.toggle('flip', x + 130 + 250 > innerWidth);   /* 오른쪽 끝이면 컨트롤을 왼쪽으로 */
   }
   function place(){
     var p = null; try { p = JSON.parse(LS.get('sy-bgm-pos') || 'null'); } catch(e){}
@@ -214,6 +215,8 @@
       $('.bc-disc', chip).innerHTML = d; $('.bl-disc', lp).innerHTML = d; $('.bs-disc', sheet).innerHTML = d;
     }
     [chip, lp, sheet].forEach(function(el){ el.classList.toggle('is-on', !!on); el.classList.toggle('is-ext', n.kind !== 'BGM'); });
+    var empty = !au && n.kind === 'BGM';   /* 곡이 없고 다른 음악도 없으면 칩 · LP 숨김 */
+    chip.hidden = empty; lp.classList.toggle('is-empty', empty); if (empty) openSheet(false);
     $('.bc-k', chip).textContent = n.kind; $('.bc-t', chip).textContent = n.title;
     chip.setAttribute('aria-label', n.kind + ' · ' + n.title + (mq() ? ' · LP 꺼내기 / 넣기' : ' · 열기'));
     chip.setAttribute('aria-pressed', lp.classList.contains('show') ? 'true' : 'false');

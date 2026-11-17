@@ -42,12 +42,11 @@ function flake(R){
   }
   ctx.beginPath(); ctx.arc(0,0,R*.2,0,Math.PI*2); ctx.fillStyle=PALE; ctx.fill(); ctx.lineWidth=Math.max(1,R*.1); ctx.strokeStyle=SKY; ctx.stroke();
 }
-// 해 (여름 시즌 클릭 효과 가운데) : 블루 톱니 햇살 + 흰 원
+// 팔각별 (여름 시즌 클릭 효과 가운데) : 블루 별 + 흰 테두리 · 가운데 원 없이
 function sun(R){
   ctx.beginPath();
-  for(let i=0;i<16;i++){ const a=i/16*Math.PI*2, r=i%2?R*.62:R; ctx[i?'lineTo':'moveTo'](Math.cos(a)*r,Math.sin(a)*r); }
+  for(let i=0;i<16;i++){ const a=-Math.PI/2+i/16*Math.PI*2, r=i%2?R*.46:R; ctx[i?'lineTo':'moveTo'](Math.cos(a)*r,Math.sin(a)*r); }
   ctx.closePath(); ctx.lineJoin='round'; ctx.fillStyle=BLUE; ctx.fill(); ctx.lineWidth=Math.max(1,R*.1); ctx.strokeStyle=PALE; ctx.stroke();
-  ctx.beginPath(); ctx.arc(0,0,R*.36,0,Math.PI*2); ctx.fillStyle=PALE; ctx.fill(); ctx.lineWidth=Math.max(1,R*.08); ctx.strokeStyle=SKY; ctx.stroke();
 }
 function draw(f){
   const k=Math.min(1,f.t/f.life), s=f.s;

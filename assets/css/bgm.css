@@ -14,6 +14,9 @@
   background:#fff;color:var(--deep,#1C86C2);font-weight:800;font-size:10px;letter-spacing:.12em;
   box-shadow:inset 0 0 0 1.5px rgba(47,164,222,.55);transition:box-shadow .2s,background .2s}
 .bgm-chip + .sy-tray{margin-left:0}
+.bgm-chip[hidden]{display:none}
+.bgm-chip[hidden] + .sy-tray{margin-left:auto}
+.bgm-lp.is-empty{display:none !important}
 .bgm-chip:hover{background:#F3F9FD}
 .bgm-chip[aria-pressed="true"]{box-shadow:inset 0 0 0 1.5px #2FA4DE,0 0 0 4px rgba(47,164,222,.15)}
 .bc-disc{width:24px;height:24px;flex:none}
@@ -44,9 +47,6 @@ html.booting .bgm-lp{display:none}
   opacity:0;transform:translateX(-14px);pointer-events:none;transition:opacity .2s,transform .2s}
 .bgm-lp:hover .bl-pan,.bgm-lp:focus-within .bl-pan{opacity:1;transform:none;pointer-events:auto}
 .bgm-lp.drag .bl-pan{opacity:0}
-.bgm-lp.flip{flex-direction:row-reverse}
-.bgm-lp.flip .bl-pan{margin:0 -24px 0 0;padding:10px 34px 10px 14px;border-radius:40px 0 0 40px;transform:translateX(14px)}
-.bgm-lp.flip:hover .bl-pan,.bgm-lp.flip:focus-within .bl-pan{transform:none}
 .bl-k{font-weight:800;font-size:8.5px;letter-spacing:.18em;color:#2FA4DE}
 .bgm-lp.is-ext .bl-k{color:#2E8C7E}
 .bl-t{font-weight:900;font-size:13.5px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -98,5 +98,6 @@ html.booting .bgm-lp{display:none}
   .bgm-chip .bc-k,.bgm-chip .bc-t,.bgm-chip .bc-eq{display:none}
   .bgm-chip .bc-disc{width:32px;height:32px}
   .bgm-lp{display:none !important}
+  .tk-tray{margin-left:auto}   /* 음악 칩이 빠진 자리 : 왼쪽 + 하나, 오른쪽 흰 버튼들 */
 }
 @media (prefers-reduced-motion:reduce){ .is-on .bgm-disc,.bgm-chip.is-on .bc-eq i{animation:none} }

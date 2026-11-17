@@ -405,7 +405,8 @@ body[data-view="vSeason"] .ad-nav a.ad-ss{background:var(--wash);color:var(--dee
 .ss-chk input{width:16px;height:16px;accent-color:#2FA4DE}
 .ss-err{grid-column:1/-1;margin:0;font-weight:700;font-size:11.5px;color:#D9534F}
 .ss-prev{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.ss-prev .ad-btn{text-decoration:none}
+.ss-prev .ad-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;text-decoration:none;color:inherit}
+a.ad-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 @media (max-width:640px){ .ss-row{grid-template-columns:1fr 1fr} .ss-name{grid-column:1/-1} }
 
 /* ── BGM 관리 ── */
