@@ -1,0 +1,102 @@
+/* BGM — 상단바 LP 칩 · 끌어서 옮기는 LP (데스크톱) · 아래에서 올라오는 시트 (모바일)  — assets/js/bgm.js */
+
+/* 하단바의 예전 음악 칩은 빼요 (노래는 Player 앱에서) */
+#tkNp{display:none !important}
+
+/* LP 그림 */
+.bgm-disc{display:block;width:100%;height:100%;overflow:visible}
+.bgm-disc .gv{fill:none;stroke:rgba(255,255,255,.08)}
+.is-on .bgm-disc{animation:bgmSpin 6s linear infinite}
+@keyframes bgmSpin{to{transform:rotate(360deg)}}
+
+/* ── 상단바 칩 ── */
+.bgm-chip{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:8px;height:34px;max-width:280px;padding:0 12px 0 5px;border-radius:999px;
+  background:#fff;color:var(--deep,#1C86C2);font-weight:800;font-size:10px;letter-spacing:.12em;
+  box-shadow:inset 0 0 0 1.5px rgba(47,164,222,.55);transition:box-shadow .2s,background .2s}
+.bgm-chip + .sy-tray{margin-left:0}
+.bgm-chip:hover{background:#F3F9FD}
+.bgm-chip[aria-pressed="true"]{box-shadow:inset 0 0 0 1.5px #2FA4DE,0 0 0 4px rgba(47,164,222,.15)}
+.bc-disc{width:24px;height:24px;flex:none}
+.bc-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;font-size:11px;letter-spacing:0;color:var(--ink,#0E0F12)}
+.bc-eq{display:inline-flex;align-items:flex-end;gap:2px;height:11px;flex:none}
+.bc-eq i{display:block;width:2.5px;height:11px;border-radius:2px;background:#2FA4DE;transform-origin:50% 100%;transform:scaleY(.3)}
+.bgm-chip.is-on .bc-eq i{animation:bgmEq .9s ease-in-out infinite}
+.bgm-chip.is-on .bc-eq i:nth-child(2){animation-duration:.7s;animation-delay:-.2s}
+.bgm-chip.is-on .bc-eq i:nth-child(3){animation-duration:1.1s;animation-delay:-.4s}
+@keyframes bgmEq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+.bgm-chip.is-ext{color:#2E8C7E;box-shadow:inset 0 0 0 1.5px rgba(46,140,126,.6)}
+.bgm-chip.is-ext .bc-eq i{background:#2E8C7E}
+
+/* ── 데스크톱 : 끌어서 옮기는 LP ── */
+.bgm-lp{position:fixed;left:60%;top:60%;z-index:8800;display:none;align-items:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.bgm-lp.show{display:flex;animation:bgmPop .45s cubic-bezier(.3,1.4,.5,1) both}
+html.booting .bgm-lp{display:none}
+@keyframes bgmPop{from{transform:scale(.3);opacity:0}}
+.bl-disc{position:relative;z-index:2;width:120px;height:120px;flex:none;padding:0;border-radius:50%;cursor:grab;filter:drop-shadow(0 18px 22px rgba(13,60,100,.42))}
+.bgm-lp.drag .bl-disc{cursor:grabbing}
+.bgm-lp:not(.is-on) .bl-disc{filter:drop-shadow(0 12px 16px rgba(13,60,100,.3)) saturate(.7)}
+.bl-grip{position:absolute;z-index:3;left:60px;top:-12px;transform:translateX(-50%);height:20px;padding:0 8px;border-radius:999px;background:#fff;display:inline-flex;align-items:center;gap:5px;
+  font-weight:800;font-size:8px;letter-spacing:.12em;color:#7A818A;box-shadow:0 0 0 1px rgba(14,15,18,.08),0 6px 12px -6px rgba(14,15,18,.3);cursor:grab;opacity:0;transition:opacity .2s}
+.bl-grip i{width:9px;height:9px;background:radial-gradient(circle,#9AA0A8 1.1px,transparent 1.4px) 0 0/4.5px 4.5px}
+.bgm-lp:hover .bl-grip,.bgm-lp.drag .bl-grip{opacity:1}
+.bl-pan{margin-left:-24px;padding:10px 14px 10px 34px;min-width:200px;border-radius:0 40px 40px 0;background:#fff;
+  box-shadow:0 0 0 1px rgba(14,15,18,.06),0 20px 40px -24px rgba(13,60,100,.5);display:flex;flex-direction:column;gap:5px;
+  opacity:0;transform:translateX(-14px);pointer-events:none;transition:opacity .2s,transform .2s}
+.bgm-lp:hover .bl-pan,.bgm-lp:focus-within .bl-pan{opacity:1;transform:none;pointer-events:auto}
+.bgm-lp.drag .bl-pan{opacity:0}
+.bgm-lp.flip{flex-direction:row-reverse}
+.bgm-lp.flip .bl-pan{margin:0 -24px 0 0;padding:10px 34px 10px 14px;border-radius:40px 0 0 40px;transform:translateX(14px)}
+.bgm-lp.flip:hover .bl-pan,.bgm-lp.flip:focus-within .bl-pan{transform:none}
+.bl-k{font-weight:800;font-size:8.5px;letter-spacing:.18em;color:#2FA4DE}
+.bgm-lp.is-ext .bl-k{color:#2E8C7E}
+.bl-t{font-weight:900;font-size:13.5px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bl-row{display:flex;align-items:center;gap:7px}
+.bl-row > svg{width:14px;height:14px;fill:#7A818A;flex:none}
+.bl-pp,.bs-pp{display:grid;place-items:center;border-radius:50%;background:#2FA4DE;color:#fff;flex:none}
+.bl-pp{width:30px;height:30px}
+.bl-pp svg,.bs-pp svg{width:12px;height:12px;fill:currentColor}
+.bl-pp:disabled,.bs-pp:disabled{opacity:.4}
+.bl-vol,.bs-vol{-webkit-appearance:none;appearance:none;flex:1;min-width:70px;height:4px;border-radius:999px;background:linear-gradient(90deg,#8FDCFB var(--v,40%),#E6ECF0 var(--v,40%));outline:0}
+.bl-vol::-webkit-slider-thumb,.bs-vol::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(14,15,18,.18),0 2px 5px rgba(14,15,18,.2)}
+.bl-vol::-moz-range-thumb,.bs-vol::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(14,15,18,.18)}
+.bl-lyr{height:26px;padding:0 10px;border-radius:999px;background:#E9F5F2;color:#2E8C7E;font-weight:800;font-size:10.5px;white-space:nowrap}
+.bl-lyr[hidden],.bs-lyr[hidden],.bs-auto[hidden]{display:none}
+.bgm-lp.is-ext .bl-row > svg,.bgm-lp.is-ext .bl-vol{display:none}   /* 다른 음악 땐 그 앱의 볼륨으로 */
+
+/* ── 모바일 : 시트 ── */
+.bgm-sheet{position:fixed;inset:0;z-index:9600}
+.bgm-sheet[hidden]{display:none}
+.bs-dim{position:absolute;inset:0;background:rgba(14,26,38,.3);opacity:0;transition:opacity .25s}
+.bs-in{position:absolute;left:0;right:0;bottom:0;padding:10px 20px calc(26px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;background:#fff;
+  box-shadow:0 -20px 40px -20px rgba(0,0,0,.3);transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.bgm-sheet.on .bs-dim{opacity:1}
+.bgm-sheet.on .bs-in{transform:none}
+.bs-hd{display:block;width:40px;height:5px;margin:0 auto 14px;border-radius:999px;background:#D5DCE2}
+.bs-top{display:flex;align-items:center;gap:14px}
+.bs-disc{width:64px;height:64px;flex:none}
+.bs-tx{flex:1;min-width:0}
+.bs-k{display:block;font-weight:800;font-size:9px;letter-spacing:.18em;color:#2FA4DE}
+.bgm-sheet.is-ext .bs-k{color:#2E8C7E}
+.bs-t{display:block;margin-top:3px;font-weight:900;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bs-a{display:block;font-size:12px;color:#5F656E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bs-pp{width:52px;height:52px}
+.bs-pp svg{width:16px;height:16px}
+.bs-row{display:flex;align-items:center;gap:12px;margin-top:18px}
+.bs-row svg{width:18px;height:18px;fill:#7A818A;flex:none}
+.bs-vol{height:6px}
+.bs-vol::-webkit-slider-thumb{width:22px;height:22px}
+.bgm-sheet.is-ext .bs-row{display:none}
+.bs-btns{display:flex;gap:8px;margin-top:16px}
+.bs-btns button{flex:1;height:44px;border-radius:12px;font-weight:800;font-size:12.5px}
+.bs-lyr{background:#2E8C7E;color:#fff}
+.bs-auto{background:#EEF4F8;color:#1C86C2}
+.bs-auto.off{color:#7A818A}
+
+/* 모바일 : 칩은 둥근 LP 버튼만 · 떠 있는 LP 없음 */
+@media not all and (min-width:861px) and (min-height:600px){
+  .bgm-chip{width:44px;height:44px;max-width:none;padding:0;justify-content:center;border-radius:50%}
+  .bgm-chip .bc-k,.bgm-chip .bc-t,.bgm-chip .bc-eq{display:none}
+  .bgm-chip .bc-disc{width:32px;height:32px}
+  .bgm-lp{display:none !important}
+}
+@media (prefers-reduced-motion:reduce){ .is-on .bgm-disc,.bgm-chip.is-on .bc-eq i{animation:none} }

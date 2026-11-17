@@ -1,0 +1,114 @@
+/* ══════════════════════════════════════════════════════════════
+   SEASON · SUMMER (여름)  — season.js 가 기간에 맞춰 불러와요
+   · 포인트 블루는 그대로 · 물결 / 탄산 / 얼음 / 라임만 아주 조금 더해요
+   · 장식 요소(물결 띠 · 탄산 · 얼음 · 라임 · 날짜)는 season-summer.js 가 붙여요
+══════════════════════════════════════════════════════════════ */
+html.season-summer{--ss-sky:#8FDCFB;--ss-lime:#B8E85A;--ss-lime2:#8FCF3A;--sy-home-dday:off}   /* off = 홈에서 D-DAY 창은 처음엔 닫아 둬요 (아이콘으로 열기) */
+
+/* ══════════════ 여름 홈 배치 (꽉 채운 배치) ══════════════
+   · 오른쪽 도면 주사기 + SPEC SHEET 숨김 → 포스터 · 앱 패널이 화면 가로를 꽉 채워요
+   · 포스터 : SYRINGE 가운데 · 병뚜껑 다이얼 왼쪽 아래 · 여름 날짜 오른쪽 아래
+   · 앱 : 한 줄 · 아래쪽이 물 */
+html.season-summer #sy-home .hp-side{display:none}
+@media (min-width:861px) and (min-height:600px){
+  html.season-summer #tt-body-index .sy-desk{grid-template-columns:minmax(0,1fr)}
+  html.season-summer #sy-home .hp-dial{right:auto;top:auto;left:clamp(22px,3.4cqw,52px);bottom:clamp(20px,7cqh,48px);width:clamp(120px,min(14cqw,40cqh),196px)}
+  html.season-summer .hp-l{left:50%;right:auto;top:52%;bottom:auto;width:max-content;max-width:calc(100% - 2 * clamp(150px,20cqw,300px));transform:translate(-50%,-50%);align-items:center;text-align:center}
+  html.season-summer .hp-eye{max-width:none;justify-content:center}
+  html.season-summer .hp-eye i{flex:0 0 clamp(36px,7cqw,120px)}
+  html.season-summer .hp-t{font-size:min(12.4cqw,var(--th,200px));transform-origin:50% 100%}
+  html.season-summer .hp-pair{justify-content:center}
+  /* 앱 한 줄 */
+  html.season-summer #sy-home .hp-apps .sy-icons{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);padding:24px 14px 14px}
+  html.season-summer #sy-home .hp-apps .dico{width:auto;min-width:0}
+}
+
+/* ── 공통 : 올라오는 탄산 ── */
+.ss-fizz{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.ss-fizz i{position:absolute;top:104%;border-radius:50%;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 1.2px rgba(255,255,255,.85);animation:ssRise linear infinite}
+@keyframes ssRise{0%{top:104%;transform:translateX(0);opacity:0}8%{opacity:1}50%{transform:translateX(8px)}100%{top:-6%;transform:translateX(0);opacity:0}}
+/* 얼음 큐브 */
+.ss-ice{position:absolute;z-index:1;pointer-events:none;border-radius:12px;transform:rotate(var(--r));
+  background:linear-gradient(135deg,rgba(255,255,255,.55),rgba(255,255,255,.12));
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.8),inset 6px 6px 0 -3px rgba(255,255,255,.5),0 12px 20px -12px rgba(8,40,70,.35);animation:ssClink 3.4s ease-in-out infinite}
+@keyframes ssClink{0%,100%{transform:rotate(var(--r)) translateY(0)}50%{transform:rotate(calc(var(--r) + 6deg)) translateY(-6px)}}
+@keyframes ssSpin{to{transform:rotate(360deg)}}
+
+/* ── 알약 I : 빛나게 ── */
+@keyframes ssGlow{0%,100%{box-shadow:inset 0 0 0 .03em #fff,0 0 18px rgba(255,255,255,.55),0 0 40px rgba(143,220,251,.45)}50%{box-shadow:inset 0 0 0 .03em #fff,0 0 34px rgba(255,255,255,.95),0 0 80px rgba(143,220,251,.85)}}
+html.season-summer .hp-t .cap,html.season-summer .boot .ix-cap{animation:capWob 3.2s cubic-bezier(.5,0,.2,1) infinite,ssGlow 2.4s ease-in-out infinite}
+
+/* ══════════════ 홈 포스터 ══════════════ */
+/* 위쪽 물결 띠 (뒤 한 겹은 천천히 흘러요) */
+.ss-wave{position:absolute;left:0;right:0;top:0;height:34px;z-index:2;pointer-events:none;filter:drop-shadow(0 3px 4px rgba(8,40,70,.12))}
+.ss-wave i{position:absolute;inset:0;background-repeat:repeat-x}
+.ss-wave .b{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='66' height='34' viewBox='0 0 66 34'%3E%3Cpath d='M0 0H66V18Q49.5 32 33 18T0 18Z' fill='%23fff' fill-opacity='.45'/%3E%3C/svg%3E");background-size:66px 34px;animation:ssWave 9s linear infinite}
+.ss-wave .f{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='34' viewBox='0 0 48 34'%3E%3Cpath d='M0 0H48V10Q36 22 24 10T0 10Z' fill='%23fff'/%3E%3C/svg%3E");background-size:48px 34px}
+@keyframes ssWave{to{background-position:-660px 0}}
+/* 라임 */
+.ss-lime{position:absolute;z-index:1;left:72%;top:16%;width:clamp(60px,7cqw,100px);aspect-ratio:1;transform:rotate(-18deg);pointer-events:none;filter:drop-shadow(0 14px 18px rgba(8,40,70,.3))}
+.ss-lime svg{display:block;width:100%;height:100%}
+/* 병뚜껑 다이얼 */
+.ss-crown{position:absolute;inset:-2%;width:104%;height:104%;overflow:visible;pointer-events:none;animation:ssSpin 60s linear infinite}
+.ss-crown path{fill:rgba(255,255,255,.14);stroke:#fff;stroke-width:1.4}
+html.season-summer .hp-dial .hp-ticks{opacity:.5}
+html.season-summer .hp-dial .arc,html.season-summer .boot .bt-ring .bt-arc{stroke:var(--ss-sky);filter:drop-shadow(0 0 5px rgba(143,220,251,.9))}
+/* 여름 날짜 (오른쪽 아래) */
+.ss-day{position:absolute;z-index:2;right:clamp(22px,3.4cqw,52px);bottom:clamp(24px,8cqh,52px);display:grid;grid-template-columns:auto auto;align-items:center;justify-items:end;gap:6px 8px;white-space:nowrap;pointer-events:none}
+.ss-day small{font-weight:800;font-size:8px;letter-spacing:.2em;opacity:.9}
+.ss-day b{grid-column:1/3;font-weight:300;font-size:clamp(34px,5.4cqw,64px);letter-spacing:-.03em;line-height:1}
+.ss-day svg{width:15px;height:15px}
+.ss-day svg path{fill:#fff}
+/* 라임 칩 */
+html.season-summer #sy-home .hp-pair .ss-chip{background:#D6F58A;color:#0E0F12;box-shadow:none;font-weight:900}
+
+/* 앱 패널 : 아래쪽이 물 · 기포만 뽀글 */
+.ss-water{position:absolute;left:0;right:0;top:58px;bottom:0;z-index:0;pointer-events:none;border-radius:0 0 24px 24px;background:rgba(206,236,250,.6)}
+.ss-water i{position:absolute;left:0;right:0;top:-10px;height:12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='132' height='12' viewBox='0 0 132 12'%3E%3Cpath d='M0 6C33 0 99 12 132 6V12H0Z' fill='%23CEECFA' fill-opacity='.6'/%3E%3C/svg%3E") 0 0/132px 12px repeat-x;animation:ssWave2 14s linear infinite}
+@keyframes ssWave2{to{background-position:-1320px 0}}
+html.season-summer #sy-home .hp-apps .sy-icons,html.season-summer #sy-home .hp-apps .hp-ribbon{position:relative;z-index:1}
+.ss-bub{position:absolute;top:2px;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1.2px var(--ss-sky);animation:ssBub ease-out infinite}
+@keyframes ssBub{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translateY(-46px) scale(1);opacity:0}}
+
+/* ══════════════ 창 · 독 : 물결 ══════════════ */
+html.season-summer .win:not(.app-aol):not(.app-vault) > .wbar::before,
+html.season-summer .doc > .wbar::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:6px;z-index:3;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='6' viewBox='0 0 20 6'%3E%3Cpath d='M0 3C5 0 15 6 20 3V6H0Z' fill='%238FDCFB' fill-opacity='.75'/%3E%3C/svg%3E") 0 0/20px 6px repeat-x}
+html.season-summer .tk-start{position:relative;overflow:hidden}
+html.season-summer .tk-start::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='6' viewBox='0 0 16 6'%3E%3Cpath d='M0 0H16V2C12 5 4 -1 0 2Z' fill='%23fff' fill-opacity='.85'/%3E%3C/svg%3E") 0 0/16px 6px repeat-x}
+
+/* ══════════════ 입장화면 ══════════════ */
+html.season-summer .boot .bt-pill{display:none}
+html.season-summer #ixLiqG stop:nth-child(1){stop-color:#E6F8FF}
+html.season-summer #ixLiqG stop:nth-child(2){stop-color:#8FDCFB}
+html.season-summer #ixLiqG stop:nth-child(3){stop-color:#4DB8EC}
+/* 로딩바 : 물결 채움 */
+html.season-summer .boot .bt-track{height:10px;background:rgba(14,15,18,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+html.season-summer .boot .bt-track i{box-shadow:0 0 12px rgba(255,255,255,.7);animation:ssBar 1.4s linear infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 3C10 0 30 6 40 3V0H0Z' fill='%232FA4DE' fill-opacity='.45'/%3E%3C/svg%3E") 0 0/40px 10px repeat-x,linear-gradient(90deg,#fff,#8FDCFB)}
+@keyframes ssBar{to{background-position:-40px 0,0 0}}
+/* 그래픽 컴포지션 (스코프 링 뒤) */
+.ss-comp{position:absolute;left:50%;top:50%;width:min(86%,62vh,520px);aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.ss-comp > *{position:absolute}
+.ss-ht{left:-12%;top:-14%;width:80%;height:80%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95) 1.6px,transparent 2.1px) 0 0/10px 10px;
+  -webkit-mask-image:radial-gradient(circle at 48% 46%,#000 12%,rgba(0,0,0,.35) 46%,transparent 70%);mask-image:radial-gradient(circle at 48% 46%,#000 12%,rgba(0,0,0,.35) 46%,transparent 70%)}
+.ss-bigsun{right:-12%;bottom:-8%;width:44%;height:44%;filter:drop-shadow(0 24px 30px rgba(8,40,70,.35));animation:ssSpin 50s linear infinite}
+.ss-blime{right:26%;top:-4%;width:15%;aspect-ratio:1;z-index:3;transform:rotate(-24deg);filter:drop-shadow(0 12px 14px rgba(8,40,70,.3))}
+.ss-blime svg{display:block;width:100%;height:100%}
+.ss-bice{left:10%;bottom:8%;width:10%;aspect-ratio:1;border-radius:22%;--r:-14deg;transform:rotate(var(--r));
+  background:linear-gradient(135deg,rgba(255,255,255,.75),rgba(255,255,255,.2));box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.95),inset 6px 6px 0 -3px rgba(255,255,255,.6),0 12px 20px -12px rgba(8,40,70,.4);animation:ssClink 3.4s ease-in-out infinite}
+.ss-mk{fill:#fff;opacity:.9}
+
+@media not all and (min-width:861px) and (min-height:600px){
+  .ss-day,.ss-water{display:none}
+  .ss-lime{left:auto;right:44%;top:20%;width:46px}
+  .ss-ice.i2,.ss-ice.i3,.ss-ice.i4{display:none}
+  .ss-ice.i0{width:44px !important;height:44px !important;left:5% !important;top:20% !important}
+  .ss-ice.i1{width:30px !important;height:30px !important;left:24% !important;top:14% !important}
+  .ss-bigsun{right:-2%;bottom:4%;width:32%;height:32%}
+}
+@media (prefers-reduced-motion:reduce){
+  .ss-fizz i,.ss-ice,.ss-wave .b,.ss-crown,.ss-water i,.ss-bub,.ss-bigsun,.ss-bice{animation:none}
+  .ss-fizz,.ss-bub{display:none}
+}

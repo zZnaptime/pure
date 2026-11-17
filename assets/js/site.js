@@ -462,12 +462,15 @@ window.SY_MAIN = function (SET, POSTS) {
   }
 
   /* 홈 자동 배치 — 처음엔 몇 개만 깔끔하게 */
+  /* 시즌 테마가 '처음엔 D-DAY 창 닫아 두기'를 원할 때 (css 변수 --sy-home-dday:off) — 버튼으로는 그대로 열려요 */
+  function ddayOff(){ try { return getComputedStyle(D.documentElement).getPropertyValue('--sy-home-dday').trim() === 'off'; } catch(e){ return false; } }
   function autoLayout(force){
     if (!isHome || !isDesk()) return;
     var hp = $('#syHero'), r = hp ? hp.getBoundingClientRect() : { top: barH() + 16 };
     var R = window.innerWidth - 24, B = window.innerHeight - taskH() - 14, T = Math.round(r.top);
     ['memo','kit','chat','radar','dday','notice'].forEach(function(id){ if (wins[id] && id !== 'dday') wins[id].classList.remove('open', 'min'); });
-    var w = wins.dday;
+    var w = ddayOff() ? null : wins.dday;
+    if (wins.dday && !w) wins.dday.classList.remove('open', 'min');
     if (w){
       w.style.width = '320px'; w.style.height = ''; w.classList.add('open'); w.classList.remove('min');
       w.style.height = Math.min(w.offsetHeight, B - T) + 'px';
@@ -1011,7 +1014,7 @@ window.SY_MAIN = function (SET, POSTS) {
     if (isHome){
       homeWidgets();
       if (isDesk()) autoLayout();
-      else openWin('dday', true);
+      else if (!ddayOff()) openWin('dday', true);
       /* 주소로 들어온 경우 : ?p=글 / ?c=카테고리 / ?notice → 그 창 열기 */
       if (ROUTE === 'post' && SLUG) openPost(SLUG);
       else if (ROUTE === 'list') openList(CAT);

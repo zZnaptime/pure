@@ -1,0 +1,112 @@
+/* ══════════════════════════════════════════════════════════════
+   SEASON · WINTER (겨울 · 연말)  — season.js 가 기간에 맞춰 불러와요
+   · 포인트 블루는 그대로 · 눈 / 서리 / 반짝이만 더해요
+   · 장식 요소(눈 · 별 · 카운트다운)는 season-winter.js 가 붙여요
+══════════════════════════════════════════════════════════════ */
+html.season-winter{--sw-sky:#8FDCFB;--sw-warm:#E2A94B;--sy-home-dday:off}   /* off = 홈에서 D-DAY 창은 처음엔 닫아 둬요 (독 · 아이콘으로 열기) */
+
+/* ══════════════ 겨울 홈 배치 (C안) ══════════════
+   · 오른쪽 도면 주사기 + SPEC SHEET 숨김 → 포스터 · 앱 패널이 화면 가로를 꽉 채워요
+   · 포스터 : SYRINGE 가운데 · D+ 다이얼 왼쪽 아래 · 크리스마스 카운트다운 오른쪽 아래
+   · 앱 : 한 줄 오너먼트 (높낮이 번갈아) */
+html.season-winter #sy-home .hp-side{display:none}
+@media (min-width:861px) and (min-height:600px){
+  html.season-winter #tt-body-index .sy-desk{grid-template-columns:minmax(0,1fr)}
+  html.season-winter #sy-home .hp-dial{right:auto;top:auto;left:clamp(22px,3.4cqw,52px);bottom:clamp(20px,7cqh,48px);width:clamp(120px,min(14cqw,40cqh),196px)}
+  html.season-winter .hp-l{left:50%;right:auto;top:52%;bottom:auto;width:max-content;max-width:calc(100% - 2 * clamp(150px,20cqw,300px));transform:translate(-50%,-50%);align-items:center;text-align:center}
+  html.season-winter .hp-eye{max-width:none;justify-content:center}
+  html.season-winter .hp-eye i{flex:0 0 clamp(36px,7cqw,120px)}
+  html.season-winter .hp-t{font-size:min(12.4cqw,var(--th,200px));transform-origin:50% 100%}
+  html.season-winter .hp-pair{justify-content:center}
+  html.season-winter .sw-xmas{top:auto;right:clamp(22px,3.4cqw,52px);bottom:clamp(24px,8cqh,52px);width:auto;display:grid;grid-template-columns:auto auto;align-items:center;justify-items:end;gap:6px 8px}
+  html.season-winter .sw-xmas b{grid-column:1/3;font-size:clamp(34px,5.4cqw,64px)}
+  /* 앱 한 줄 */
+  html.season-winter #sy-home .hp-apps .sy-icons{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);padding:30px 14px 14px}
+  html.season-winter #sy-home .hp-apps .dico{width:auto;min-width:0}
+  html.season-winter #sy-home .hp-apps .dico:nth-child(even){padding-top:16px}
+  html.season-winter #sy-home .hp-apps .dico:nth-child(even)::before{height:32px;background-size:12px 7px,1.5px 26px}
+}
+
+
+/* ── 공통 : 내리는 눈 ── */
+.sw-snow{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.sw-snow i{position:absolute;top:-4%;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.85);animation:swFall linear infinite}
+@keyframes swFall{0%{top:-4%;transform:translateX(0)}50%{transform:translateX(10px)}100%{top:104%;transform:translateX(0)}}
+.sw-crys{position:absolute;pointer-events:none;opacity:.5;animation:swSpin 18s linear infinite;z-index:1}
+.sw-crys path{fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round}
+@keyframes swSpin{to{transform:rotate(360deg)}}
+
+/* ── 알약 I : 빛나게 ── */
+@keyframes swGlow{0%,100%{box-shadow:inset 0 0 0 .03em #fff,0 0 18px rgba(255,255,255,.55),0 0 40px rgba(143,220,251,.45)}50%{box-shadow:inset 0 0 0 .03em #fff,0 0 34px rgba(255,255,255,.95),0 0 80px rgba(143,220,251,.85)}}
+html.season-winter .hp-t .cap,html.season-winter .boot .ix-cap{animation:capWob 3.2s cubic-bezier(.5,0,.2,1) infinite,swGlow 2.4s ease-in-out infinite}
+
+/* ══════════════ 홈 포스터 ══════════════ */
+/* 위쪽 레이스 눈 */
+.sw-lace{position:absolute;left:0;right:0;top:0;height:30px;z-index:2;pointer-events:none;
+  background:linear-gradient(#fff,#fff) 0 0/100% 10px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='22' viewBox='0 0 46 22'%3E%3Cpath d='M0 0H46V10a23 10 0 0 1 -46 0Z' fill='%23fff'/%3E%3C/svg%3E") 0 8px/46px 22px repeat-x;
+  filter:drop-shadow(0 3px 4px rgba(8,40,70,.12))}
+/* 다이얼 꾸밈 : 하프톤 원 + 도는 점선 링 + 반짝이 */
+.sw-dial-ht{position:absolute;inset:-16%;border-radius:50%;pointer-events:none;opacity:.55;
+  background:radial-gradient(circle,rgba(255,255,255,.55) 1.2px,transparent 1.7px) 0 0/7px 7px;
+  -webkit-mask-image:radial-gradient(circle at 38% 36%,#000 18%,transparent 70%);mask-image:radial-gradient(circle at 38% 36%,#000 18%,transparent 70%)}
+.sw-dial-ring{position:absolute;inset:-9%;width:118%;height:118%;overflow:visible;pointer-events:none;animation:swSpin 40s linear infinite}
+.sw-dial-ring circle{fill:none;stroke:rgba(255,255,255,.55);stroke-width:1;stroke-dasharray:1.5 5}
+.sw-dial-ring path{fill:#fff}
+/* 게이지 · 점 : 스카이 */
+html.season-winter .hp-dial .arc,html.season-winter .boot .bt-ring .bt-arc{stroke:var(--sw-sky);filter:drop-shadow(0 0 5px rgba(143,220,251,.9))}
+/* 크리스마스 카운트다운 (다이얼 아래) */
+.sw-xmas{position:absolute;z-index:2;right:clamp(18px,4cqw,40px);width:clamp(130px,23cqw,200px);top:calc(54px + clamp(4px,1.6cqw,16px) + clamp(130px,23cqw,200px) + 4px);display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.sw-xmas small{font-weight:800;font-size:8px;letter-spacing:.2em;opacity:.85}
+.sw-xmas b{font-weight:300;font-size:clamp(18px,2.6cqw,24px);letter-spacing:-.03em;line-height:1}
+.sw-xmas svg{width:14px;height:14px;flex:none}
+.sw-xmas svg path{fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round}
+
+/* 앱 = 오너먼트 (줄에 매달려 살랑살랑) */
+html.season-winter #sy-home .hp-apps .dico{position:relative}
+html.season-winter #sy-home .hp-apps .dico::before{content:"";position:absolute;left:50%;top:-6px;width:12px;height:16px;margin-left:-6px;pointer-events:none;z-index:1;
+  background:linear-gradient(90deg,#C9D3DC,#fff,#C9D3DC) 50% 100%/12px 7px no-repeat,linear-gradient(#C9D3DC,#C9D3DC) 50% 0/1.5px 10px no-repeat;border-radius:2px}
+html.season-winter #sy-home .hp-apps .dico .ic{border-radius:50%;margin-top:4px;transform-origin:50% -10px;animation:swSway 3.4s ease-in-out infinite;
+  box-shadow:inset -7px -9px 14px rgba(14,15,18,.12),inset 5px 5px 10px rgba(255,255,255,.6),0 0 0 1px rgba(14,15,18,.07),0 12px 20px -14px rgba(14,15,18,.5) !important}
+html.season-winter #sy-home .hp-apps .dico:nth-child(3n) .ic{animation-duration:4.1s;animation-delay:-1s}
+html.season-winter #sy-home .hp-apps .dico:nth-child(3n+1) .ic{animation-duration:3.7s;animation-delay:-2s}
+@keyframes swSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+html.season-winter #sy-home .hp-apps .dico:hover .ic{animation-play-state:paused}
+html.season-winter #sy-home .hp-apps .sy-icons{padding-top:28px}
+/* 앱 패널 맨 위 은색 가랜드 줄 */
+.sw-garland{position:absolute;left:0;right:0;top:6px;height:26px;width:100%;pointer-events:none}
+.sw-garland path{fill:none;stroke:#D3DAE1;stroke-width:1.6}
+
+/* ══════════════ 창 · 독 : 눈모자 ══════════════ */
+html.season-winter .win:not(.app-aol):not(.app-vault) > .wbar::before,
+html.season-winter .doc > .wbar::before{content:"";position:absolute;left:0;right:0;top:0;height:9px;z-index:3;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='9' viewBox='0 0 24 9'%3E%3Cpath d='M0 0H24V2.5a12 6 0 0 1 -24 0Z' fill='%23fff'/%3E%3C/svg%3E") 0 0/24px 9px repeat-x;
+  filter:drop-shadow(0 1px 1.5px rgba(14,15,18,.16))}
+html.season-winter .tk-start{position:relative;overflow:hidden}
+html.season-winter .tk-start::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='7' viewBox='0 0 14 7'%3E%3Cpath d='M0 0H14V2a7 3.6 0 0 1 -14 0Z' fill='%23fff'/%3E%3C/svg%3E") 0 0/14px 7px repeat-x}
+
+/* ══════════════ 입장화면 ══════════════ */
+html.season-winter .boot .bt-pill{display:none}
+html.season-winter .boot .bt-track{height:10px;background:rgba(14,15,18,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+html.season-winter .boot .bt-track i{background:linear-gradient(-45deg,#fff 25%,#8FDCFB 25% 50%,#fff 50% 75%,#8FDCFB 75%) 0 0/16px 16px;box-shadow:0 0 12px rgba(255,255,255,.7);animation:swStripe .8s linear infinite}
+@keyframes swStripe{to{background-position:16px 0}}
+/* 그래픽 컴포지션 (스코프 링 뒤) */
+.sw-comp{position:absolute;left:50%;top:50%;width:min(86%,62vh,520px);aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.sw-comp > *{position:absolute}
+.sw-ht{inset:-4%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95) 1.5px,transparent 2px) 0 0/9px 9px;
+  -webkit-mask-image:radial-gradient(circle at 30% 28%,#000 8%,rgba(0,0,0,.35) 48%,transparent 72%);mask-image:radial-gradient(circle at 30% 28%,#000 8%,rgba(0,0,0,.35) 48%,transparent 72%)}
+.sw-flake{left:24%;top:22%;width:52%;height:52%;animation:swSpin 60s linear infinite}
+.sw-flake path{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.sw-star4{right:-10%;bottom:-4%;width:44%;height:44%;filter:drop-shadow(0 24px 30px rgba(8,40,70,.35));animation:swSpin 50s linear infinite reverse}
+.sw-oct{left:-12%;bottom:4%;width:32%;height:32%;animation:swSpin 30s linear infinite}
+.sw-hept{left:38%;top:-13%;width:15%;height:15%;animation:swSpin 22s linear infinite}
+.sw-hept path{fill:none;stroke:#fff;stroke-width:8;stroke-linejoin:round}
+.sw-mk{fill:#fff;opacity:.9}
+@media not all and (min-width:861px) and (min-height:600px){
+  .sw-xmas{display:none}
+  .sw-star4{right:-2%;bottom:4%;width:32%;height:32%}.sw-oct{display:none}.sw-hept{left:auto;right:6%;top:2%}
+}
+@media (prefers-reduced-motion:reduce){
+  .sw-snow i,.sw-crys,.sw-dial-ring,.sw-flake,.sw-star4,.sw-oct,.sw-hept{animation:none}
+  html.season-winter #sy-home .hp-apps .dico .ic{animation:none}
+}

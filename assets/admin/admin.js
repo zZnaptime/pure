@@ -77,7 +77,7 @@
 
   /* ════════ 화면 전환 ════════ */
   function show(v){
-    ['vLock', 'vLogin', 'vList', 'vEdit', 'vPrompt'].forEach(function(id){ $('#' + id).hidden = id !== v; });
+    ['vLock', 'vLogin', 'vList', 'vEdit', 'vPrompt', 'vSeason', 'vBgm'].forEach(function(id){ $('#' + id).hidden = id !== v; });
     var guest = v === 'vLogin' || v === 'vLock';
     $('#adNav').hidden = guest; $('#adLogout').hidden = guest; $('#adSite').hidden = guest;
     D.body.setAttribute('data-view', v);
@@ -90,6 +90,8 @@
     }
     var h = location.hash || '#list';
     if (h === '#prompts'){ show('vPrompt'); lastHash = h; if (window.SY_PROMPT) window.SY_PROMPT.enter(); }
+    else if (h === '#season'){ show('vSeason'); lastHash = h; if (window.SY_SEASON_ADMIN) window.SY_SEASON_ADMIN.enter(); }
+    else if (h === '#bgm'){ show('vBgm'); lastHash = h; if (window.SY_BGM_ADMIN) window.SY_BGM_ADMIN.enter(); }
     else if (h === '#new'){ openEditor(null); }
     else if (h.indexOf('#edit/') === 0){ openEditor(decodeURIComponent(h.slice(6))); }
     else { loadList(); }
@@ -97,6 +99,8 @@
   window.addEventListener('hashchange', function(){
     if (D.body.getAttribute('data-view') === 'vEdit' && dirty && !confirm('저장하지 않은 내용이 있어요. 나갈까요?')){ history.replaceState(null, '', lastHash); return; }
     if (D.body.getAttribute('data-view') === 'vPrompt' && location.hash !== '#prompts' && window.SY_PROMPT && window.SY_PROMPT.dirty() && !confirm('프롬프트 관리에 저장하지 않은 내용이 있어요. 나갈까요?')){ history.replaceState(null, '', lastHash); return; }
+    if (D.body.getAttribute('data-view') === 'vSeason' && location.hash !== '#season' && window.SY_SEASON_ADMIN && window.SY_SEASON_ADMIN.dirty() && !confirm('시즌 테마에 저장하지 않은 내용이 있어요. 나갈까요?')){ history.replaceState(null, '', lastHash); return; }
+    if (D.body.getAttribute('data-view') === 'vBgm' && location.hash !== '#bgm' && window.SY_BGM_ADMIN && window.SY_BGM_ADMIN.dirty() && !confirm('BGM 설정에 저장하지 않은 내용이 있어요. 나갈까요?')){ history.replaceState(null, '', lastHash); return; }
     route();
   });
   var lastHash = location.hash;

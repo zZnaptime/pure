@@ -31,6 +31,24 @@ function star(r,q){
   ctx.moveTo(0,-r); ctx.quadraticCurveTo(q,-q,r,0); ctx.quadraticCurveTo(q,q,0,r);
   ctx.quadraticCurveTo(-q,q,-r,0); ctx.quadraticCurveTo(-q,-q,0,-r); ctx.closePath();
 }
+// 눈 결정 (겨울 시즌 클릭 효과 가운데)
+function flake(R){
+  ctx.lineCap='round'; ctx.strokeStyle=BLUE; ctx.lineWidth=Math.max(1.4,R*.16);
+  for(let i=0;i<3;i++){
+    ctx.save(); ctx.rotate(i*Math.PI/3);
+    ctx.beginPath(); ctx.moveTo(0,-R); ctx.lineTo(0,R);
+    [-1,1].forEach(d=>{ const y=d*R*.58, b=R*.3; ctx.moveTo(0,y); ctx.lineTo(-b,y+d*b); ctx.moveTo(0,y); ctx.lineTo(b,y+d*b); });
+    ctx.stroke(); ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(0,0,R*.2,0,Math.PI*2); ctx.fillStyle=PALE; ctx.fill(); ctx.lineWidth=Math.max(1,R*.1); ctx.strokeStyle=SKY; ctx.stroke();
+}
+// 해 (여름 시즌 클릭 효과 가운데) : 블루 톱니 햇살 + 흰 원
+function sun(R){
+  ctx.beginPath();
+  for(let i=0;i<16;i++){ const a=i/16*Math.PI*2, r=i%2?R*.62:R; ctx[i?'lineTo':'moveTo'](Math.cos(a)*r,Math.sin(a)*r); }
+  ctx.closePath(); ctx.lineJoin='round'; ctx.fillStyle=BLUE; ctx.fill(); ctx.lineWidth=Math.max(1,R*.1); ctx.strokeStyle=PALE; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0,0,R*.36,0,Math.PI*2); ctx.fillStyle=PALE; ctx.fill(); ctx.lineWidth=Math.max(1,R*.08); ctx.strokeStyle=SKY; ctx.stroke();
+}
 function draw(f){
   const k=Math.min(1,f.t/f.life), s=f.s;
   ctx.save(); ctx.translate(f.x,f.y);
@@ -59,8 +77,10 @@ function draw(f){
   const R=10*s*Math.max(0,sc);
   if(R>.4){
     ctx.save(); ctx.rotate(f.spin*k);
-    star(R,R*.2); ctx.lineJoin='round'; ctx.lineWidth=Math.max(1.2,R*.16); ctx.strokeStyle=EDGE; ctx.stroke();
-    ctx.fillStyle=PALE; ctx.fill(); ctx.restore();
+    if(window.SY_SEASON_FX==='snow'){ flake(R*1.25); }   // 겨울 시즌 : 눈 결정
+    else if(window.SY_SEASON_FX==='sun'){ sun(R*1.3); }   // 여름 시즌 : 해
+    else { star(R,R*.2); ctx.lineJoin='round'; ctx.lineWidth=Math.max(1.2,R*.16); ctx.strokeStyle=EDGE; ctx.stroke(); ctx.fillStyle=PALE; ctx.fill(); }
+    ctx.restore();
   }
   // 작은 반짝이 2개 (하나는 블루 · 하나는 스카이)
   f.side.forEach((o,i)=>{

@@ -19,6 +19,8 @@
     <a href="#new" data-nav="new" class="ad-new">＋ 새 글</a>
     <i class="ad-nav-sep" aria-hidden="true"></i>
     <a href="#prompts" data-nav="prompts" class="ad-pm">프롬프트<span class="ad-hm"> 관리</span></a>
+    <a href="#season" data-nav="season" class="ad-ss">시즌<span class="ad-hm"> 테마</span></a>
+    <a href="#bgm" data-nav="bgm" class="ad-bgm">BGM</a>
   </nav>
   <span class="ad-sp"></span>
   <a class="ad-ghost" id="adSite" href="./" target="_blank" rel="noopener" hidden>사이트 보기 ↗</a>
@@ -212,6 +214,25 @@
   <input type="file" id="pmFile" accept="image/*" hidden>
 </main>
 
+<!-- 시즌 테마 (겨울 등) -->
+<main class="ad-view" id="vSeason" hidden>
+  <div class="pm ss" id="ssRoot"></div>
+  <footer class="ad-foot pm-foot" id="ssFoot" hidden>
+    <span class="ad-state" id="ssState"></span>
+    <span class="ad-sp"></span>
+    <button type="button" class="ad-btn pri" id="ssSave">저장</button>
+  </footer>
+</main>
+
+<main class="ad-view" id="vBgm" hidden>
+  <div class="pm bg" id="bgRoot"></div>
+  <footer class="ad-foot pm-foot" id="bgFoot" hidden>
+    <span class="ad-state" id="bgState"></span>
+    <span class="ad-sp"></span>
+    <button type="button" class="ad-btn pri" id="bgSave">저장</button>
+  </footer>
+</main>
+
 <!-- 입력창 (링크 · HTML 블록 등) -->
 <div class="ad-modal" id="md" hidden>
   <div class="md-in">
@@ -233,5 +254,7 @@
 <script src="assets/admin/admin.js"></script>
 <script src="assets/js/vault-crypto.js"></script>
 <script src="assets/admin/prompt-admin.js"></script>
+<script src="assets/admin/season-admin.js"></script>
+<script src="assets/admin/bgm-admin.js"></script>
 </body>
 </html>

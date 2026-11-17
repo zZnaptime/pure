@@ -49,6 +49,12 @@
     linear-gradient(#0E0F12,#0E0F12) 0 calc(100% - 7px)/14px 1px no-repeat,linear-gradient(#0E0F12,#0E0F12) 7px 100%/1px 14px no-repeat,
     linear-gradient(#0E0F12,#0E0F12) 100% calc(100% - 7px)/14px 1px no-repeat,linear-gradient(#0E0F12,#0E0F12) calc(100% - 7px) 100%/1px 14px no-repeat}
 body::after{background:linear-gradient(to top,var(--bg) 0%,var(--bg) 58%,rgba(238,239,242,0) 100%)}
+/* 모바일 (특히 iOS Safari) : 하단바 아래 · 주소창 뒤로 화면 내용이 비쳐 보이지 않게
+   가림막을 화면 아래 바깥까지 길게 늘이고, 위쪽 34px만 부드럽게 흐려지게 해요 */
+@media not all and (min-width:861px) and (min-height:600px){
+  body::after{bottom:-160px;height:calc(var(--taskH) + 22px + 160px + env(safe-area-inset-bottom,0px));
+    background:linear-gradient(to top,var(--bg) 0,var(--bg) calc(100% - 34px),rgba(238,239,242,0) 100%)}
+}
 @media (min-width:861px) and (min-height:600px){
   #tt-body-index::after{background:linear-gradient(to top,rgba(238,239,242,.9) 0%,rgba(238,239,242,.45) 40%,rgba(238,239,242,0) 100%)}
 }
